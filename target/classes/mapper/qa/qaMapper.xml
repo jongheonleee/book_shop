@@ -9,9 +9,18 @@
     where user_id = #{user_id};
   </select>
 
+  <select id="select" parameterType="int" resultType="QaDto">
+    select
+      qa_num, user_id, qa_cate_num, title, content,
+      created_at, email, tele_num, phon_num, img1,
+      img2, img3
+    from qa
+    where qa_num = #{qa_num};
+  </select>
+
   <select id="selectByUserId" parameterType="string" resultType="QaDto">
     select
-      user_id, qa_cate_num, title, content,
+      qa_num, user_id, qa_cate_num, title, content,
       created_at, email, tele_num, phon_num, img1,
       img2, img3
     from qa
@@ -26,6 +35,41 @@
     from qa
     where user_id = #{user_id} and qa_num = #{qa_num}
     for update;
+  </select>
+
+  <select id="selectByUserIdAndPh" parameterType="map" resultType="QaDto">
+    select
+      qa_num, user_id, qa_cate_num, title, content,
+      created_at, email, tele_num, phon_num, img1,
+      img2, img3
+    from qa
+    where user_id = #{user_id}
+    limit #{offSet}, #{pageSize};
+  </select>
+
+  <select id="selectBySearchCondition" parameterType="map" resultType="QaDto">
+    select
+    qa_num, user_id, qa_cate_num, title, content,
+    created_at, email, tele_num, phon_num, img1,
+    img2, img3
+    from qa
+    where true
+    <choose>
+      <when test='option=="title"'>
+        AND user_id = #{user_id}
+        AND title LIKE concat('%', #{titleKeyword}, '%')
+      </when>
+      <when test='option=="period"'>
+        AND user_id = #{user_id}
+        AND created_at between DATE_SUB(NOW(), INTERVAL #{period} MONTH) and now()
+      </when>
+      <otherwise>
+        AND user_id = #{user_id}
+        AND title LIKE concat('%', #{title}, '%')
+        AND created_at between DATE_SUB(NOW(), INTERVAL #{period} MONTH) and now()
+      </otherwise>
+    </choose>
+    limit #{offSet}, #{pageSize};
   </select>
 
   <insert id="insert" parameterType="QaDto">

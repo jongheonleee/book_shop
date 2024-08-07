@@ -3,8 +3,10 @@ package com.fastcampus.ch4.dao.qa;
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.fastcampus.ch4.dto.qa.PageHandler;
 import com.fastcampus.ch4.dto.qa.QaDto;
 
+import com.fastcampus.ch4.dto.qa.SearchCondition;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +14,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -40,7 +41,9 @@ public class QaDaoImpTest {
      * - (3) 유저의 문의글 등록
      * - (4) 유저의 문의글 수정
      * - (5) 유저의 문의글 삭제
-     *
+     * - (6) 구간별로 문의글 조회(페이징 처리)
+     * - (7) 글 검색 - 기간, 제목, 기간 & 제목 대상으로 글 검색
+     * - (8) 문의글 일련번호로 조회
      *
      * 1차 요구사항 정리
      * - (1) 유저의 문의글 카운팅 [✅]
@@ -75,10 +78,10 @@ public class QaDaoImpTest {
      * - 회원이지만, 해당 회원의 문의 글이 아닌 경우 삭제 실패
      * - 회원의 경우, 삭제 성공
      *
+     * - (6) 페이징 처리로 글 조회[✅]
+     * - (7) 글 검색 - 기간, 제목 대상으로 글 검색[✅]
+     * - (8) 문의글 일련번호로 조회[✅]
      *
-     * 2차 기능 구현[]
-     * - (1) 페이징 처리로 글 조회
-     * - (2) 글 검색 - 기간, 제목 대상으로 글 검색
      */
 
     // 1차 기능 구현 테스트
@@ -107,7 +110,6 @@ public class QaDaoImpTest {
 
         for (int i=0; i<expected; i++) {
             QaDto dto = new QaDto();
-            dto.setQa_num("qa_num" + i);
             dto.setUser_id(user_id);
             dto.setQa_cate_num("qa_cate_num1");
             dto.setTitle("title" + i);
@@ -171,7 +173,6 @@ public class QaDaoImpTest {
         int expected = 5;
         for (int i=0; i<expected; i++) {
             QaDto dto = new QaDto();
-            dto.setQa_num("qa_num" + i);
             dto.setUser_id(user_id);
             dto.setQa_cate_num("qa_cate_num1");
             dto.setTitle("title" + i);
@@ -216,7 +217,6 @@ public class QaDaoImpTest {
     public void 비회원_등록_실패() {
         // given
         QaDto dto = new QaDto();
-        dto.setQa_num("qa_num1");
         dto.setUser_id(null);
         dto.setQa_cate_num("qa_cate_num1");
         dto.setTitle("title1");
@@ -240,7 +240,6 @@ public class QaDaoImpTest {
     public void 회원_등록_성공() {
         // given
         QaDto dto = new QaDto();
-        dto.setQa_num("qa_num1");
         dto.setUser_id("user1");
         dto.setQa_cate_num("qa_cate_num1");
         dto.setTitle("title1");
@@ -266,7 +265,6 @@ public class QaDaoImpTest {
     public void 회원_등록_실패1() {
         // given
         QaDto dto = new QaDto();
-        dto.setQa_num("qa_num1");
         dto.setUser_id("user1");
         dto.setQa_cate_num("qa_cate_num1");
         dto.setTitle("title1");
@@ -291,7 +289,6 @@ public class QaDaoImpTest {
     public void 회원_등록_실패2() {
         // given
         QaDto dto = new QaDto();
-        dto.setQa_num("qa_num1");
         dto.setUser_id("user1");
         dto.setQa_cate_num("qa_cate_num1");
         dto.setTitle(null);
@@ -314,7 +311,6 @@ public class QaDaoImpTest {
     @DisplayName("회원의 경우, 공백 문의글은 예외 발생 ")
     public void 공백_문의글_예외() {
         QaDto dto = new QaDto();
-        dto.setQa_num("qa_num1");
         dto.setUser_id("user1");
         dto.setQa_cate_num("qa_cate_num1");
         dto.setTitle("title1");
@@ -338,7 +334,6 @@ public class QaDaoImpTest {
     @DisplayName("회원의 경우, 공백 제목인 경우 예외 발생 ")
     public void 공백_제목_예외() {
         QaDto dto = new QaDto();
-        dto.setQa_num("qa_num1");
         dto.setUser_id("user1");
         dto.setQa_cate_num("qa_cate_num1");
         dto.setTitle(""); // 최소 길이 3 이상
@@ -358,30 +353,29 @@ public class QaDaoImpTest {
 
     }
 
-    @Test
-    @DisplayName("중복된 키 값 등록시 예외 발생")
-    public void 중복된_키_등록_예외() {
-        // given
-        QaDto dto = new QaDto();
-        dto.setQa_num("qa_num1");
-        dto.setUser_id("user1");
-        dto.setQa_cate_num("qa_cate_num1");
-        dto.setTitle("title1");
-        dto.setContent("content1");
-        dto.setCreated_at("2021-01-01");
-        dto.setEmail("email1");
-        dto.setTele_num("010-1234-5678");
-        dto.setPhon_num("010-1234-5678");
-        dto.setImg1("img1");
-        dto.setImg2("img2");
-        dto.setImg3("img3");
-
-
-        // when
-        dao.insert(dto);
-        assertThrows(DuplicateKeyException.class, () -> dao.insert(dto));
-
-    }
+//    @Test
+//    @DisplayName("중복된 키 값 등록시 예외 발생")
+//    public void 중복된_키_등록_예외() {
+//        // given
+//        QaDto dto = new QaDto();
+//        dto.setUser_id("user1");
+//        dto.setQa_cate_num("qa_cate_num1");
+//        dto.setTitle("title1");
+//        dto.setContent("content1");
+//        dto.setCreated_at("2021-01-01");
+//        dto.setEmail("email1");
+//        dto.setTele_num("010-1234-5678");
+//        dto.setPhon_num("010-1234-5678");
+//        dto.setImg1("img1");
+//        dto.setImg2("img2");
+//        dto.setImg3("img3");
+//
+//
+//        // when
+//        dao.insert(dto);
+//        assertThrows(DuplicateKeyException.class, () -> dao.insert(dto));
+//
+//    }
 
     // (4) 기능 테스트
     @Test
@@ -389,10 +383,8 @@ public class QaDaoImpTest {
     public void 비회원_수정_실패() {
         // given
         String user_id = "non-member";
-        String qa_num = "qa_num1";
 
         QaDto dto = new QaDto();
-        dto.setQa_num("qa_num1");
         dto.setUser_id("user1");
         dto.setQa_cate_num("qa_cate_num1");
         dto.setTitle("title1");
@@ -425,7 +417,6 @@ public class QaDaoImpTest {
         int expected = 1;
 
         QaDto dto = new QaDto();
-        dto.setQa_num("qa_num1");
         dto.setUser_id("user2");
         dto.setQa_cate_num("qa_cate_num1");
         dto.setTitle("title1");
@@ -458,7 +449,6 @@ public class QaDaoImpTest {
         int expected = 1;
 
         QaDto dto = new QaDto();
-        dto.setQa_num("qa_num1");
         dto.setUser_id(user_id);
         dto.setQa_cate_num("qa_cate_num1");
         dto.setTitle("title1");
@@ -472,7 +462,8 @@ public class QaDaoImpTest {
         dto.setImg3("img3");
         assertTrue(1 == dao.insert(dto));
 
-        QaDto target = dao.selectForUpdate(dto);
+        List<QaDto> qaDtos = dao.selectByUserId("user1");
+        QaDto target = qaDtos.get(0);
         assertTrue(target != null);
         System.out.println(target);
         target.setTitle("updated title");
@@ -494,7 +485,6 @@ public class QaDaoImpTest {
 //        String user_id = "user1";
 //
 //        QaDto dto = new QaDto();
-//        dto.setQa_num("qa_num1");
 //        dto.setUser_id(user_id);
 //        dto.setQa_cate_num("qa_cate_num1");
 //        dto.setTitle("title1");
@@ -523,7 +513,6 @@ public class QaDaoImpTest {
 //        int expected = 1;
 //
 //        QaDto dto = new QaDto();
-//        dto.setQa_num("qa_num1");
 //        dto.setUser_id(user_id);
 //        dto.setQa_cate_num("qa_cate_num1");
 //        dto.setTitle("title1");
@@ -555,7 +544,6 @@ public class QaDaoImpTest {
         String user_id = "non-member";
 
         QaDto dto = new QaDto();
-        dto.setQa_num("qa_num1");
         dto.setUser_id("user1");
         dto.setQa_cate_num("qa_cate_num1");
         dto.setTitle("title1");
@@ -586,7 +574,6 @@ public class QaDaoImpTest {
         String user_id = "user1";
 
         QaDto dto = new QaDto();
-        dto.setQa_num("qa_num1");
         dto.setUser_id("user1");
         dto.setQa_cate_num("qa_cate_num1");
         dto.setTitle("title1");
@@ -600,7 +587,7 @@ public class QaDaoImpTest {
         dto.setImg3("img3");
         assertTrue(1 == dao.insert(dto));
 
-        dto.setQa_num("qa_num2");
+        dto.setUser_id("user2");
 
         int expected = 0;
 
@@ -619,7 +606,6 @@ public class QaDaoImpTest {
         String user_id = "user1";
 
         QaDto dto = new QaDto();
-        dto.setQa_num("qa_num1");
         dto.setUser_id("user1");
         dto.setQa_cate_num("qa_cate_num1");
         dto.setTitle("title1");
@@ -635,18 +621,107 @@ public class QaDaoImpTest {
 
 
         int expected = 1;
+        List<QaDto> qaDtos = dao.selectByUserId(user_id);
+        dto = qaDtos.get(0);
+        System.out.println(dto);
 
         // when
         int rowCnt = dao.delete(dto);
 
         // then
+        System.out.println("rowCnt = " + rowCnt);
         assertTrue(expected == rowCnt);
     }
 
-    // 2차 기능 구현
+    // (6) 페이징 처리로 글 조회
+    @Test
+    @DisplayName("페이징 처리로 글 조회")
+    public void 구간_문의글_조회() {
+        // given
+        for (int i=0; i<=100; i++) {
+            QaDto dto = new QaDto();
+            dto.setUser_id("user1");
+            dto.setQa_cate_num("qa_cate_num1");
+            dto.setTitle("title" + i);
+            dto.setContent("content" + i);
+            dto.setCreated_at("2021-01-01");
+            dto.setEmail("email1");
+            dto.setTele_num("010-1234-5678");
+            dto.setPhon_num("010-1234-5678");
+            dto.setImg1("img1");
+            dto.setImg2("img2");
+            dto.setImg3("img3");
 
-    // (1) 페이징 처리로 글 조회
+            assertTrue(1 == dao.insert(dto));
+        }
 
-    // (2) 글 검색 - 기간, 제목 대상으로 글 검색
+        // when
+        PageHandler ph = new PageHandler(1, 100);
+        SearchCondition sc = new SearchCondition(1, 10, "", "", 0);
+        int offSet = (ph.getPage() - 1) * ph.getPageSize();
+        int pageSize = ph.getPageSize();
+        List<QaDto> selected = dao.selectByUserIdAndPh("user1", sc);
+
+
+        // then
+        assertTrue(10 == selected.size());
+    }
+
+    // (7) 글 검색 - 기간, 제목 대상으로 글 검색
+    // 제목 대상으로 검색
+    @DisplayName("제목 대상으로 글 검색")
+    @Test
+    public void 제목_검색() {
+        for (int i=0; i<10; i++) {
+            QaDto dto = new QaDto();
+            dto.setUser_id("user1");
+            dto.setQa_cate_num("qa_cate_num1");
+            dto.setTitle("title" + i);
+            dto.setContent("content" + i);
+            dto.setCreated_at("2021-01-01");
+            dto.setEmail("email1");
+            dto.setTele_num("010-1234-5678");
+            dto.setPhon_num("010-1234-5678");
+            dto.setImg1("img1");
+            dto.setImg2("img2");
+            dto.setImg3("img3");
+
+            assertTrue(1 == dao.insert(dto));
+        }
+
+        SearchCondition sc = new SearchCondition(1, 10, "title", "title1", 0);
+        List<QaDto> selected = dao.selectBySearchCondition("user1", sc);
+        assertTrue(1 == selected.size());
+
+
+    }
+
+    // 기간 대상으로 검색
+    @DisplayName("기간으로 글 검색")
+    @Test
+    public void 기간_검색() {
+        for (int i=0; i<10; i++) {
+            QaDto dto = new QaDto();
+            dto.setUser_id("user1");
+            dto.setQa_cate_num("qa_cate_num1");
+            dto.setTitle("title" + i);
+            dto.setContent("content" + i);
+            dto.setCreated_at("2021-01-01");
+            dto.setEmail("email1");
+            dto.setTele_num("010-1234-5678");
+            dto.setPhon_num("010-1234-5678");
+            dto.setImg1("img1");
+            dto.setImg2("img2");
+            dto.setImg3("img3");
+
+            assertTrue(1 == dao.insert(dto));
+        }
+
+        SearchCondition sc = new SearchCondition(1, 10, "period", "", 3);
+        List<QaDto> selected = dao.selectBySearchCondition("user1", sc);
+        assertTrue(10 == selected.size());
+
+
+    }
 
 }

@@ -1,19 +1,12 @@
 package com.fastcampus.ch4.dao.qa;
 
-
-import static com.fastcampus.ch4.code.error.qa.QaErrorCode.*;
-
-import com.fastcampus.ch4.dto.qa.PageHandler;
 import com.fastcampus.ch4.dto.qa.QaDto;
-import com.fastcampus.ch4.exeption.qa.QaDuplicatedKeyException;
-import com.fastcampus.ch4.exeption.qa.QaInvalidValueException;
-import com.fastcampus.ch4.exeption.qa.QaNoRequiredValueException;
+import com.fastcampus.ch4.dto.qa.SearchCondition;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.dao.UncategorizedDataAccessException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -30,6 +23,10 @@ public class QaDaoImp implements QaDao {
         return session.selectOne(namespace + "count", user_id);
     }
 
+    public QaDto select(int qa_num) {
+        return session.selectOne(namespace + "select", qa_num);
+    }
+
     // 사용자 문의 등록시 발생하는 예외 세분화해서 재정의 반환
     @Override
     public int insert(QaDto dto) {
@@ -41,9 +38,33 @@ public class QaDaoImp implements QaDao {
         return session.selectList(namespace + "selectByUserId", user_id);
     }
 
+    public List<QaDto> selectByUserIdAndPh(String user_id, SearchCondition sc) {
+        Map map = new HashMap();
+
+        map.put("user_id", user_id);
+        map.put("offSet", (sc.getPage() - 1) * sc.getPageSize());
+        map.put("pageSize", sc.getPageSize());
+
+        return session.selectList(namespace + "selectByUserIdAndPh", map);
+    }
+
     @Override
     public QaDto selectForUpdate(QaDto dto) {
         return session.selectOne(namespace + "selectForUpdate", dto);
+    }
+
+
+    public List<QaDto> selectBySearchCondition(String user_id, SearchCondition sc) {
+        Map map = new HashMap();
+
+        map.put("user_id", user_id);
+        map.put("option", sc.getOption());
+        map.put("titleKeyword", sc.getTitleKeyword());
+        map.put("period", sc.getPeriod());
+        map.put("offSet", (sc.getPage() - 1) * sc.getPageSize());
+        map.put("pageSize", sc.getPageSize());
+
+        return session.selectList(namespace + "selectBySearchCondition", map);
     }
 
     @Override

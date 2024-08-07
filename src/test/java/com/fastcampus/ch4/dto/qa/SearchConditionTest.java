@@ -14,12 +14,14 @@ public class SearchConditionTest {
 
     private SearchCondition sc;
 
-    @Before
-    public void 초기화() {
-    }
+
 
     @Test
-    public void 안녕() {
-        System.out.println("안녕");
+    public void test1() {
+        SearchCondition sc = new SearchCondition(1, 10, "title", "안녕", 3);
+        // ?page=1&pageSize=10&option=title&titleKeword=안녕&period=3
+        assertTrue("?page=1&pageSize=10&option=title&titleKeyword=안녕&period=3".equals(sc.getQuery()));
+        System.out.println("sc.getQuery() = " + sc.getQuery());
     }
+
 }

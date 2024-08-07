@@ -2,7 +2,7 @@ package com.fastcampus.ch4.dto.qa;
 
 public class QaDto {
 
-    private String qa_num;
+    private int qa_num;
     private String user_id;
     private String qa_cate_num;
     private String admin;
@@ -19,11 +19,11 @@ public class QaDto {
     private String img3;
     private String comt;
 
-    public String getQa_num() {
+    public int getQa_num() {
         return qa_num;
     }
 
-    public void setQa_num(String qa_num) {
+    public void setQa_num(int qa_num) {
         this.qa_num = qa_num;
     }
 

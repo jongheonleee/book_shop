@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fastcampus.ch4.QaMapper">
+  <select id="count" parameterType="string" resultType="int">
+    select count(*)
+    from qa
+    where user_id = #{user_id};
+  </select>
+
+  <select id="selectByUserId" parameterType="string" resultType="QaDto">
+    select
+      user_id, qa_cate_num, title, content,
+      created_at, email, tele_num, phon_num, img1,
+      img2, img3
+    from qa
+    where user_id = #{user_id};
+  </select>
+
+  <select id="selectForUpdate" parameterType="QaDto" resultType="QaDto">
+    select
+      qa_num, user_id, qa_cate_num, title, content,
+      created_at, email, tele_num, phon_num, img1,
+      img2, img3
+    from qa
+    where user_id = #{user_id} and qa_num = #{qa_num}
+    for update;
+  </select>
+
+  <insert id="insert" parameterType="QaDto">
+    insert into qa
+        (qa_num, user_id, qa_cate_num, title, content,
+        created_at, email, tele_num, phon_num, img1,
+        img2, img3)
+    values
+        (#{qa_num}, #{user_id}, #{qa_cate_num}, #{title}, #{content},
+        now(), #{email}, #{tele_num}, #{phon_num}, #{img1},
+        #{img2}, #{img3});
+  </insert>
+
+  <update id="update" parameterType="QaDto">
+    update qa
+    set title = #{title}, content = #{content}, email = #{email},
+        tele_num = #{tele_num}, phon_num = #{phon_num}, img1 = #{img1},
+        img2 = #{img2}, img3 = #{img3}
+    where user_id = #{user_id}  and qa_num = #{qa_num};
+  </update>
+
+  <delete id="delete" parameterType="QaDto">
+    delete
+    from qa
+    where user_id = #{user_id}
+    and qa_num = #{qa_num};
+  </delete>
+
+  <delete id="deleteAll">
+    delete
+    from qa;
+  </delete>
+
+</mapper>

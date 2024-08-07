@@ -13,5 +13,7 @@
     <!-- order  -->
 
     <!-- qa  -->
+    <typeAlias alias="QaDto" type="com.fastcampus.ch4.dto.qa.QaDto"/>
+
   </typeAliases>
 </configuration>

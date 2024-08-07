@@ -2,12 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fastcampus.ch4.dao.OrderMapper">
-    <!--
-    insert 시 pk 들고오는 방법
-    1. autoincrement 지원 DBMS 이고 pk 가 autoincrement 일 때 : useGeneratedKeys, keyProperty
-    2. autoincrement 미지원 DBMS 이거나 pk 가 autoincrement 가 아닐 때 : selectKey
-    -->
-    <insert id="createOrder" parameterType="OrderDto" useGeneratedKeys="true" keyProperty="ordSeq">
+    <insert id="creaetOrder" parameterType="OrderDto">
         INSERT INTO
             order_table
         (
@@ -29,7 +24,7 @@
             #{deliveryFee},
             #{totalProdPric},
             #{totalBenePric},
-            #{totalOrdPric},
+            #{totalOrd},
             now(),
             #{regId},
             now(),

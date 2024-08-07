@@ -4,51 +4,34 @@ import java.util.Date;
 
 public class OrderDto {
     // pk
-    int ordSeq; // 주문 번호
+    // auto increment
+    private Integer ordSeq; // 주문 번호
 
     // fk
-    String id; // 유저 id
+    private String id; // 유저 id
 
     // 속성
-    Date createdAt; // 주문 생성 일자
-    int deliveryFee = 0; // 배송비
-    int totalProdPric = 0; // 총 상품 금액
-    int totalBenePric = 0; // 총 할인 금액
-    int totalOrdPric = 0; // 총 주문 금액
+    private Date createdAt; // 주문 생성 일자
+    private Integer deliveryFee = 0; // 배송비
+    private Integer totalProdPric = 0; // 총 상품 금액
+    private Integer totalBenePric = 0; // 총 할인 금액
+    private Integer totalOrdPric = 0; // 총 주문 금액
 
     // 시스템 컬럼
-    Date  regDate; // 최초 등록 일시
-    String regId; // 최초 등록 id
-    Date  upDate; // 최근 수정 일시
-    String upId; // 최근 수정 id
+    private Date  regDate; // 최초 등록 일시
+    private String regId; // 최초 등록 id
+    private Date  upDate; // 최근 수정 일시
+    private String upId; // 최근 수정 id
 
-    public OrderDto(int ordSeq, String id) {
-        this.ordSeq = ordSeq;
+    public OrderDto(String id) {
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "OrderDto{" +
-                "ordNum='" + ordSeq + '\'' +
-                ", id='" + id + '\'' +
-                ", createdAt=" + createdAt +
-                ", deliveryFee=" + deliveryFee +
-                ", totalProductPrice=" + totalProdPric +
-                ", totalBenefitPrice=" + totalBenePric +
-                ", totalOrderPrice=" + totalOrdPric +
-                ", regDate=" + regDate +
-                ", regId='" + regId + '\'' +
-                ", upDate=" + upDate +
-                ", upId='" + upId + '\'' +
-                '}';
-    }
-
-    public int getOrdSeq() {
+    public Integer getOrdSeq() {
         return ordSeq;
     }
 
-    public void setOrdSeq(int ordSeq) {
+    public void setOrdSeq(Integer ordSeq) {
         this.ordSeq = ordSeq;
     }
 
@@ -68,35 +51,35 @@ public class OrderDto {
         this.createdAt = createdAt;
     }
 
-    public int getDeliveryFee() {
+    public Integer getDeliveryFee() {
         return deliveryFee;
     }
 
-    public void setDeliveryFee(int deliveryFee) {
+    public void setDeliveryFee(Integer deliveryFee) {
         this.deliveryFee = deliveryFee;
     }
 
-    public int getTotalProdPric() {
+    public Integer getTotalProdPric() {
         return totalProdPric;
     }
 
-    public void setTotalProdPric(int totalProdPric) {
+    public void setTotalProdPric(Integer totalProdPric) {
         this.totalProdPric = totalProdPric;
     }
 
-    public int getTotalBenePric() {
+    public Integer getTotalBenePric() {
         return totalBenePric;
     }
 
-    public void setTotalBenePric(int totalBenePric) {
+    public void setTotalBenePric(Integer totalBenePric) {
         this.totalBenePric = totalBenePric;
     }
 
-    public int getTotalOrdPric() {
+    public Integer getTotalOrdPric() {
         return totalOrdPric;
     }
 
-    public void setTotalOrdPric(int totalOrdPric) {
+    public void setTotalOrdPric(Integer totalOrdPric) {
         this.totalOrdPric = totalOrdPric;
     }
 

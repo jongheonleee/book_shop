@@ -11,7 +11,8 @@
     <!-- member  -->
 
     <!-- order  -->
-
+    <typeAlias alias="OrderDto" type="com.fastcampus.ch4.dto.order.OrderDto"/>
+    <typeAlias alias="OrderProductDto" type="com.fastcampus.ch4.dto.order.OrderProductDto"/>
     <!-- qa  -->
   </typeAliases>
 </configuration>

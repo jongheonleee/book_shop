@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class OrderDto {
     // pk
-    String ordNum; // 주문 번호
+    int ordSeq; // 주문 번호
 
     // fk
     String id; // 유저 id
@@ -13,8 +13,8 @@ public class OrderDto {
     Date createdAt; // 주문 생성 일자
     int deliveryFee = 0; // 배송비
     int totalProdPric = 0; // 총 상품 금액
-    int totalBenefitPric = 0; // 총 할인 금액
-    int totalOrderPric = 0; // 총 주문 금액
+    int totalBenePric = 0; // 총 할인 금액
+    int totalOrdPric = 0; // 총 주문 금액
 
     // 시스템 컬럼
     Date  regDate; // 최초 등록 일시
@@ -22,21 +22,21 @@ public class OrderDto {
     Date  upDate; // 최근 수정 일시
     String upId; // 최근 수정 id
 
-    public OrderDto(String ordNum, String id) {
-        this.ordNum = ordNum;
+    public OrderDto(int ordSeq, String id) {
+        this.ordSeq = ordSeq;
         this.id = id;
     }
 
     @Override
     public String toString() {
         return "OrderDto{" +
-                "ordNum='" + ordNum + '\'' +
+                "ordNum='" + ordSeq + '\'' +
                 ", id='" + id + '\'' +
                 ", createdAt=" + createdAt +
                 ", deliveryFee=" + deliveryFee +
                 ", totalProductPrice=" + totalProdPric +
-                ", totalBenefitPrice=" + totalBenefitPric +
-                ", totalOrderPrice=" + totalOrderPric +
+                ", totalBenefitPrice=" + totalBenePric +
+                ", totalOrderPrice=" + totalOrdPric +
                 ", regDate=" + regDate +
                 ", regId='" + regId + '\'' +
                 ", upDate=" + upDate +
@@ -44,12 +44,12 @@ public class OrderDto {
                 '}';
     }
 
-    public String getOrdNum() {
-        return ordNum;
+    public int getOrdSeq() {
+        return ordSeq;
     }
 
-    public void setOrdNum(String ordNum) {
-        this.ordNum = ordNum;
+    public void setOrdSeq(int ordSeq) {
+        this.ordSeq = ordSeq;
     }
 
     public String getId() {
@@ -84,20 +84,20 @@ public class OrderDto {
         this.totalProdPric = totalProdPric;
     }
 
-    public int getTotalBenefitPric() {
-        return totalBenefitPric;
+    public int getTotalBenePric() {
+        return totalBenePric;
     }
 
-    public void setTotalBenefitPric(int totalBenefitPric) {
-        this.totalBenefitPric = totalBenefitPric;
+    public void setTotalBenePric(int totalBenePric) {
+        this.totalBenePric = totalBenePric;
     }
 
-    public int getTotalOrderPric() {
-        return totalOrderPric;
+    public int getTotalOrdPric() {
+        return totalOrdPric;
     }
 
-    public void setTotalOrderPric(int totalOrderPric) {
-        this.totalOrderPric = totalOrderPric;
+    public void setTotalOrdPric(int totalOrdPric) {
+        this.totalOrdPric = totalOrdPric;
     }
 
     public Date getRegDate() {

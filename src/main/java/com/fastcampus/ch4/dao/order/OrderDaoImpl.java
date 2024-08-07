@@ -15,7 +15,7 @@ public class OrderDaoImpl implements OrderDao {
     String namespace = "com.fastcampus.ch4.dao.OrderMapper.";
 
     @Override
-    public int createOrder(OrderDto orderDto) {
+    public Integer createOrderAndReturnId(OrderDto orderDto) {
         /**
          * order 생성 시 필수 데이터
          * 1. id : 사용자 id
@@ -33,7 +33,12 @@ public class OrderDaoImpl implements OrderDao {
         orderDto.setRegId(orderDto.getId());
         orderDto.setUpId(orderDto.getId());
 
-        return sqlSession.insert(namespace + "createOrder", orderDto);
+        try {
+            sqlSession.insert(namespace + "createOrder", orderDto);
+            return orderDto.getOrdSeq();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

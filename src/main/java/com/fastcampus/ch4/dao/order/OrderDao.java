@@ -11,6 +11,6 @@ public interface OrderDao {
      * 2. 주문 조회하기
      */
 
-    public int createOrder(OrderDto orderDto);
+    public Integer createOrderAndReturnId(OrderDto orderDto);
     public List<OrderDto> searchOrder();
 }

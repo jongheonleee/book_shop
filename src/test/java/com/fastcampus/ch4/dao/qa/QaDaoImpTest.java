@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.fastcampus.ch4.dto.qa.QaDto;
+
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,13 +28,13 @@ public class QaDaoImpTest {
 
 
     @Before
-    public void 초기화() throws Exception {
+    public void 초기화() {
         assertTrue(dao != null);
         dao.deleteAll();
     }
 
     /**
-     * 1차 기능 구현
+     * 1차 기능 구현[✅]
      * - (1) 유저의 문의글 카운팅
      * - (2) 유저의 문의글 리스트 조회
      * - (3) 유저의 문의글 등록
@@ -59,6 +61,7 @@ public class QaDaoImpTest {
      * - 회원의 경우, 필수값 null인 경우 예외 발생 (제약 조건 위배 : DataIntegrityViolationException)
      * - 회원의 경우, 공백 문의글은 예외 발생
      * - 회원의 경우, 공백 제목인 경우 예외 발생
+     * - 중복된 키값 등록시 예외 발생
      *
      * - (4) 유저의 문의글 수정 [✅]
      *  - 비회원의 경우, 수정 실패
@@ -72,8 +75,13 @@ public class QaDaoImpTest {
      * - 회원이지만, 해당 회원의 문의 글이 아닌 경우 삭제 실패
      * - 회원의 경우, 삭제 성공
      *
+     *
+     * 2차 기능 구현[]
+     * - (1) 페이징 처리로 글 조회
+     * - (2) 글 검색 - 기간, 제목 대상으로 글 검색
      */
 
+    // 1차 기능 구현 테스트
     // (1) 기능 테스트
     @Test
     @DisplayName("비회원 유저 문의글 카운팅 0")
@@ -221,7 +229,8 @@ public class QaDaoImpTest {
         dto.setImg2("img2");
         dto.setImg3("img3");
 
-        // 제약 조건 위배 -> DataIntegrityViolationException 발생
+        // 💥 제약 조건 위배 -> DataIntegrityViolationException 발생
+        // 필수값 넣지 않아서 발생하는 예외
         assertThrows(DataIntegrityViolationException.class, () -> dao.insert(dto));
 
     }
@@ -270,6 +279,8 @@ public class QaDaoImpTest {
         dto.setImg2("img2");
         dto.setImg3("img3");
 
+        // 💥 제약 조건 위배 -> DataIntegrityViolationException 발생
+        // 필수값 넣지 않아서 발생하는 예외
         assertThrows(DataIntegrityViolationException.class, () -> dao.insert(dto));
 
     }
@@ -293,6 +304,8 @@ public class QaDaoImpTest {
         dto.setImg2("img2");
         dto.setImg3("img3");
 
+        // 💥 제약 조건 위배 -> DataIntegrityViolationException 발생
+        // 필수값 작성하지 않아서 발생하는 예외
         assertThrows(DataIntegrityViolationException.class, () -> dao.insert(dto));
 
     }
@@ -315,7 +328,8 @@ public class QaDaoImpTest {
         dto.setImg3("img3");
 
         // 스프링 예외, UncategorizedSQLException -> 예외에 대해서 명확히 파악 못한 경우 발생
-        // 사용자 예외 재정의
+        // 💥
+        // 유효한 값 넣지 않아서 발생하는 예외
         assertThrows(UncategorizedSQLException.class, () -> dao.insert(dto));
 
     }
@@ -339,7 +353,33 @@ public class QaDaoImpTest {
 
         // 스프링 예외, UncategorizedSQLException -> 예외에 대해서 명확히 파악 못한 경우 발생
         // 사용자 예외 재정의
+        // 💥 유효한 값 넣지 않아서 발생하는 예외
         assertThrows(UncategorizedSQLException.class, () -> dao.insert(dto));
+
+    }
+
+    @Test
+    @DisplayName("중복된 키 값 등록시 예외 발생")
+    public void 중복된_키_등록_예외() {
+        // given
+        QaDto dto = new QaDto();
+        dto.setQa_num("qa_num1");
+        dto.setUser_id("user1");
+        dto.setQa_cate_num("qa_cate_num1");
+        dto.setTitle("title1");
+        dto.setContent("content1");
+        dto.setCreated_at("2021-01-01");
+        dto.setEmail("email1");
+        dto.setTele_num("010-1234-5678");
+        dto.setPhon_num("010-1234-5678");
+        dto.setImg1("img1");
+        dto.setImg2("img2");
+        dto.setImg3("img3");
+
+
+        // when
+        dao.insert(dto);
+        assertThrows(DuplicateKeyException.class, () -> dao.insert(dto));
 
     }
 
@@ -602,5 +642,11 @@ public class QaDaoImpTest {
         // then
         assertTrue(expected == rowCnt);
     }
+
+    // 2차 기능 구현
+
+    // (1) 페이징 처리로 글 조회
+
+    // (2) 글 검색 - 기간, 제목 대상으로 글 검색
 
 }

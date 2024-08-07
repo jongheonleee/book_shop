@@ -23,6 +23,7 @@ public class QaDaoImp implements QaDao {
         return session.selectOne(namespace + "count", user_id);
     }
 
+    @Override
     public QaDto select(int qa_num) {
         return session.selectOne(namespace + "select", qa_num);
     }
@@ -38,6 +39,7 @@ public class QaDaoImp implements QaDao {
         return session.selectList(namespace + "selectByUserId", user_id);
     }
 
+    @Override
     public List<QaDto> selectByUserIdAndPh(String user_id, SearchCondition sc) {
         Map map = new HashMap();
 
@@ -54,6 +56,7 @@ public class QaDaoImp implements QaDao {
     }
 
 
+    @Override
     public List<QaDto> selectBySearchCondition(String user_id, SearchCondition sc) {
         Map map = new HashMap();
 

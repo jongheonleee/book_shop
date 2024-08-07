@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class QaServiceImp {
+public class QaServiceImp implements QaService {
 
     private final QaDao dao;
     // private final AnswerDao answerDao;
@@ -19,7 +19,8 @@ public class QaServiceImp {
         this.dao = dao;
     }
 
-    /** 기능 요구 사항 정리
+    /** 1차 기능 요구 사항 정리
+     * - (0) 카운팅
      * - (1) 특정 글 상세 조회
      * - (2) 글 목록 조회 - 페이징 처리, 페이징 처리 및 특정 상태
      * - (3) 글 검색 - 기간, 제목 대상으로 글 조회
@@ -28,29 +29,40 @@ public class QaServiceImp {
      * - (6) 글 수정
      */
 
+    // (0) 카운팅
+    @Override
+    public int count(String userId) {
+        return dao.count(userId);
+    }
+
     // (1) ⚙️ 특정 글 상세 조회(시퀀스라 테스트 하기 어려움)
+    @Override
     public QaDto readDetail(int qaNum) {
         // ⚙️ 추후에 관련 답글 긁어 오는 거 처리하기
         return dao.select(qaNum);
     }
 
     // (2) 글 목록 조회 - 페이징 처리, 페이징 처리 및 특정 상태
+    @Override
     public List<QaDto> read(String userId) {
         return dao.selectByUserId(userId);
     }
 
+    @Override
     public List<QaDto> read(String userId, SearchCondition sc) {
         return dao.selectByUserIdAndPh(userId, sc);
     }
 
     // (3) 글 검색 - 기간, 제목 대상으로 글 조회
+    @Override
     public List<QaDto> readBySearchCondition(String userId, SearchCondition sc) {
         return dao.selectBySearchCondition(userId, sc);
     }
 
     // (4) 글 작성 - 같은 제목 작성 방지
+    @Override
     public boolean write(String userId, SearchCondition sc, QaDto dto) {
-        // 기존의 작성한 문의글 조회
+        // 기존의 작성한 문의글 조회 - select for update 사용하기 💥
         List<QaDto> selected = dao.selectBySearchCondition(userId, sc);
         // 현재 작성한 문의글과 중복되는 제목이 있는지 확인
         boolean isDuplicated = selected
@@ -61,14 +73,16 @@ public class QaServiceImp {
     }
 
     // (5) 글 삭제 - 글 번호로 삭제, 글 제목으로 삭제
+    @Override
     public boolean remove(QaDto dto) {
         return dao.delete(dto) == 1;
     }
 
 
     // (6) 글 수정
+    @Override
     public boolean modify(String userId, SearchCondition sc, QaDto dto) {
-        // 기존의 작성한 문의글 조회
+        // 기존의 작성한 문의글 조회 - select for update 사용하기 💥
         List<QaDto> selected = dao.selectBySearchCondition(userId, sc);
         // 현재 수정한 문의글과 문의글 번호는 다르지만 중복되는 제목이 있는지 확인
         boolean isDuplicated = selected

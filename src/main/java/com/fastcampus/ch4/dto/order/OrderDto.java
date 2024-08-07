@@ -11,10 +11,10 @@ public class OrderDto {
 
     // 속성
     Date createdAt; // 주문 생성 일자
-    int deliveryFee; // 배송비
-    int totalProductPrice; // 총 상품 금액
-    int totalBenefitPrice; // 총 할인 금액
-    int totalOrderPrice; // 총 주문 금액
+    int deliveryFee = 0; // 배송비
+    int totalProdPric = 0; // 총 상품 금액
+    int totalBenefitPrice = 0; // 총 할인 금액
+    int totalOrderPrice = 0; // 총 주문 금액
 
     // 시스템 컬럼
     Date  regDate; // 최초 등록 일시
@@ -34,7 +34,7 @@ public class OrderDto {
                 ", id='" + id + '\'' +
                 ", createdAt=" + createdAt +
                 ", deliveryFee=" + deliveryFee +
-                ", totalProductPrice=" + totalProductPrice +
+                ", totalProductPrice=" + totalProdPric +
                 ", totalBenefitPrice=" + totalBenefitPrice +
                 ", totalOrderPrice=" + totalOrderPrice +
                 ", regDate=" + regDate +
@@ -76,12 +76,12 @@ public class OrderDto {
         this.deliveryFee = deliveryFee;
     }
 
-    public int getTotalProductPrice() {
-        return totalProductPrice;
+    public int getTotalProdPric() {
+        return totalProdPric;
     }
 
-    public void setTotalProductPrice(int totalProductPrice) {
-        this.totalProductPrice = totalProductPrice;
+    public void setTotalProdPric(int totalProdPric) {
+        this.totalProdPric = totalProdPric;
     }
 
     public int getTotalBenefitPrice() {

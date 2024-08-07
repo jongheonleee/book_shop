@@ -18,7 +18,8 @@ public class PageHandlerTest {
     @Test
     public void 테스트1() {
         ph = new PageHandler(1, 100);
-        assertTrue(ph.getQuery().equals("?page=1&pageSize=10"));
+        System.out.println("ph.getQuery() = " + ph.getQuery());
+        assertTrue(ph.getQuery().equals("?page=1&pageSize=10&option&titleKeyword&period=0"));
 
         System.out.println(ph);
         // 1 2 ... 10
@@ -28,9 +29,9 @@ public class PageHandlerTest {
     @Test
     public void 테스트2() {
         ph = new PageHandler(12, 1000);
-        assertTrue(ph.getQuery().equals("?page=12&pageSize=10"));
+        System.out.println("ph.getQuery() = " + ph.getQuery());
+        assertTrue(ph.getQuery().equals("?page=12&pageSize=10&option&titleKeyword&period=0"));
 
-        System.out.println(ph);
         // < 11 12 ... 20 >
         ph.show();
 
@@ -39,7 +40,7 @@ public class PageHandlerTest {
     @Test
     public void 테스트3() {
         ph = new PageHandler(16, 256);
-        assertTrue(ph.getQuery().equals("?page=16&pageSize=10"));
+        assertTrue(ph.getQuery().equals("?page=16&pageSize=10&option&titleKeyword&period=0"));
         System.out.println(ph.getQuery());
 
         System.out.println(ph);
@@ -50,7 +51,7 @@ public class PageHandlerTest {
     @Test
     public void 테스트4() {
         ph = new PageHandler(3, 90);
-        assertTrue(ph.getQuery().equals("?page=3&pageSize=10"));
+        assertTrue(ph.getQuery().equals("?page=3&pageSize=10&option&titleKeyword&period=0"));
         System.out.println(ph.getQuery());
 
         System.out.println(ph);
@@ -61,7 +62,7 @@ public class PageHandlerTest {
     @Test
     public void 테스트5() {
         ph = new PageHandler(24, 500);
-        assertTrue(ph.getQuery().equals("?page=24&pageSize=10"));
+        assertTrue(ph.getQuery().equals("?page=24&pageSize=10&option&titleKeyword&period=0"));
         System.out.println(ph.getQuery());
 
         System.out.println(ph);

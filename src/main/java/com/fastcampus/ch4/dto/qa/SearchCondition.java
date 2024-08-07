@@ -13,6 +13,11 @@ public class SearchCondition {
     public SearchCondition() {
     }
 
+    public SearchCondition(int page, int pageSize) {
+        this.page = page;
+        this.pageSize = pageSize;
+    }
+
     public SearchCondition(int page, int pageSize, String option, String titleKeyword, int period) {
         this.page = page;
         this.pageSize = pageSize;

@@ -1,10 +1,11 @@
 package com.fastcampus.ch4.dto.qa;
 
-public class PageHandler {
-    private final int pageSize  = 10;
+import org.springframework.web.util.UriComponentsBuilder;
 
+public class PageHandler {
+
+    private SearchCondition sc;
     private int totalCnt;
-    private int page;
     private int totalPage;
     private int beginPage;
     private int endPage;
@@ -12,23 +13,25 @@ public class PageHandler {
     private boolean next;
 
     public PageHandler(int page, int totalCnt) {
-        this.page = page;
+        this(totalCnt, new SearchCondition(page, 10));
+    }
+
+
+    public PageHandler(int totalCnt, SearchCondition sc) {
         this.totalCnt = totalCnt;
+        this.sc = sc;
         calculate();
     }
 
     private void calculate() {
-        totalPage = (totalCnt / pageSize) + (totalCnt % pageSize == 0 ? 0 : 1);
-        beginPage = ((page-1) / pageSize) * pageSize + 1;
-        endPage = (beginPage - 1) + pageSize;
+        totalPage = (totalCnt / sc.getPageSize()) + (totalCnt % sc.getPageSize() == 0 ? 0 : 1);
+        beginPage = ((sc.getPage()-1) / sc.getPageSize()) * sc.getPageSize() + 1;
+        endPage = (beginPage - 1) + sc.getPageSize();
         endPage = endPage > totalPage ? totalPage : endPage;
-        prev = beginPage == page ? false : true;
+        prev = beginPage == sc.getPage() ? false : true;
         next = endPage == totalPage ? false : true;
     }
 
-    public int getPageSize() {
-        return pageSize;
-    }
 
     public int getTotalCnt() {
         return totalCnt;
@@ -36,14 +39,6 @@ public class PageHandler {
 
     public void setTotalCnt(int totalCnt) {
         this.totalCnt = totalCnt;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
     }
 
     public int getTotalPage() {
@@ -86,8 +81,31 @@ public class PageHandler {
         this.next = next;
     }
 
+    public int getPage() {
+        return sc.getPage();
+    }
+
+    public int getPageSize() {
+        return sc.getPageSize();
+    }
+
+    public SearchCondition getSc() {
+        return sc;
+    }
+
+    public void setSc(SearchCondition sc) {
+        this.sc = sc;
+    }
+
     public String getQuery() {
-        return "?page=" + page + "&pageSize=" + pageSize;
+        return UriComponentsBuilder.newInstance()
+                .queryParam("page", sc.getPage())
+                .queryParam("pageSize", sc.getPageSize())
+                .queryParam("option", sc.getOption())
+                .queryParam("titleKeyword", sc.getTitleKeyword())
+                .queryParam("period", sc.getPeriod())
+                .build()
+                .toString();
     }
 
     public void show() {
@@ -110,9 +128,8 @@ public class PageHandler {
     @Override
     public String toString() {
         return "PageHandler{" +
-                "pageSize=" + pageSize +
+                "sc=" + sc +
                 ", totalCnt=" + totalCnt +
-                ", page=" + page +
                 ", totalPage=" + totalPage +
                 ", beginPage=" + beginPage +
                 ", endPage=" + endPage +

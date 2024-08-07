@@ -2,7 +2,7 @@ package com.fastcampus.ch4.dto.order;
 
 import java.util.Date;
 
-public class OrderProduct {
+public class OrderProductDto {
     // PK
     String ordProdNum; // 주문 상품 번호
 
@@ -26,7 +26,7 @@ public class OrderProduct {
     Date  upDate; // 최근 수정 일시
     String upId; // 최근 수정 id
 
-    public OrderProduct(String ordNum, String isbn, String prodTypeCode) {
+    public OrderProductDto(String ordNum, String isbn, String prodTypeCode) {
         this.ordNum = ordNum;
         this.isbn = isbn;
         this.prodTypeCode = prodTypeCode;

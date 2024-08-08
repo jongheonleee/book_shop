@@ -79,7 +79,7 @@
             ord_seq = #{ord_seq}
     </update>
 
-    <select id="orderCount" resultType="int">
+    <select id="countAllOrder" resultType="int">
         SELECT
             count(*)
         FROM

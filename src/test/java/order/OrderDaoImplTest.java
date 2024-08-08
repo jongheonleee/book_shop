@@ -318,8 +318,8 @@ public class OrderDaoImplTest {
         assertTrue(orderDao.updateOrderById(selectedOrderDto, updatingId) != SUCCESS_CODE);
 
         // 6
-
-
     }
+
+
 
 }

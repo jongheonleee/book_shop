@@ -156,7 +156,7 @@ public class OrderDaoImplTest {
         assertTrue(ORDER_DONE.isSameStatus(selectedOrderStatus));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void 주문조회_실패테스트_주문일련번호없음() {
         /**
          * === give ===

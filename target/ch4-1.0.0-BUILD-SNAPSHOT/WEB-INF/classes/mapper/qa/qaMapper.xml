@@ -2,6 +2,105 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.fastcampus.ch4.qa.QaMapper">
+<mapper namespace="com.fastcampus.ch4.QaMapper">
+  <select id="count" parameterType="string" resultType="int">
+    SELECT COUNT(*)
+    FROM qa
+    WHERE user_id = #{user_id};
+  </select>
+
+  <select id="select" parameterType="int" resultType="QaDto">
+    SELECT
+      qa_num, user_id, qa_cate_num, title, content,
+      created_at, email, tele_num, phon_num, img1,
+      img2, img3
+    FROM qa
+    WHERE qa_num = #{qa_num};
+  </select>
+
+  <select id="selectByUserId" parameterType="string" resultType="QaDto">
+    SELECT
+      qa_num, user_id, qa_cate_num, title, content,
+      created_at, email, tele_num, phon_num, img1,
+      img2, img3
+    FROM qa
+    WHERE user_id = #{user_id};
+  </select>
+
+  <select id="selectForUpdate" parameterType="QaDto" resultType="QaDto">
+    SELECT
+      qa_num, user_id, qa_cate_num, title, content,
+      created_at, email, tele_num, phon_num, img1,
+      img2, img3
+    FROM qa
+    WHERE user_id = #{user_id} and qa_num = #{qa_num}
+    FOR UPDATE;
+  </select>
+
+  <select id="selectByUserIdAndPh" parameterType="map" resultType="QaDto">
+    SELECT
+      qa_num, user_id, qa_cate_num, title, content,
+      created_at, email, tele_num, phon_num, img1,
+      img2, img3
+    FROM qa
+    WHERE user_id = #{user_id}
+    LIMIT #{offSet}, #{pageSize};
+  </select>
+
+  <select id="selectBySearchCondition" parameterType="map" resultType="QaDto">
+    SELECT
+      qa_num, user_id, qa_cate_num, title, content,
+      created_at, email, tele_num, phon_num, img1,
+      img2, img3
+    FROM qa
+    WHERE TRUE
+    <choose>
+      <when test='option=="title"'>
+        AND user_id = #{user_id}
+        AND title LIKE CONCAT('%', #{titleKeyword}, '%')
+      </when>
+      <when test='option=="period"'>
+        AND user_id = #{user_id}
+        AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL #{period} MONTH) AND now()
+      </when>
+      <otherwise>
+        AND user_id = #{user_id}
+        AND title LIKE CONCAT('%', #{title}, '%')
+        AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL #{period} MONTH) AND now()
+      </otherwise>
+    </choose>
+    LIMIT #{offSet}, #{pageSize};
+  </select>
+
+  <insert id="insert" parameterType="QaDto">
+    INSERT INTO qa
+        (qa_num, user_id, qa_cate_num, title, content,
+        created_at, email, tele_num, phon_num, img1,
+        img2, img3)
+    VALUES
+        (#{qa_num}, #{user_id}, #{qa_cate_num}, #{title}, #{content},
+        now(), #{email}, #{tele_num}, #{phon_num}, #{img1},
+        #{img2}, #{img3});
+  </insert>
+
+  <update id="update" parameterType="QaDto">
+    UPDATE qa
+    SET title = #{title}, content = #{content}, email = #{email},
+        tele_num = #{tele_num}, phon_num = #{phon_num}, img1 = #{img1},
+        img2 = #{img2}, img3 = #{img3}
+    WHERE user_id = #{user_id} AND qa_num = #{qa_num};
+  </update>
+
+  <delete id="delete" parameterType="QaDto">
+    DELETE
+    FROM qa
+    WHERE user_id = #{user_id}
+    AND qa_num = #{qa_num};
+  </delete>
+
+  <delete id="deleteAll">
+    DELETE
+    FROM qa;
+  </delete>
 
 </mapper>

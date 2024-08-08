@@ -56,10 +56,19 @@ public class QaController {
      *  - (8) 유저 문의글 수정
      **/
 
-    // (1) 유저 관련 문의글 카운팅
-    private int count(String userId) {
-        return service.count(userId);
+    // 예외 처리(런타임) -> DuplicateKeyException, UncategorizedSQLException, DataIntegrityViolationException
+    @ExceptionHandler({DataIntegrityViolationException.class, DataIntegrityViolationException.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleInvalidInput() {
+        return ResponseEntity.status(INVALID_VALUE_INPUT.getHttpStatus()).body(INVALID_VALUE_INPUT.getMessage());
     }
+
+    @ExceptionHandler(DuplicateKeyException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    public ResponseEntity<String> handleConflict() {
+        return ResponseEntity.status(DUPLICATED_KEY.getHttpStatus()).body(DUPLICATED_KEY.getMessage());
+    }
+
 
     // (2) 유저 관련 문의글 조회
     @GetMapping("/qa/list")
@@ -69,7 +78,8 @@ public class QaController {
 
         // 필요 정보 조회 - 1. 유저 문의글, 2. 유저 문의글 수, 3. 페이징
         HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("userId");
+//        String userId = (String) session.getAttribute("userId");
+        String userId = "user1";
         List<QaDto> selected = service.read(userId, sc);
         int totalCnt = count(userId);
         PageHandler ph = new PageHandler(totalCnt, sc);
@@ -91,7 +101,8 @@ public class QaController {
 
         // 필요 정보 조회 - 1. 검색 문의글, 2. 검색 문의글 수, 3. 페이징
         HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("userId");
+//        String userId = (String) session.getAttribute("userId");
+        String userId = "user1";
         List<QaDto> selected = service.readBySearchCondition(userId, sc);
         int totalCnt = selected.size();
         PageHandler ph = new PageHandler(totalCnt, sc);
@@ -169,7 +180,7 @@ public class QaController {
     }
 
     // (8) 유저 문의글 수정
-    @PatchMapping("/qa/{qaNum}")
+    @PostMapping("/qa/{qaNum}")
     public String updateQa(HttpServletRequest request, @RequestParam int qaNum, @RequestBody QaDto dto,SearchCondition sc, Model model) {
         // 로그인 여부 확인, 로그인 x -> 로그인 폼으로 이동
         if (!isLogin(request)) return "redirect:/loginForm";
@@ -187,19 +198,6 @@ public class QaController {
         return "/qa/list";
     }
 
-    // 예외 처리(런타임) -> DuplicateKeyException, UncategorizedSQLException, DataIntegrityViolationException
-    @ExceptionHandler({DataIntegrityViolationException.class, DataIntegrityViolationException.class})
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleInvalidInput() {
-        return ResponseEntity.status(INVALID_VALUE_INPUT.getHttpStatus()).body(INVALID_VALUE_INPUT.getMessage());
-    }
-
-    @ExceptionHandler(DuplicateKeyException.class)
-    @ResponseStatus(value = HttpStatus.CONFLICT)
-    public ResponseEntity<String> handleConflict() {
-        return ResponseEntity.status(DUPLICATED_KEY.getHttpStatus()).body(DUPLICATED_KEY.getMessage());
-    }
-
 
     // 공통 로직 : 로그인 여부 확인
     private boolean isLogin(HttpServletRequest request) {
@@ -211,5 +209,10 @@ public class QaController {
         // 정보 서로 일치하는지 비교
         boolean check = userId.equals(sessionId);
         return true;
+    }
+
+    // (1) 유저 관련 문의글 카운팅
+    private int count(String userId) {
+        return service.count(userId);
     }
 }

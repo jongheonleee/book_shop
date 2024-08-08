@@ -34,6 +34,26 @@ public class QaDaoImpTest {
         dao.deleteAll();
     }
 
+    @Test
+    public void 데이터_넣기() {
+        for (int i=0; i<20; i++) {
+            QaDto dto = new QaDto();
+            dto.setUser_id("user1");
+            dto.setQa_cate_num("qa_cate_num1");
+            dto.setTitle("title" + i);
+            dto.setContent("content" + i);
+            dto.setCreated_at("2021-01-01");
+            dto.setEmail("email1");
+            dto.setTele_num("010-1234-5678");
+            dto.setPhon_num("010-1234-5678");
+            dto.setImg1("img1");
+            dto.setImg2("img2");
+            dto.setImg3("img3");
+
+            assertTrue(1 == dao.insert(dto));
+        }
+    }
+
     /**
      * 1차 기능 구현[✅]
      * - (1) 유저의 문의글 카운팅

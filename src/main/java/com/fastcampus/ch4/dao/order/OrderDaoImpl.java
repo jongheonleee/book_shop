@@ -39,13 +39,18 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public OrderDto findOrderById(Integer ordSeq) throws Exception {
-        return sqlSession.selectOne(namespace + "findOrderById", ordSeq);
+    public OrderDto selectOrderById(Integer ordSeq) throws Exception {
+        return sqlSession.selectOne(namespace + "selectOrderById", ordSeq);
     }
 
     @Override
     public int deleteOrderById(Integer ordSeq) throws Exception {
         return sqlSession.delete(namespace + "deleteOrderById", ordSeq);
+    }
+
+    @Override
+    public int deleteAllOrder() throws Exception {
+        return sqlSession.delete(namespace + "deleteAllOrder");
     }
 
     @Override

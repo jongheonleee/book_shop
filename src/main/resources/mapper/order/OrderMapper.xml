@@ -37,7 +37,7 @@
         )
     </insert>
 
-    <select id="findOrderById" parameterType="int" resultType="OrderDto">
+    <select id="selectOrderById" parameterType="int" resultType="OrderDto">
         SELECT
             ord_seq,
             ord_stat,
@@ -62,6 +62,12 @@
             order_table
         WHERE
             ord_seq = #{ord_seq}
+    </delete>
+
+    <delete id="deleteAllOrder">
+        DELETE
+        FROM
+            order_table
     </delete>
 
     <update id="updateOrderById" parameterType="OrderDto">

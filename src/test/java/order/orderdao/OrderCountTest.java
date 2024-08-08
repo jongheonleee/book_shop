@@ -23,7 +23,6 @@ public class OrderCountTest {
 
     final int SUCCESS_CODE = 1; // Query Execute Success
     final int SINGLE = 1;
-    final String USER_ID_NULL = null; // user id null
 
     /*
     countAllOrder 테스트

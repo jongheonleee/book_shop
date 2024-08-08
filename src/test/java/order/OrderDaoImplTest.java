@@ -5,10 +5,13 @@ import com.fastcampus.ch4.dto.order.OrderDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import static com.fastcampus.ch4.dto.order.OrderStatus.ORDER_DONE;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/spring/root-context.xml")
@@ -16,7 +19,9 @@ public class OrderDaoImplTest {
     @Autowired
     OrderDao orderDao;
 
-final int SUCCESS_CODE = 1;
+
+    final int SUCCESS_CODE = 1; // Query Execute Success
+    final String USER_ID_NULL = null; // user id null
 
     /**
      * 주문 생성 테스트
@@ -32,31 +37,30 @@ final int SUCCESS_CODE = 1;
 
     @Test
     public void 주문생성_성공테스트_단일생성() throws Exception {
-        /**
-         * 주문 생성 테스트
-         * === give ===
-         *
-         * === do ===
-         * 2. 고객 id 가 포함되어 있는 orderDto 생성하고 insert
-         * === assert ===
-         * 3. insert 를 할 때마다 제대로 생성되어 있는지 확인한다. (생성이 제대로 되었는지 확인한다.)
-         * 한개 / 다수 케이스
-         */
-
+        // 1. dto 생성하기
         String registerUserId = "createTestUser";
         OrderDto orderDto = new OrderDto(registerUserId);
 
+        // 2. insert
         Integer createdOrderSeq = orderDao.createOrderAndReturnId(orderDto);
         assertNotNull(createdOrderSeq);
 
+        // 3. 생성한 order 조회하기
         OrderDto selectedOrderDto = orderDao.findOrderById(createdOrderSeq);
-        assertEquals(selectedOrderDto.getReg_id(), registerUserId);
+        assertNotNull(selectedOrderDto);
+        String selectedOrderRegId = selectedOrderDto.getReg_id();
+        String selectedOrderStatus = selectedOrderDto.getOrd_stat();
 
+        // 4. 생성된 order 값 비교
+        assertEquals(selectedOrderRegId, registerUserId);
+        assertTrue(ORDER_DONE.isSameStatus(selectedOrderStatus));
+
+        // 5. 테스트한 order 삭제
         assertTrue(orderDao.deleteOrderById(createdOrderSeq) == SUCCESS_CODE);
     }
 
     //1. 고객 id 가 없는 orderDto 가 insert 되는 경우
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = DataIntegrityViolationException.class)
     public void 주문생성_실패테스트_고객id없음() throws Exception {
         /**
          * === give ===
@@ -66,13 +70,10 @@ final int SUCCESS_CODE = 1;
          * 2. orderDto 를 insert 한다.
          *
          * === assert ===
-         * 3. IllegalArgumentException 가 발생하면 성공
+         * 3. DataIntegrityViolationException 가 발생하면 성공
          */
 
-        // 고객id 를 null 로
-        String userId = null;
-        OrderDto orderDto = new OrderDto(userId);
-
+        OrderDto orderDto = new OrderDto(USER_ID_NULL);
         Integer createdOrderSeq = orderDao.createOrderAndReturnId(orderDto);
 
     }
@@ -89,9 +90,9 @@ final int SUCCESS_CODE = 1;
      */
     @Test(expected = IllegalArgumentException.class)
     public void 주문생성_실패테스트_배송비() throws Exception {
-        OrderDto orderDto = new OrderDto("userId");
-        orderDto.setTotal_bene_pric(3000);
-        orderDao.createOrderAndReturnId(orderDto);
+        OrderDto orderDtoDeliveryFeeTest = new OrderDto("userId");
+        orderDtoDeliveryFeeTest.setTotal_bene_pric(3000);
+        orderDao.createOrderAndReturnId(orderDtoDeliveryFeeTest);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -140,13 +141,19 @@ final int SUCCESS_CODE = 1;
          */
 
         // 1, 2
-        Integer createdOrderSeq = orderDao.createOrderAndReturnId(new OrderDto("findTestUser"));
+        OrderDto createdOrderDto = new OrderDto("selectTestUser");
+        Integer createdOrderSeq = orderDao.createOrderAndReturnId(createdOrderDto);
+        assertNotNull(createdOrderSeq);
 
         // 3
-        OrderDto orderDto = orderDao.findOrderById(createdOrderSeq);
+        OrderDto selectedOrderDto = orderDao.findOrderById(createdOrderSeq);
+        int selectedOrderSeq = selectedOrderDto.getOrd_seq();
+        String selectedOrderStatus = selectedOrderDto.getOrd_stat();
+        assertNotNull(selectedOrderDto);
 
         // 4
-        assertTrue(createdOrderSeq.compareTo(orderDto.getOrd_seq()) == 0);
+        assertTrue(createdOrderSeq == selectedOrderSeq);
+        assertTrue(ORDER_DONE.isSameStatus(selectedOrderStatus));
     }
 
     @Test(expected = NullPointerException.class)
@@ -183,15 +190,17 @@ final int SUCCESS_CODE = 1;
          * 4. 제대로 삭제되었는지 확인
          */
 
+        String deleteUserId = "deleteTestUser";
+
         // 1
-        OrderDto orderDto = new OrderDto("deleteTestUser");
+        OrderDto orderDto = new OrderDto(deleteUserId);
         // 2
         int createdOrderSeq = orderDao.createOrderAndReturnId(orderDto);
         // 3 삭제와 동시에 assert
-        assertTrue(orderDao.deleteOrderById(createdOrderSeq) == 1);
+        assertTrue(orderDao.deleteOrderById(createdOrderSeq) == SUCCESS_CODE);
         // 4
         OrderDto deletedOrderDto = orderDao.findOrderById(createdOrderSeq);
-        assertTrue(deletedOrderDto == null);
+        assertNull(deletedOrderDto);
     }
 
     @Test
@@ -231,12 +240,14 @@ final int SUCCESS_CODE = 1;
          * 6. 저장한 값(3번 단계) 과 조회한 값(5번 단계)을 비교한다.
          */
 
+        String updateUserId = "updateTestUser";
+
         // 1
-        OrderDto createdOrderDto = new OrderDto("updateTest");
-        Integer createdId = orderDao.createOrderAndReturnId(createdOrderDto);
+        OrderDto createdOrderDto = new OrderDto(updateUserId);
+        Integer createdOrderSeq = orderDao.createOrderAndReturnId(createdOrderDto);
 
         // 2
-        OrderDto selectedOrderDto = orderDao.findOrderById(createdId);
+        OrderDto selectedOrderDto = orderDao.findOrderById(createdOrderSeq);
 
         // 3
         int deliveryFee = 3000;

@@ -11,8 +11,8 @@
         INSERT INTO
             order_table
         (
-            id,
-            created_at,
+            userId,
+            ord_stat,
             delivery_fee,
             total_prod_pric,
             total_bene_pric,
@@ -24,8 +24,8 @@
         )
         VALUES
         (
-            #{id},
-            now(),
+            #{userId},
+            #{ord_stat},
             #{delivery_fee},
             #{total_prod_pric},
             #{total_bene_pric},
@@ -40,7 +40,7 @@
     <select id="findOrderById" parameterType="int" resultType="OrderDto">
         SELECT
             ord_seq,
-            created_at,
+            ord_stat,
             delivery_fee,
             total_prod_pric,
             total_bene_pric,
@@ -49,7 +49,7 @@
             reg_id,
             up_date,
             up_id,
-            id
+            userId
         FROM
             order_table
         WHERE
@@ -68,6 +68,7 @@
         UPDATE
             order_table
         SET
+            ord_stat = #{ord_stat},
             delivery_fee = #{delivery_fee},
             total_prod_pric = #{total_prod_pric},
             total_bene_pric = #{total_bene_pric},
@@ -75,6 +76,13 @@
             up_date = now(),
             up_id = #{up_id}
         WHERE
-            ord_seq = #{ord_seq};
+            ord_seq = #{ord_seq}
     </update>
+
+    <select id="orderCount" resultType="int">
+        SELECT
+            count(*)
+        FROM
+            order_table
+    </select>
 </mapper>

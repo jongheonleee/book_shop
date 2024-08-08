@@ -8,10 +8,10 @@ public class OrderDto {
     private Integer ord_seq; // 주문 번호
 
     // fk
-    private String id; // 유저 id
+    private String userId; // 유저 id
 
     // 속성
-    private Date created_at; // 주문 생성 일자
+    private String ord_stat; // 주문 상태
     private Integer delivery_fee = 0; // 배송비
     private Integer total_prod_pric = 0; // 총 상품 금액
     private Integer total_bene_pric = 0; // 총 할인 금액
@@ -24,7 +24,7 @@ public class OrderDto {
     private String up_id; // 최근 수정 id
 
     public OrderDto(String id) {
-        this.id = id;
+        this.userId = id;
     }
 
     public Integer getOrd_seq() {
@@ -35,20 +35,20 @@ public class OrderDto {
         this.ord_seq = ord_seq;
     }
 
-    public String getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public Date getCreated_at() {
-        return created_at;
+    public String getOrd_stat() {
+        return ord_stat;
     }
 
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
+    public void setOrd_stat(String ord_stat) {
+        this.ord_stat = ord_stat;
     }
 
     public Integer getDelivery_fee() {

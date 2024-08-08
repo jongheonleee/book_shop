@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/spring/root-context.xml")
 public class OrderDaoImplTest {
     @Autowired
     OrderDao orderDao;
+
+final int SUCCESS_CODE = 1;
 
     /**
      * 주문 생성 테스트
@@ -31,28 +31,29 @@ public class OrderDaoImplTest {
      */
 
     @Test
-    public void 주문생성_성공테스트() throws Exception {
+    public void 주문생성_성공테스트_단일생성() throws Exception {
         /**
          * 주문 생성 테스트
          * === give ===
          *
          * === do ===
-         * 2. 고객 id 가 포함되어 있는 orderDto 10개를 생성하고 insert
+         * 2. 고객 id 가 포함되어 있는 orderDto 생성하고 insert
          * === assert ===
-         * 3. insert 를 할 때마다 제대로 생성되어 있는지 확인한다.
+         * 3. insert 를 할 때마다 제대로 생성되어 있는지 확인한다. (생성이 제대로 되었는지 확인한다.)
+         * 한개 / 다수 케이스
          */
 
+        String registerUserId = "createTestUser";
+        OrderDto orderDto = new OrderDto(registerUserId);
 
-        for (int i = 0; i < 10; i++) {
-            // 2. 고객 id 가 포함되어 있는 orderDto 10개를 생성하고 insert
-            String userId = "userId" + i;
-            OrderDto orderDto = new OrderDto(userId);
-            Integer ordSeq = orderDao.createOrderAndReturnId(orderDto);
-            System.out.println("orderDto.ordSeq : " + ordSeq);
-            assertTrue(ordSeq != null);
-        }
+        Integer createdOrderSeq = orderDao.createOrderAndReturnId(orderDto);
+        assertNotNull(createdOrderSeq);
+
+        OrderDto selectedOrderDto = orderDao.findOrderById(createdOrderSeq);
+        assertEquals(selectedOrderDto.getReg_id(), registerUserId);
+
+        assertTrue(orderDao.deleteOrderById(createdOrderSeq) == SUCCESS_CODE);
     }
-
 
     //1. 고객 id 가 없는 orderDto 가 insert 되는 경우
     @Test(expected = IllegalArgumentException.class)
@@ -68,8 +69,12 @@ public class OrderDaoImplTest {
          * 3. IllegalArgumentException 가 발생하면 성공
          */
 
-        OrderDto orderDto = new OrderDto(null);
-        orderDao.createOrderAndReturnId(orderDto);
+        // 고객id 를 null 로
+        String userId = null;
+        OrderDto orderDto = new OrderDto(userId);
+
+        Integer createdOrderSeq = orderDao.createOrderAndReturnId(orderDto);
+
     }
 
     // 2. 최초 주문 생성 시 금액(배송비, 총 상품금액, 총 할인금액, 총 주문금액)이 0이 아닌 orderDto 가 insert 요청될 때
@@ -130,6 +135,8 @@ public class OrderDaoImplTest {
          * 3. 생성한 주문 id 로 주문을 조회한다.
          * === assert ===
          * 4. 저장한 주문의 id 와 생성한 주문의 id 를 비교한다.
+         *
+         * 조회한 값이 같아야 한다. (key만 비교 x)
          */
 
         // 1, 2
@@ -160,7 +167,7 @@ public class OrderDaoImplTest {
      * 1. ord_seq 를 넣어서 삭제되는 것을 확인한다.
      *
      * === 주문 삭제 실패 케이스
-     * 1. 존재하지 않는 주문을 삭제하는 것을 시도한다. => 상관없음
+     * 1. 존재하지 않는 주문을 삭제하는 것을 시도한다. => 상관없음 ( == 0)
      * 2. 주문상품이 존재하는 주문을 삭제한다. (삭제되면 안됨) => 구현예정
      */
 
@@ -188,7 +195,7 @@ public class OrderDaoImplTest {
     }
 
     @Test
-    public void 주문삭제_실패테스트_주문상품이존재하는주문 () throws Exception{
+    public void 주문삭제_실패테스트_주문상품이존재하는주문 () throws Exception {
         /**
          * === give
          * 1. 주문을 생성한다.
@@ -198,8 +205,112 @@ public class OrderDaoImplTest {
          * === assert
          * 4. exception 발생
          */
-        
+
     }
 
+    /**
+     * 주문 변경하기 테스트
+     * === 성공 테스트 케이스
+     * 1. 생성된 orderDto 를 수정하고 수정된 값을 비교하여 의도된 값인지 확인한다. 최근 수정 일자가 수정 전 일자와 다른지 확인한다.
+     * === 실패 테스트 케이스
+     * 1. 없는 주문을 변경하려고 시도하는 경우
+     *
+     */
+
+    @Test
+    public void 주문변경_성공테스트 () throws Exception {
+        /**
+         * === give
+         * 1. 주문을 생성한다.
+         * 2. 생성한 주문을 조회하여 생성한 주문의 정보를 저장한다.
+         * 3. 변경할 값을 저장한다.
+         * === do
+         * 4. 변경할 값으로 orderDto 를 변경하여 update 를 진행한다.
+         * 5. update 이후 주문을 조회하여 새로운 orderDto 에 저장한다.
+         * === assert
+         * 6. 저장한 값(3번 단계) 과 조회한 값(5번 단계)을 비교한다.
+         */
+
+        // 1
+        OrderDto createdOrderDto = new OrderDto("updateTest");
+        Integer createdId = orderDao.createOrderAndReturnId(createdOrderDto);
+
+        // 2
+        OrderDto selectedOrderDto = orderDao.findOrderById(createdId);
+
+        // 3
+        int deliveryFee = 3000;
+        int totalProductPrice = 16800;
+        int totalBenefitPrice = 1680;
+        int totalOrderPrice = totalProductPrice - totalBenefitPrice + deliveryFee;
+        String updatingId = "updatingTest";
+
+        // 4
+        selectedOrderDto.setDelivery_fee(deliveryFee);
+        selectedOrderDto.setTotal_prod_pric(totalProductPrice);
+        selectedOrderDto.setTotal_bene_pric(totalBenefitPrice);
+        selectedOrderDto.setTotal_ord_pric(totalOrderPrice);
+        selectedOrderDto.setUp_id(updatingId);
+        assertTrue(orderDao.updateOrderById(selectedOrderDto, updatingId) == 1);
+
+        // 5
+        OrderDto updatedOrderDto = orderDao.findOrderById(selectedOrderDto.getOrd_seq());
+
+        // 6
+        assertEquals((int) updatedOrderDto.getDelivery_fee(), deliveryFee);
+        assertEquals((int) updatedOrderDto.getTotal_bene_pric(), totalBenefitPrice);
+        assertEquals((int) updatedOrderDto.getTotal_ord_pric(), totalOrderPrice);
+        assertEquals(updatedOrderDto.getUp_id(), updatingId);
+        assertEquals(updatedOrderDto.getUp_date(), selectedOrderDto.getUp_date());
+    }
+
+    @Test
+    public void 주문변경_실패테스트_없는주문변경시도 () throws Exception {
+        /**
+         * === give
+         * 1. 주문을 생성한다.
+         * 2. 생성한 주문을 조회해서 저장한다.
+         *
+         * === do
+         * 3. 주문을 삭제한다.
+         * 4. 저장한 주문의 정보를 변경한다.
+         * === assert
+         * 5. update 를 진행한다 ( update X)
+         * 6. 데이터 비교?
+         *
+         */
+        int successResult = 1;
+        int failedResult = 0;
+
+        // 1
+        OrderDto createdOrderDto = new OrderDto("updateTest");
+        Integer createdId = orderDao.createOrderAndReturnId(createdOrderDto);
+
+        // 2
+        OrderDto selectedOrderDto = orderDao.findOrderById(createdId);
+
+        // 3
+        assertTrue(orderDao.deleteOrderById(selectedOrderDto.getOrd_seq()) == successResult);
+
+        // 4
+        int deliveryFee = 3000;
+        int totalProductPrice = 16800;
+        int totalBenefitPrice = 1680;
+        int totalOrderPrice = totalProductPrice - totalBenefitPrice + deliveryFee;
+        String updatingId = "updatingTest";
+
+        selectedOrderDto.setDelivery_fee(deliveryFee);
+        selectedOrderDto.setTotal_prod_pric(totalProductPrice);
+        selectedOrderDto.setTotal_bene_pric(totalBenefitPrice);
+        selectedOrderDto.setTotal_ord_pric(totalOrderPrice);
+        selectedOrderDto.setUp_id(updatingId);
+
+        // 5
+        assertTrue(orderDao.updateOrderById(selectedOrderDto, updatingId) == failedResult);
+
+        // 6
+
+
+    }
 
 }

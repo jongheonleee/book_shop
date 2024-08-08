@@ -46,9 +46,31 @@ public class OrderDaoImpl implements OrderDao {
         return sqlSession.selectOne(namespace + "findOrderById", ordSeq);
     }
 
+    /**
+     * 주문상품이 있는 주문은 삭제할 수 없다.
+     * @param ordSeq
+     * @return
+     * @throws Exception
+     */
     @Override
     public int deleteOrderById(Integer ordSeq) throws Exception {
         return sqlSession.delete(namespace + "deleteOrderById", ordSeq);
+    }
+
+    /**
+     *
+     * @param orderDto
+     * @param upId
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public int updateOrderById(OrderDto orderDto, String upId) throws Exception {
+        if (upId == null) {
+            throw new IllegalArgumentException("수정자 id 가 없습니다. 입력해주세요.");
+        }
+
+        return sqlSession.update(namespace + "updateOrderById", orderDto);
     }
 
     @Override

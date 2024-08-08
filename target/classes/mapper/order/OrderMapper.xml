@@ -63,4 +63,18 @@
         WHERE
             ord_seq = #{ord_seq}
     </delete>
+
+    <update id="updateOrderById" parameterType="OrderDto">
+        UPDATE
+            order_table
+        SET
+            delivery_fee = #{delivery_fee},
+            total_prod_pric = #{total_prod_pric},
+            total_bene_pric = #{total_bene_pric},
+            total_ord_pric = #{total_ord_pric},
+            up_date = now(),
+            up_id = #{up_id}
+        WHERE
+            ord_seq = #{ord_seq};
+    </update>
 </mapper>

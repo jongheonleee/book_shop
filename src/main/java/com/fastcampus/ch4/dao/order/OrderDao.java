@@ -16,5 +16,6 @@ public interface OrderDao {
     public Integer createOrderAndReturnId(OrderDto orderDto) throws Exception;
     public OrderDto findOrderById(Integer ordSeq) throws Exception;
     public int deleteOrderById(Integer ordSeq) throws Exception;
+    public int updateOrderById(OrderDto orderDto, String upId) throws Exception;
     public List<OrderDto> searchOrder() throws Exception ;
 }

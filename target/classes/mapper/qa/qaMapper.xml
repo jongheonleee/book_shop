@@ -4,103 +4,103 @@
 
 <mapper namespace="com.fastcampus.ch4.QaMapper">
   <select id="count" parameterType="string" resultType="int">
-    select count(*)
-    from qa
-    where user_id = #{user_id};
+    SELECT COUNT(*)
+    FROM qa
+    WHERE user_id = #{user_id};
   </select>
 
   <select id="select" parameterType="int" resultType="QaDto">
-    select
+    SELECT
       qa_num, user_id, qa_cate_num, title, content,
       created_at, email, tele_num, phon_num, img1,
       img2, img3
-    from qa
-    where qa_num = #{qa_num};
+    FROM qa
+    WHERE qa_num = #{qa_num};
   </select>
 
   <select id="selectByUserId" parameterType="string" resultType="QaDto">
-    select
+    SELECT
       qa_num, user_id, qa_cate_num, title, content,
       created_at, email, tele_num, phon_num, img1,
       img2, img3
-    from qa
-    where user_id = #{user_id};
+    FROM qa
+    WHERE user_id = #{user_id};
   </select>
 
   <select id="selectForUpdate" parameterType="QaDto" resultType="QaDto">
-    select
+    SELECT
       qa_num, user_id, qa_cate_num, title, content,
       created_at, email, tele_num, phon_num, img1,
       img2, img3
-    from qa
-    where user_id = #{user_id} and qa_num = #{qa_num}
-    for update;
+    FROM qa
+    WHERE user_id = #{user_id} and qa_num = #{qa_num}
+    FOR UPDATE;
   </select>
 
   <select id="selectByUserIdAndPh" parameterType="map" resultType="QaDto">
-    select
+    SELECT
       qa_num, user_id, qa_cate_num, title, content,
       created_at, email, tele_num, phon_num, img1,
       img2, img3
-    from qa
-    where user_id = #{user_id}
-    limit #{offSet}, #{pageSize};
+    FROM qa
+    WHERE user_id = #{user_id}
+    LIMIT #{offSet}, #{pageSize};
   </select>
 
   <select id="selectBySearchCondition" parameterType="map" resultType="QaDto">
-    select
-    qa_num, user_id, qa_cate_num, title, content,
-    created_at, email, tele_num, phon_num, img1,
-    img2, img3
-    from qa
-    where true
+    SELECT
+      qa_num, user_id, qa_cate_num, title, content,
+      created_at, email, tele_num, phon_num, img1,
+      img2, img3
+    FROM qa
+    WHERE TRUE
     <choose>
       <when test='option=="title"'>
         AND user_id = #{user_id}
-        AND title LIKE concat('%', #{titleKeyword}, '%')
+        AND title LIKE CONCAT('%', #{titleKeyword}, '%')
       </when>
       <when test='option=="period"'>
         AND user_id = #{user_id}
-        AND created_at between DATE_SUB(NOW(), INTERVAL #{period} MONTH) and now()
+        AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL #{period} MONTH) AND now()
       </when>
       <otherwise>
         AND user_id = #{user_id}
-        AND title LIKE concat('%', #{title}, '%')
-        AND created_at between DATE_SUB(NOW(), INTERVAL #{period} MONTH) and now()
+        AND title LIKE CONCAT('%', #{title}, '%')
+        AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL #{period} MONTH) AND now()
       </otherwise>
     </choose>
-    limit #{offSet}, #{pageSize};
+    LIMIT #{offSet}, #{pageSize};
   </select>
 
   <insert id="insert" parameterType="QaDto">
-    insert into qa
+    INSERT INTO qa
         (qa_num, user_id, qa_cate_num, title, content,
         created_at, email, tele_num, phon_num, img1,
         img2, img3)
-    values
+    VALUES
         (#{qa_num}, #{user_id}, #{qa_cate_num}, #{title}, #{content},
         now(), #{email}, #{tele_num}, #{phon_num}, #{img1},
         #{img2}, #{img3});
   </insert>
 
   <update id="update" parameterType="QaDto">
-    update qa
-    set title = #{title}, content = #{content}, email = #{email},
+    UPDATE qa
+    SET title = #{title}, content = #{content}, email = #{email},
         tele_num = #{tele_num}, phon_num = #{phon_num}, img1 = #{img1},
         img2 = #{img2}, img3 = #{img3}
-    where user_id = #{user_id}  and qa_num = #{qa_num};
+    WHERE user_id = #{user_id} AND qa_num = #{qa_num};
   </update>
 
   <delete id="delete" parameterType="QaDto">
-    delete
-    from qa
-    where user_id = #{user_id}
-    and qa_num = #{qa_num};
+    DELETE
+    FROM qa
+    WHERE user_id = #{user_id}
+    AND qa_num = #{qa_num};
   </delete>
 
   <delete id="deleteAll">
-    delete
-    from qa;
+    DELETE
+    FROM qa;
   </delete>
 
 </mapper>

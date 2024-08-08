@@ -55,4 +55,12 @@
         WHERE
             ord_seq = #{ord_seq};
     </select>
+
+    <delete id="deleteOrderById" parameterType="int">
+        DELETE
+        FROM
+            order_table
+        WHERE
+            ord_seq = #{ord_seq}
+    </delete>
 </mapper>

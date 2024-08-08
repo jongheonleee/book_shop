@@ -133,13 +133,13 @@ public class OrderDaoImplTest {
          */
 
         // 1, 2
-        Integer createOrderSeq = orderDao.createOrderAndReturnId(new OrderDto("findTestUser"));
+        Integer createdOrderSeq = orderDao.createOrderAndReturnId(new OrderDto("findTestUser"));
 
         // 3
-        OrderDto orderDto = orderDao.findOrderById(createOrderSeq);
+        OrderDto orderDto = orderDao.findOrderById(createdOrderSeq);
 
         // 4
-        assertTrue(createOrderSeq.compareTo(orderDto.getOrd_seq()) == 0);
+        assertTrue(createdOrderSeq.compareTo(orderDto.getOrd_seq()) == 0);
     }
 
     @Test(expected = NullPointerException.class)
@@ -154,6 +154,52 @@ public class OrderDaoImplTest {
          */
     }
 
+    /**
+     * 주문 삭제 테스트
+     * === 주문 삭제 성공 케이스
+     * 1. ord_seq 를 넣어서 삭제되는 것을 확인한다.
+     *
+     * === 주문 삭제 실패 케이스
+     * 1. 존재하지 않는 주문을 삭제하는 것을 시도한다. => 상관없음
+     * 2. 주문상품이 존재하는 주문을 삭제한다. (삭제되면 안됨) => 구현예정
+     */
+
+    @Test
+    public void 주문삭제_성공테스트 () throws Exception {
+        /**
+         * === give
+         * 1. 주문을 생성한다.
+         * 2. 생성한 주문의 id 를 저장한다.
+         * === do
+         * 3. 생성한 주문을 삭제한다.
+         * === assert
+         * 4. 제대로 삭제되었는지 확인
+         */
+
+        // 1
+        OrderDto orderDto = new OrderDto("deleteTestUser");
+        // 2
+        int createdOrderSeq = orderDao.createOrderAndReturnId(orderDto);
+        // 3 삭제와 동시에 assert
+        assertTrue(orderDao.deleteOrderById(createdOrderSeq) == 1);
+        // 4
+        OrderDto deletedOrderDto = orderDao.findOrderById(createdOrderSeq);
+        assertTrue(deletedOrderDto == null);
+    }
+
+    @Test
+    public void 주문삭제_실패테스트_주문상품이존재하는주문 () throws Exception{
+        /**
+         * === give
+         * 1. 주문을 생성한다.
+         * 2. 주문 상품을 생성한다. (주문 fk 사용)
+         * === do
+         * 3. 생성한 주문 삭제를 실행한다.
+         * === assert
+         * 4. exception 발생
+         */
+        
+    }
 
 
 }

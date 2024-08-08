@@ -48,7 +48,7 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public int deleteOrderById(Integer ordSeq) throws Exception {
-        return 0;
+        return sqlSession.delete(namespace + "deleteOrderById", ordSeq);
     }
 
     @Override

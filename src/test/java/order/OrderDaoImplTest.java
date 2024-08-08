@@ -251,7 +251,7 @@ final int SUCCESS_CODE = 1;
         selectedOrderDto.setTotal_bene_pric(totalBenefitPrice);
         selectedOrderDto.setTotal_ord_pric(totalOrderPrice);
         selectedOrderDto.setUp_id(updatingId);
-        assertTrue(orderDao.updateOrderById(selectedOrderDto, updatingId) == 1);
+        assertTrue(orderDao.updateOrderById(selectedOrderDto, updatingId) == SUCCESS_CODE);
 
         // 5
         OrderDto updatedOrderDto = orderDao.findOrderById(selectedOrderDto.getOrd_seq());
@@ -279,8 +279,6 @@ final int SUCCESS_CODE = 1;
          * 6. 데이터 비교?
          *
          */
-        int successResult = 1;
-        int failedResult = 0;
 
         // 1
         OrderDto createdOrderDto = new OrderDto("updateTest");
@@ -290,7 +288,7 @@ final int SUCCESS_CODE = 1;
         OrderDto selectedOrderDto = orderDao.findOrderById(createdId);
 
         // 3
-        assertTrue(orderDao.deleteOrderById(selectedOrderDto.getOrd_seq()) == successResult);
+        assertTrue(orderDao.deleteOrderById(selectedOrderDto.getOrd_seq()) == SUCCESS_CODE);
 
         // 4
         int deliveryFee = 3000;
@@ -306,7 +304,7 @@ final int SUCCESS_CODE = 1;
         selectedOrderDto.setUp_id(updatingId);
 
         // 5
-        assertTrue(orderDao.updateOrderById(selectedOrderDto, updatingId) == failedResult);
+        assertTrue(orderDao.updateOrderById(selectedOrderDto, updatingId) != SUCCESS_CODE);
 
         // 6
 

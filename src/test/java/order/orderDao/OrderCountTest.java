@@ -1,4 +1,4 @@
-package order.orderdao;
+package order.orderDao;
 
 import com.fastcampus.ch4.dao.order.OrderDao;
 import com.fastcampus.ch4.dto.order.OrderDto;

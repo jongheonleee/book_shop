@@ -9,7 +9,7 @@
     -->
     <insert id="createOrder" parameterType="OrderDto" useGeneratedKeys="true" keyProperty="ord_seq">
         INSERT INTO
-            order_table
+            book_shop.order
         (
             userId,
             ord_stat,
@@ -30,9 +30,9 @@
             #{total_prod_pric},
             #{total_bene_pric},
             #{total_ord_pric},
-            now(),
+            DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),
             #{reg_id},
-            now(),
+            DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),
             #{up_id}
         )
     </insert>
@@ -51,15 +51,40 @@
             up_id,
             userId
         FROM
-            order_table
+            book_shop.order
         WHERE
             ord_seq = #{ord_seq};
+    </select>
+
+    <select id="selectAll" parameterType="map" resultType="OrderDto">
+        SELECT
+            ord_seq,
+            delivery_fee,
+            total_prod_pric,
+            total_bene_pric,
+            total_ord_pric,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id,
+            userId,
+            ord_stat
+        FROM
+            book_shop.order
+        ORDER BY
+            <choose>
+                <when test="orderCondition == 'ord_seq_DESC'">ord_seq DESC</when>
+                <when test="orderCondition == 'ord_seq_ASC'">ord_seq ASC</when>
+                <otherwise>
+                    ord_seq DESC
+                </otherwise>
+            </choose>
     </select>
 
     <delete id="deleteOrderById" parameterType="int">
         DELETE
         FROM
-            order_table
+            book_shop.order
         WHERE
             ord_seq = #{ord_seq}
     </delete>
@@ -67,12 +92,12 @@
     <delete id="deleteAllOrder">
         DELETE
         FROM
-            order_table
+            book_shop.order
     </delete>
 
-    <update id="updateOrderById" parameterType="OrderDto">
+    <update id="updateOrder" parameterType="OrderDto">
         UPDATE
-            order_table
+            book_shop.order
         SET
             ord_stat = #{ord_stat},
             delivery_fee = #{delivery_fee},
@@ -89,6 +114,6 @@
         SELECT
             count(*)
         FROM
-            order_table
+            book_shop.order
     </select>
 </mapper>

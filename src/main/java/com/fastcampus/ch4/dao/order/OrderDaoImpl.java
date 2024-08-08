@@ -5,7 +5,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.fastcampus.ch4.dto.order.OrderStatus.*;
 
@@ -44,6 +46,16 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
+    public List<OrderDto> selectAll(String columnName, boolean isDesc) throws Exception {
+        Map<String, String> map = new HashMap<>();
+
+        String orderCriterion = isDesc ? "DESC" : "ASC";
+        String orderCondition = columnName + "_" + orderCriterion;
+        map.put("orderCondition", orderCondition);
+        return sqlSession.selectList(namespace + "selectAll", map);
+    }
+
+    @Override
     public int deleteOrderById(Integer ordSeq) throws Exception {
         return sqlSession.delete(namespace + "deleteOrderById", ordSeq);
     }
@@ -54,12 +66,9 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public int updateOrderById(OrderDto orderDto, String upId) throws Exception {
-        if (upId == null) {
-            throw new IllegalArgumentException("수정자 id 가 없습니다. 입력해주세요.");
-        }
-
-        return sqlSession.update(namespace + "updateOrderById", orderDto);
+    public int updateOrder(OrderDto orderDto, String upId) throws Exception {
+        orderDto.setUp_id(upId);
+        return sqlSession.update(namespace + "updateOrder", orderDto);
     }
 
     @Override

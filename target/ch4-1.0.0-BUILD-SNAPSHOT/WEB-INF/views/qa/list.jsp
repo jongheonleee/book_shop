@@ -325,11 +325,11 @@
     $('#search-period-button').click(function (e) {
       // 선택한 옵션의 값을 조회
       const selectedOption = $('.dropdown').val();
-      alert("selectedOption: " + selectedOption);
+      alert(selectedOption);
       // 서버에 get 파라미터로 요청
       location.href = 'http://localhost:8080/ch4/qa/search?option=' + SEARCH_KEYWORD_PERIOD + '&period=' + selectedOption;
+      alert(location.href);
     });
-
 
     // // 제목 검색 버튼 핸들러
     $('#search-title-button').click(function (e) {

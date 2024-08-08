@@ -7,7 +7,7 @@
     1. autoincrement 지원 DBMS 이고 pk 가 autoincrement 일 때 : useGeneratedKeys, keyProperty
     2. autoincrement 미지원 DBMS 이거나 pk 가 autoincrement 가 아닐 때 : selectKey
     -->
-    <insert id="createOrder" parameterType="OrderDto" useGeneratedKeys="true" keyProperty="ordSeq">
+    <insert id="createOrder" parameterType="OrderDto" useGeneratedKeys="true" keyProperty="ord_seq">
         INSERT INTO
             order_table
         (
@@ -26,14 +26,33 @@
         (
             #{id},
             now(),
-            #{deliveryFee},
-            #{totalProdPric},
-            #{totalBenePric},
-            #{totalOrdPric},
+            #{delivery_fee},
+            #{total_prod_pric},
+            #{total_bene_pric},
+            #{total_ord_pric},
             now(),
-            #{regId},
+            #{reg_id},
             now(),
-            #{upId}
+            #{up_id}
         )
     </insert>
+
+    <select id="findOrderById" parameterType="int" resultType="OrderDto">
+        SELECT
+            ord_seq,
+            created_at,
+            delivery_fee,
+            total_prod_pric,
+            total_bene_pric,
+            total_ord_pric,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id,
+            id
+        FROM
+            order_table
+        WHERE
+            ord_seq = #{ord_seq};
+    </select>
 </mapper>

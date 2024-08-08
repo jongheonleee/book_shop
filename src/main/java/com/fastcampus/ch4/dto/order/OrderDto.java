@@ -5,34 +5,34 @@ import java.util.Date;
 public class OrderDto {
     // pk
     // auto increment
-    private Integer ordSeq; // 주문 번호
+    private Integer ord_seq; // 주문 번호
 
     // fk
     private String id; // 유저 id
 
     // 속성
-    private Date createdAt; // 주문 생성 일자
-    private Integer deliveryFee = 0; // 배송비
-    private Integer totalProdPric = 0; // 총 상품 금액
-    private Integer totalBenePric = 0; // 총 할인 금액
-    private Integer totalOrdPric = 0; // 총 주문 금액
+    private Date created_at; // 주문 생성 일자
+    private Integer delivery_fee = 0; // 배송비
+    private Integer total_prod_pric = 0; // 총 상품 금액
+    private Integer total_bene_pric = 0; // 총 할인 금액
+    private Integer total_ord_pric = 0; // 총 주문 금액
 
     // 시스템 컬럼
-    private Date  regDate; // 최초 등록 일시
-    private String regId; // 최초 등록 id
-    private Date  upDate; // 최근 수정 일시
-    private String upId; // 최근 수정 id
+    private Date reg_date; // 최초 등록 일시
+    private String reg_id; // 최초 등록 id
+    private Date up_date; // 최근 수정 일시
+    private String up_id; // 최근 수정 id
 
     public OrderDto(String id) {
         this.id = id;
     }
 
-    public Integer getOrdSeq() {
-        return ordSeq;
+    public Integer getOrd_seq() {
+        return ord_seq;
     }
 
-    public void setOrdSeq(Integer ordSeq) {
-        this.ordSeq = ordSeq;
+    public void setOrd_seq(Integer ord_seq) {
+        this.ord_seq = ord_seq;
     }
 
     public String getId() {
@@ -43,75 +43,75 @@ public class OrderDto {
         this.id = id;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
     }
 
-    public Integer getDeliveryFee() {
-        return deliveryFee;
+    public Integer getDelivery_fee() {
+        return delivery_fee;
     }
 
-    public void setDeliveryFee(Integer deliveryFee) {
-        this.deliveryFee = deliveryFee;
+    public void setDelivery_fee(Integer delivery_fee) {
+        this.delivery_fee = delivery_fee;
     }
 
-    public Integer getTotalProdPric() {
-        return totalProdPric;
+    public Integer getTotal_prod_pric() {
+        return total_prod_pric;
     }
 
-    public void setTotalProdPric(Integer totalProdPric) {
-        this.totalProdPric = totalProdPric;
+    public void setTotal_prod_pric(Integer total_prod_pric) {
+        this.total_prod_pric = total_prod_pric;
     }
 
-    public Integer getTotalBenePric() {
-        return totalBenePric;
+    public Integer getTotal_bene_pric() {
+        return total_bene_pric;
     }
 
-    public void setTotalBenePric(Integer totalBenePric) {
-        this.totalBenePric = totalBenePric;
+    public void setTotal_bene_pric(Integer total_bene_pric) {
+        this.total_bene_pric = total_bene_pric;
     }
 
-    public Integer getTotalOrdPric() {
-        return totalOrdPric;
+    public Integer getTotal_ord_pric() {
+        return total_ord_pric;
     }
 
-    public void setTotalOrdPric(Integer totalOrdPric) {
-        this.totalOrdPric = totalOrdPric;
+    public void setTotal_ord_pric(Integer total_ord_pric) {
+        this.total_ord_pric = total_ord_pric;
     }
 
-    public Date getRegDate() {
-        return regDate;
+    public Date getReg_date() {
+        return reg_date;
     }
 
-    public void setRegDate(Date regDate) {
-        this.regDate = regDate;
+    public void setReg_date(Date reg_date) {
+        this.reg_date = reg_date;
     }
 
-    public String getRegId() {
-        return regId;
+    public String getReg_id() {
+        return reg_id;
     }
 
-    public void setRegId(String regId) {
-        this.regId = regId;
+    public void setReg_id(String reg_id) {
+        this.reg_id = reg_id;
     }
 
-    public Date getUpDate() {
-        return upDate;
+    public Date getUp_date() {
+        return up_date;
     }
 
-    public void setUpDate(Date upDate) {
-        this.upDate = upDate;
+    public void setUp_date(Date up_date) {
+        this.up_date = up_date;
     }
 
-    public String getUpId() {
-        return upId;
+    public String getUp_id() {
+        return up_id;
     }
 
-    public void setUpId(String upId) {
-        this.upId = upId;
+    public void setUp_id(String up_id) {
+        this.up_id = up_id;
     }
 }

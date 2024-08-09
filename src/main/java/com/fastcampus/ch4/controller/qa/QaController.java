@@ -4,15 +4,13 @@ package com.fastcampus.ch4.controller.qa;
 import static com.fastcampus.ch4.code.error.qa.QaErrorCode.DUPLICATED_KEY;
 import static com.fastcampus.ch4.code.error.qa.QaErrorCode.INVALID_VALUE_INPUT;
 
-import com.fastcampus.ch4.code.error.qa.QaErrorCode;
-import com.fastcampus.ch4.dto.qa.PageHandler;
+import com.fastcampus.ch4.domain.qa.PageHandler;
 import com.fastcampus.ch4.dto.qa.QaDto;
-import com.fastcampus.ch4.dto.qa.SearchCondition;
+import com.fastcampus.ch4.domain.qa.SearchCondition;
 import com.fastcampus.ch4.service.qa.QaService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -24,13 +22,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Validated // 유효성 검증

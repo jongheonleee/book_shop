@@ -2,7 +2,7 @@ package com.fastcampus.ch4.dto.qa;
 
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
+import com.fastcampus.ch4.domain.qa.PageHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;

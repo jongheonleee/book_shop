@@ -18,6 +18,42 @@ public class QaDto {
     private String img2;
     private String img3;
     private String comt;
+    private String reg_date;
+    private String reg_id;
+    private String up_date;
+    private String up_id;
+
+    public String getReg_date() {
+        return reg_date;
+    }
+
+    public void setReg_date(String reg_date) {
+        this.reg_date = reg_date;
+    }
+
+    public String getReg_id() {
+        return reg_id;
+    }
+
+    public void setReg_id(String reg_id) {
+        this.reg_id = reg_id;
+    }
+
+    public String getUp_date() {
+        return up_date;
+    }
+
+    public void setUp_date(String up_date) {
+        this.up_date = up_date;
+    }
+
+    public String getUp_id() {
+        return up_id;
+    }
+
+    public void setUp_id(String up_id) {
+        this.up_id = up_id;
+    }
 
     public int getQa_num() {
         return qa_num;

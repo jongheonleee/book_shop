@@ -36,8 +36,8 @@
       created_at, email, tele_num, phon_num, img1,
       img2, img3
     FROM qa
-    WHERE user_id = #{user_id} and qa_num = #{qa_num}
-    FOR UPDATE;
+    WHERE qa_num = #{qa_num}
+    FOR UPDATE
   </select>
 
   <select id="selectByUserIdAndPh" parameterType="map" resultType="QaDto">
@@ -47,6 +47,7 @@
       img2, img3
     FROM qa
     WHERE user_id = #{user_id}
+    ORDER BY created_at DESC
     LIMIT #{offSet}, #{pageSize};
   </select>
 
@@ -81,11 +82,11 @@
     INSERT INTO qa
         (qa_num, user_id, qa_cate_num, title, content,
         created_at, email, tele_num, phon_num, img1,
-        img2, img3)
+        img2, img3, reg_date, reg_id, up_date, up_id)
     VALUES
         (#{qa_num}, #{user_id}, #{qa_cate_num}, #{title}, #{content},
         now(), #{email}, #{tele_num}, #{phon_num}, #{img1},
-        #{img2}, #{img3});
+        #{img2}, #{img3}, #{reg_date}, #{reg_id}, #{up_date}, #{up_id});
   </insert>
 
   <update id="update" parameterType="QaDto">

@@ -1,4 +1,4 @@
-package com.fastcampus.ch4.dto.qa;
+package com.fastcampus.ch4.domain.qa;
 
 import org.springframework.web.util.UriComponentsBuilder;
 

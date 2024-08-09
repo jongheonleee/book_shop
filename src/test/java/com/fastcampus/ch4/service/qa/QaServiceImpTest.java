@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.fastcampus.ch4.dao.qa.QaDao;
 import com.fastcampus.ch4.dto.qa.QaDto;
-import com.fastcampus.ch4.dto.qa.SearchCondition;
+import com.fastcampus.ch4.domain.qa.SearchCondition;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;

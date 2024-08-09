@@ -1,7 +1,7 @@
 package com.fastcampus.ch4.dao.qa;
 
 import com.fastcampus.ch4.dto.qa.QaDto;
-import com.fastcampus.ch4.dto.qa.SearchCondition;
+import com.fastcampus.ch4.domain.qa.SearchCondition;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

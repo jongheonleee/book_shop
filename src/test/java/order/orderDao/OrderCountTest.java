@@ -3,6 +3,7 @@ package order.orderDao;
 import com.fastcampus.ch4.dao.order.OrderDao;
 import com.fastcampus.ch4.dto.order.OrderDto;
 
+import com.fastcampus.ch4.service.order.factory.OrderDtoFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,17 +37,17 @@ public class OrderCountTest {
     public void 전체주문개수_insert_single () throws Exception {
         // give
         // 1. 현재 개수 카운트
-        int beforeCount = orderDao.countAllOrder();
+        int beforeCount = orderDao.countAll();
 
         // do
         // 2. 1개 insert
         String userId = "countTestUser";
-        OrderDto orderDto = new OrderDto(userId);
-        Integer orderSeq = orderDao.createOrderAndReturnId(orderDto);
+        OrderDto orderDto = OrderDtoFactory.getInstance(userId);
+        Integer orderSeq = orderDao.insertAndReturnId(orderDto);
         assertNotNull(orderSeq);
 
         // 3. 현재 개수 카운트
-        int afterCount = orderDao.countAllOrder();
+        int afterCount = orderDao.countAll();
 
         // assert
         // 4. 개수 비교
@@ -57,7 +58,7 @@ public class OrderCountTest {
     public void 전체주문개수_insert_multiple () throws Exception {
         // give
         // 1. 현재 개수 카운트
-        int beforeCount = orderDao.countAllOrder();
+        int beforeCount = orderDao.countAll();
 
         // do
         // 2. 5개 insert
@@ -66,13 +67,13 @@ public class OrderCountTest {
         Integer orderSeq = null;
         for (int i = 0; i < INSERT_COUNT; i++) {
             String userId = "countTestUser" + i;
-            orderDto = new OrderDto(userId);
+            orderDto = OrderDtoFactory.getInstance(userId);
             // 주문 생성
-            orderSeq = orderDao.createOrderAndReturnId(orderDto);
+            orderSeq = orderDao.insertAndReturnId(orderDto);
             assertNotNull(orderSeq); // 주문생성 확인
         }
         // 3. 현재 개수 카운트
-        int afterCount = orderDao.countAllOrder();
+        int afterCount = orderDao.countAll();
 
         // assert
         // 4. 개수 비교
@@ -84,20 +85,20 @@ public class OrderCountTest {
         // give
         // 1. 주문 생성
         String userId = "countTestUser";
-        OrderDto orderDto = new OrderDto(userId);
-        Integer orderSeq = orderDao.createOrderAndReturnId(orderDto);
+        OrderDto orderDto = OrderDtoFactory.getInstance(userId);
+        Integer orderSeq = orderDao.insertAndReturnId(orderDto);
         assertNotNull(orderSeq);
 
         // do
         // 2. 현재 개수 카운트
-        int beforeCount = orderDao.countAllOrder();
+        int beforeCount = orderDao.countAll();
 
         // 3. 생성한 주문 삭제
-        int deleteResult = orderDao.deleteOrderById(orderSeq);
+        int deleteResult = orderDao.deleteById(orderSeq);
         assertTrue(deleteResult == SUCCESS_CODE);
 
         // 4. 현재 개수 카운트
-        int afterCount = orderDao.countAllOrder();
+        int afterCount = orderDao.countAll();
 
         // assert
         // 5. 개수비교
@@ -110,7 +111,7 @@ public class OrderCountTest {
 
         // give
         // 1. 현재 개수 카운트
-        int startCount = orderDao.countAllOrder();
+        int startCount = orderDao.countAll();
 
         // 2. 주문 생성 (생성 시 주문 갯수 체크)
         List<Integer> createdOrdSeqList = new ArrayList<>();
@@ -120,8 +121,8 @@ public class OrderCountTest {
         Integer orderSeq = null;
         for (int i = 0; i < INSERT_COUNT; i++) {
             userId = "countTestUser" + i;
-            orderDto = new OrderDto(userId);
-            orderSeq = orderDao.createOrderAndReturnId(orderDto);
+            orderDto = OrderDtoFactory.getInstance(userId);
+            orderSeq = orderDao.insertAndReturnId(orderDto);
             assertNotNull(orderSeq);
             createdOrdSeqList.add(orderSeq);
         }
@@ -129,7 +130,7 @@ public class OrderCountTest {
 
         // do
         // 3. 현재 개수 카운트
-        int beforeCount = orderDao.countAllOrder();
+        int beforeCount = orderDao.countAll();
 
         // 4. 주문 생성 확인
         assertTrue(startCount + INSERT_COUNT == beforeCount);
@@ -138,12 +139,12 @@ public class OrderCountTest {
         Integer deleteOrdSeq = null;
         for (int i = 0; i < createdOrdSeqList.size(); i++) {
             deleteOrdSeq = createdOrdSeqList.get(i);
-            int deleteResult = orderDao.deleteOrderById(deleteOrdSeq);
+            int deleteResult = orderDao.deleteById(deleteOrdSeq);
             assertTrue(deleteResult == SUCCESS_CODE);
         }
 
         // 6. 현재 개수 카운트
-        int afterCount = orderDao.countAllOrder();
+        int afterCount = orderDao.countAll();
 
         // assert
         // 7. 개수 비교

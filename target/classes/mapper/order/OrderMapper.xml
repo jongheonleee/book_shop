@@ -7,7 +7,7 @@
     1. autoincrement 지원 DBMS 이고 pk 가 autoincrement 일 때 : useGeneratedKeys, keyProperty
     2. autoincrement 미지원 DBMS 이거나 pk 가 autoincrement 가 아닐 때 : selectKey
     -->
-    <insert id="createOrder" parameterType="OrderDto" useGeneratedKeys="true" keyProperty="ord_seq">
+    <insert id="insertAndReturnId" parameterType="OrderDto" useGeneratedKeys="true" keyProperty="ord_seq">
         INSERT INTO
             book_shop.order
         (
@@ -37,7 +37,7 @@
         )
     </insert>
 
-    <select id="selectOrderById" parameterType="int" resultType="OrderDto">
+    <select id="selectById" parameterType="int" resultType="OrderDto">
         SELECT
             ord_seq,
             ord_stat,
@@ -81,7 +81,7 @@
             </choose>
     </select>
 
-    <delete id="deleteOrderById" parameterType="int">
+    <delete id="deleteById" parameterType="int">
         DELETE
         FROM
             book_shop.order
@@ -89,13 +89,13 @@
             ord_seq = #{ord_seq}
     </delete>
 
-    <delete id="deleteAllOrder">
+    <delete id="deleteAll">
         DELETE
         FROM
             book_shop.order
     </delete>
 
-    <update id="updateOrder" parameterType="OrderDto">
+    <update id="update" parameterType="OrderDto">
         UPDATE
             book_shop.order
         SET
@@ -110,7 +110,7 @@
             ord_seq = #{ord_seq}
     </update>
 
-    <select id="countAllOrder" resultType="int">
+    <select id="countAll" resultType="int">
         SELECT
             count(*)
         FROM

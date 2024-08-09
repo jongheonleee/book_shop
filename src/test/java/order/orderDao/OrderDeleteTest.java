@@ -2,6 +2,7 @@ package order.orderDao;
 
 import com.fastcampus.ch4.dao.order.OrderDao;
 import com.fastcampus.ch4.dto.order.OrderDto;
+import com.fastcampus.ch4.service.order.factory.OrderDtoFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,31 +48,31 @@ public class OrderDeleteTest {
         String deleteUserId = "deleteTestUser";
 
         // 1. 현재 개수 카운트
-        int startCount = orderDao.countAllOrder();
+        int startCount = orderDao.countAll();
 
         // 2. 주문을 생성한다.
-        OrderDto orderDto = new OrderDto(deleteUserId);
-        Integer orderSeq = orderDao.createOrderAndReturnId(orderDto);
+        OrderDto orderDto = OrderDtoFactory.getInstance(deleteUserId);
+        Integer orderSeq = orderDao.insertAndReturnId(orderDto);
         assertNotNull(orderSeq);
 
         // 3. 현재 개수 카운트
-        int beforeCount = orderDao.countAllOrder();
+        int beforeCount = orderDao.countAll();
         assertTrue(startCount + SINGLE == beforeCount);
 
         // do
         // 3. 주문을 삭제한다.
-        int deleteResult = orderDao.deleteOrderById(orderSeq);
+        int deleteResult = orderDao.deleteById(orderSeq);
         assertTrue(deleteResult == SUCCESS_CODE);
 
         // 4. 현재 개수 카운트
-        int afterCount = orderDao.countAllOrder();
+        int afterCount = orderDao.countAll();
 
         // assert
         // 5. 개수 비교
         assertTrue(beforeCount - SINGLE == afterCount);
 
         // 6. 삭제한 주문번호로 조회한다.
-        OrderDto deletedOrderDto = orderDao.selectOrderById(orderSeq);
+        OrderDto deletedOrderDto = orderDao.selectById(orderSeq);
         assertNull(deletedOrderDto);
     }
 
@@ -81,7 +82,7 @@ public class OrderDeleteTest {
         int INSERT_COUNT = 10;
         
         // 1. 현재 개수 카운트
-        int startCount = orderDao.countAllOrder();
+        int startCount = orderDao.countAll();
 
         // 2. 주문 생성
         String userId = null;
@@ -91,27 +92,27 @@ public class OrderDeleteTest {
 
         for (int i = 0; i < INSERT_COUNT; i++) {
             userId = "deleteTestUser" + i;
-            orderDto = new OrderDto(userId);
-            orderSeq = orderDao.createOrderAndReturnId(orderDto);
+            orderDto = OrderDtoFactory.getInstance(userId);
+            orderSeq = orderDao.insertAndReturnId(orderDto);
             assertNotNull(orderSeq);
             orderSeqSet.add(orderSeq);
         }
-        assertTrue(startCount + INSERT_COUNT == orderDao.countAllOrder());
+        assertTrue(startCount + INSERT_COUNT == orderDao.countAll());
         // set 에 담겨있는지 확인
         assertTrue(orderSeqSet.size() == INSERT_COUNT);
 
         // 3. 현재 개수 카운트
-        int beforeCount = orderDao.countAllOrder();
+        int beforeCount = orderDao.countAll();
 
         // do
         // 4. 받아온 주문번호로 주문 삭제
         for (Integer createdOrderSeq : orderSeqSet) {
-            int deleteResult = orderDao.deleteOrderById(createdOrderSeq);
+            int deleteResult = orderDao.deleteById(createdOrderSeq);
             assertTrue(deleteResult == SUCCESS_CODE);
         }
 
         // 5. 현재 개수 카운트
-        int afterCount = orderDao.countAllOrder();
+        int afterCount = orderDao.countAll();
 
         // assert
         // 6. 개수 비교
@@ -120,7 +121,7 @@ public class OrderDeleteTest {
 
         // 7. 받아온 주문번호로 주문 조회
         for (Integer deletedOrderSeq : orderSeqSet) {
-            OrderDto selectedOrderDto = orderDao.selectOrderById(deletedOrderSeq);
+            OrderDto selectedOrderDto = orderDao.selectById(deletedOrderSeq);
             assertNull(selectedOrderDto);
         }
     }

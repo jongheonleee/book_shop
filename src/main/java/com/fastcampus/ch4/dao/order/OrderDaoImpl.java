@@ -18,31 +18,15 @@ public class OrderDaoImpl implements OrderDao {
 
     String namespace = "com.fastcampus.ch4.dao.OrderMapper.";
 
-
     @Override
-    public Integer createOrderAndReturnId(OrderDto orderDto) throws Exception {
-//        if (orderDto.getUserId() == null) {
-//            throw new IllegalArgumentException("주문을 생성하기 위해서는 회원 ID 가 필요합니다.");
-//        }
-//
-        if (orderDto.getDelivery_fee() != 0 || orderDto.getTotal_prod_pric() != 0 || orderDto.getTotal_bene_pric() != 0 || orderDto.getTotal_ord_pric() != 0) {
-            throw new IllegalArgumentException("주문을 생성할 때 주문의 가격정보가 초기화된 상태이어야 합니다..");
-        }
-
-        // 기본값 셋팅
-        orderDto.setOrd_stat(ORDER_DONE.getOrd_stat());
-
-        // 시스템 컬럼 셋팅
-        orderDto.setReg_id(orderDto.getUserId());
-        orderDto.setUp_id(orderDto.getUserId());
-
-        sqlSession.insert(namespace + "createOrder", orderDto);
+    public Integer insertAndReturnId(OrderDto orderDto) throws Exception {
+        sqlSession.insert(namespace + "insertAndReturnId", orderDto);
         return orderDto.getOrd_seq();
     }
 
     @Override
-    public OrderDto selectOrderById(Integer ordSeq) throws Exception {
-        return sqlSession.selectOne(namespace + "selectOrderById", ordSeq);
+    public OrderDto selectById(Integer ordSeq) throws Exception {
+        return sqlSession.selectOne(namespace + "selectById", ordSeq);
     }
 
     @Override
@@ -56,24 +40,24 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public int deleteOrderById(Integer ordSeq) throws Exception {
-        return sqlSession.delete(namespace + "deleteOrderById", ordSeq);
+    public int deleteById(Integer ordSeq) throws Exception {
+        return sqlSession.delete(namespace + "deleteById", ordSeq);
     }
 
     @Override
-    public int deleteAllOrder() throws Exception {
-        return sqlSession.delete(namespace + "deleteAllOrder");
+    public int deleteAll() throws Exception {
+        return sqlSession.delete(namespace + "deleteAll");
     }
 
     @Override
-    public int updateOrder(OrderDto orderDto, String upId) throws Exception {
+    public int update(OrderDto orderDto, String upId) throws Exception {
         orderDto.setUp_id(upId);
-        return sqlSession.update(namespace + "updateOrder", orderDto);
+        return sqlSession.update(namespace + "update", orderDto);
     }
 
     @Override
-    public int countAllOrder() throws Exception {
-        return sqlSession.selectOne(namespace + "countAllOrder");
+    public int countAll() throws Exception {
+        return sqlSession.selectOne(namespace + "countAll");
     }
 
     @Override

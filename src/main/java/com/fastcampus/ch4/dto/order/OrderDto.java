@@ -10,8 +10,10 @@ public class OrderDto {
     // fk
     private String userId; // 유저 id
 
-    // 속성
+    // NOTNULL
     private String ord_stat; // 주문 상태
+
+    // 속성
     private Integer delivery_fee = 0; // 배송비
     private Integer total_prod_pric = 0; // 총 상품 금액
     private Integer total_bene_pric = 0; // 총 할인 금액
@@ -22,10 +24,6 @@ public class OrderDto {
     private String reg_id; // 최초 등록 id
     private Date up_date; // 최근 수정 일시
     private String up_id; // 최근 수정 id
-
-    public OrderDto(String id) {
-        this.userId = id;
-    }
 
     public Integer getOrd_seq() {
         return ord_seq;

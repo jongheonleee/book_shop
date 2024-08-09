@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.fastcampus.ch4.domain.qa.PageHandler;
+import com.fastcampus.ch4.dto.qa.QaCategoryDto;
 import com.fastcampus.ch4.dto.qa.QaDto;
 
 import com.fastcampus.ch4.domain.qa.SearchCondition;
@@ -27,11 +28,27 @@ public class QaDaoImpTest {
     @Autowired
     private QaDaoImp dao;
 
+    @Autowired
+    private QaCategoryDaoImp helper;
+
 
     @Before
     public void 초기화() {
         assertTrue(dao != null);
         dao.deleteAll();
+        helper.deleteAll();
+
+        QaCategoryDto dto = new QaCategoryDto();
+        dto.setQa_cate_num("qa_cate_num1");
+        dto.setName("name1");
+        dto.setComt("comt1");
+        dto.setReg_date("2021-01-01");
+        dto.setReg_id("reg_id1");
+        dto.setUp_date("2021-01-01");
+        dto.setUp_id("up_id1");
+        dto.setChk_use("Y");
+
+        assertTrue(1 == helper.insert(dto));
     }
 
     @Test

@@ -15,6 +15,7 @@
     <!-- qa  -->
     <typeAlias alias="QaDto" type="com.fastcampus.ch4.dto.qa.QaDto"/>
     <typeAlias alias="SearchCondition" type="com.fastcampus.ch4.domain.qa.SearchCondition"/>
+    <typeAlias alias="QaCategoryDto" type="com.fastcampus.ch4.dto.qa.QaCategoryDto"/>
 
   </typeAliases>
 </configuration>

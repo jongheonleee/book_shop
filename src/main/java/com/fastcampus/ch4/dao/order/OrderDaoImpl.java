@@ -19,13 +19,13 @@ public class OrderDaoImpl implements OrderDao {
     String namespace = "com.fastcampus.ch4.dao.OrderMapper.";
 
     @Override
-    public Integer insertAndReturnId(OrderDto orderDto) throws Exception {
+    public Integer insertAndReturnSeq(OrderDto orderDto) throws Exception {
         sqlSession.insert(namespace + "insertAndReturnId", orderDto);
         return orderDto.getOrd_seq();
     }
 
     @Override
-    public OrderDto selectById(Integer ordSeq) throws Exception {
+    public OrderDto selectBySeq(Integer ordSeq) throws Exception {
         return sqlSession.selectOne(namespace + "selectById", ordSeq);
     }
 
@@ -40,7 +40,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public int deleteById(Integer ordSeq) throws Exception {
+    public int deleteBySeq(Integer ordSeq) throws Exception {
         return sqlSession.delete(namespace + "deleteById", ordSeq);
     }
 

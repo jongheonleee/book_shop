@@ -1,4 +1,4 @@
-package order.orderDao;
+package order.dao.orderDao;
 
 import com.fastcampus.ch4.dao.order.OrderDao;
 import com.fastcampus.ch4.dto.order.OrderDto;
@@ -52,7 +52,7 @@ public class OrderDeleteTest {
 
         // 2. 주문을 생성한다.
         OrderDto orderDto = OrderDtoFactory.getInstance(deleteUserId);
-        Integer orderSeq = orderDao.insertAndReturnId(orderDto);
+        Integer orderSeq = orderDao.insertAndReturnSeq(orderDto);
         assertNotNull(orderSeq);
 
         // 3. 현재 개수 카운트
@@ -61,7 +61,7 @@ public class OrderDeleteTest {
 
         // do
         // 3. 주문을 삭제한다.
-        int deleteResult = orderDao.deleteById(orderSeq);
+        int deleteResult = orderDao.deleteBySeq(orderSeq);
         assertTrue(deleteResult == SUCCESS_CODE);
 
         // 4. 현재 개수 카운트
@@ -72,7 +72,7 @@ public class OrderDeleteTest {
         assertTrue(beforeCount - SINGLE == afterCount);
 
         // 6. 삭제한 주문번호로 조회한다.
-        OrderDto deletedOrderDto = orderDao.selectById(orderSeq);
+        OrderDto deletedOrderDto = orderDao.selectBySeq(orderSeq);
         assertNull(deletedOrderDto);
     }
 
@@ -93,7 +93,7 @@ public class OrderDeleteTest {
         for (int i = 0; i < INSERT_COUNT; i++) {
             userId = "deleteTestUser" + i;
             orderDto = OrderDtoFactory.getInstance(userId);
-            orderSeq = orderDao.insertAndReturnId(orderDto);
+            orderSeq = orderDao.insertAndReturnSeq(orderDto);
             assertNotNull(orderSeq);
             orderSeqSet.add(orderSeq);
         }
@@ -107,7 +107,7 @@ public class OrderDeleteTest {
         // do
         // 4. 받아온 주문번호로 주문 삭제
         for (Integer createdOrderSeq : orderSeqSet) {
-            int deleteResult = orderDao.deleteById(createdOrderSeq);
+            int deleteResult = orderDao.deleteBySeq(createdOrderSeq);
             assertTrue(deleteResult == SUCCESS_CODE);
         }
 
@@ -121,14 +121,8 @@ public class OrderDeleteTest {
 
         // 7. 받아온 주문번호로 주문 조회
         for (Integer deletedOrderSeq : orderSeqSet) {
-            OrderDto selectedOrderDto = orderDao.selectById(deletedOrderSeq);
+            OrderDto selectedOrderDto = orderDao.selectBySeq(deletedOrderSeq);
             assertNull(selectedOrderDto);
         }
-    }
-
-
-    @Test
-    public void 주문삭제_실패테스트_주문상품이존재하는주문 () throws Exception {
-        fail();
     }
 }

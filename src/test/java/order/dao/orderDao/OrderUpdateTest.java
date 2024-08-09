@@ -1,4 +1,4 @@
-package order.orderDao;
+package order.dao.orderDao;
 
 import com.fastcampus.ch4.dao.order.OrderDao;
 import com.fastcampus.ch4.dto.order.OrderDto;
@@ -54,11 +54,11 @@ public class OrderUpdateTest {
         // give
         // 1. 주문을 생성한다.
         OrderDto orderDto = OrderDtoFactory.getInstance(CREATE_USER_ID);
-        Integer createdOrderSeq = orderDao.insertAndReturnId(orderDto);
+        Integer createdOrderSeq = orderDao.insertAndReturnSeq(orderDto);
         assertNotNull(createdOrderSeq);
 
         // 2. 생성한 주문의 값을 저장한다.
-        OrderDto createdOrderDto = orderDao.selectById(createdOrderSeq);
+        OrderDto createdOrderDto = orderDao.selectBySeq(createdOrderSeq);
         assertNotNull(createdOrderDto);
 
 //        String createdUserId = createdOrderDto.getUserId();
@@ -88,7 +88,7 @@ public class OrderUpdateTest {
 
         // assert
         // 4. 변경한 주문의 값이 제대로 변경 되어 있는지 확인한다.
-        OrderDto updatedOrderDto = orderDao.selectById(createdOrderSeq);
+        OrderDto updatedOrderDto = orderDao.selectBySeq(createdOrderSeq);
         Integer updatedOrdSeq = updatedOrderDto.getOrd_seq();
         assertNotNull(updatedOrderDto);
         assertTrue(createdOrderSeq.equals(updatedOrdSeq)); // seq 일치
@@ -122,7 +122,7 @@ public class OrderUpdateTest {
         assertNotEquals(createdUpDate, updatedUpDate);
 
         // 5. 주문 삭제
-        int deleteResult = orderDao.deleteById(updatedOrdSeq);
+        int deleteResult = orderDao.deleteBySeq(updatedOrdSeq);
         assertEquals(SUCCESS_CODE, deleteResult);
     }
 
@@ -162,12 +162,12 @@ public class OrderUpdateTest {
         // give
         // 1. 주문을 생성한다.
         OrderDto orderDto = OrderDtoFactory.getInstance(CREATE_USER_ID);
-        Integer createdOrderSeq = orderDao.insertAndReturnId(orderDto);
-        OrderDto createdOrderDto = orderDao.selectById(createdOrderSeq);
+        Integer createdOrderSeq = orderDao.insertAndReturnSeq(orderDto);
+        OrderDto createdOrderDto = orderDao.selectBySeq(createdOrderSeq);
 
         // do
         // 2. 주문을 삭제한다.
-        int deleteResult = orderDao.deleteById(createdOrderSeq);
+        int deleteResult = orderDao.deleteBySeq(createdOrderSeq);
         assertEquals(SUCCESS_CODE, deleteResult);
 
         // 3. 주문 update
@@ -195,10 +195,10 @@ public class OrderUpdateTest {
         // give
         // 1. 주문을 생성한다.
         OrderDto orderDto = OrderDtoFactory.getInstance(CREATE_USER_ID);
-        Integer createdOrderSeq = orderDao.insertAndReturnId(orderDto);
+        Integer createdOrderSeq = orderDao.insertAndReturnSeq(orderDto);
         assertNotNull(createdOrderSeq);
 
-        OrderDto createdOrderDto = orderDao.selectById(createdOrderSeq);
+        OrderDto createdOrderDto = orderDao.selectBySeq(createdOrderSeq);
         assertNotNull(createdOrderDto);
 
         // do

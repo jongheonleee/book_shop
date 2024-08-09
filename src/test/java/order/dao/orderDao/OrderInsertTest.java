@@ -1,4 +1,4 @@
-package order.orderDao;
+package order.dao.orderDao;
 
 import com.fastcampus.ch4.dao.order.OrderDao;
 import com.fastcampus.ch4.dto.order.OrderDto;
@@ -59,11 +59,11 @@ public class OrderInsertTest {
         OrderDto orderDto = OrderDtoFactory.getInstance(CREATE_USER_ID);
 
         // 2. insert
-        Integer createdOrderSeq = orderDao.insertAndReturnId(orderDto);
+        Integer createdOrderSeq = orderDao.insertAndReturnSeq(orderDto);
         assertNotNull(createdOrderSeq);
 
         // 3. 생성한 order 조회하기
-        OrderDto selectedOrderDto = orderDao.selectById(createdOrderSeq);
+        OrderDto selectedOrderDto = orderDao.selectBySeq(createdOrderSeq);
         assertNotNull(selectedOrderDto);
         String selectedOrderRegId = selectedOrderDto.getReg_id();
         String selectedOrderStatus = selectedOrderDto.getOrd_stat();
@@ -73,7 +73,7 @@ public class OrderInsertTest {
         assertTrue(ORDER_DONE.isSameStatus(selectedOrderStatus));
 
         // 5. 테스트한 order 삭제
-        assertTrue(orderDao.deleteById(createdOrderSeq) == SUCCESS_CODE);
+        assertTrue(orderDao.deleteBySeq(createdOrderSeq) == SUCCESS_CODE);
     }
 
     @Test
@@ -91,7 +91,7 @@ public class OrderInsertTest {
 
         for (int i = 0; i < INSERT_COUNT; i++) {
             orderDto = OrderDtoFactory.getInstance(CREATE_USER_ID);
-            createOrderSeq = orderDao.insertAndReturnId(orderDto);
+            createOrderSeq = orderDao.insertAndReturnSeq(orderDto);
             assertNotNull(createOrderSeq);
 
             // ADD SET
@@ -123,7 +123,7 @@ public class OrderInsertTest {
          */
 
         OrderDto orderDto = OrderDtoFactory.getInstance(CREATE_USER_ID);
-        Integer createdOrderSeq = orderDao.insertAndReturnId(orderDto);
+        Integer createdOrderSeq = orderDao.insertAndReturnSeq(orderDto);
         assertNotNull(createdOrderSeq);
         fail();
     }

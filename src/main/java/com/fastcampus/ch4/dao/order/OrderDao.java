@@ -13,10 +13,10 @@ public interface OrderDao {
      * 4. 주문 변경하기
      */
 
-    public Integer insertAndReturnId(OrderDto orderDto) throws Exception;
-    public OrderDto selectById(Integer ordSeq) throws Exception;
+    public Integer insertAndReturnSeq(OrderDto orderDto) throws Exception;
+    public OrderDto selectBySeq(Integer ordSeq) throws Exception;
     public List<OrderDto> selectAll(String columnName, boolean isDesc) throws Exception;
-    public int deleteById(Integer ordSeq) throws Exception;
+    public int deleteBySeq(Integer ordSeq) throws Exception;
     public int deleteAll() throws Exception;
     public int update(OrderDto orderDto, String upId) throws Exception;
     public int countAll() throws Exception;

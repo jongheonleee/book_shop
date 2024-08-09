@@ -1,4 +1,4 @@
-package order.orderDto;
+package order.factory;
 
 import com.fastcampus.ch4.dto.order.OrderDto;
 import com.fastcampus.ch4.service.order.factory.OrderDtoFactory;

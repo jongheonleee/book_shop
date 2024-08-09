@@ -3,11 +3,9 @@ package com.fastcampus.ch4.service.order.factory;
 import com.fastcampus.ch4.dto.order.OrderDto;
 import com.fastcampus.ch4.model.order.DeliveryStatus;
 import com.fastcampus.ch4.model.order.OrderStatus;
+import com.fastcampus.ch4.model.order.OrderConstants;
 import com.fastcampus.ch4.model.order.PaymentStatus;
 import org.springframework.stereotype.Component;
-
-import static com.fastcampus.ch4.dto.order.OrderDto.*;
-import static com.fastcampus.ch4.model.order.OrderStatus.*;
 
 @Component
 public class OrderDtoFactory {
@@ -22,7 +20,7 @@ public class OrderDtoFactory {
      */
 
     public OrderDto create(String userId) {
-        return create(userId, BASIC_ORDER_STATUS, BASIC_DELIVERY_STATUS, BASIC_PAYMENT_STATUS);
+        return create(userId, OrderConstants.BASIC_ORDER_STATUS, OrderConstants.BASIC_DELIVERY_STATUS, OrderConstants.BASIC_PAYMENT_STATUS);
     }
 
     public OrderDto create(String userId, OrderStatus orderStatus, DeliveryStatus deliveryStatus, PaymentStatus paymentStatus) {
@@ -45,21 +43,5 @@ public class OrderDtoFactory {
         orderDto.setUp_id(userId);
 
         return orderDto;
-    }
-
-    public int getBASIC_PRICE() {
-        return BASIC_PRICE;
-    }
-
-    public OrderStatus getBASIC_ORDER_STATUS() {
-        return BASIC_ORDER_STATUS;
-    }
-
-    public DeliveryStatus getBASIC_DELIVERY_STATUS() {
-        return BASIC_DELIVERY_STATUS;
-    }
-
-    public PaymentStatus getBASIC_PAYMENT_STATUS() {
-        return BASIC_PAYMENT_STATUS;
     }
 }

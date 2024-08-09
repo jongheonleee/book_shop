@@ -2,9 +2,7 @@ package order.dao.orderDao;
 
 import com.fastcampus.ch4.dao.order.OrderDao;
 import com.fastcampus.ch4.dto.order.OrderDto;
-import com.fastcampus.ch4.model.order.DeliveryStatus;
-import com.fastcampus.ch4.model.order.OrderStatus;
-import com.fastcampus.ch4.model.order.PaymentStatus;
+import com.fastcampus.ch4.model.order.OrderConstants;
 import com.fastcampus.ch4.service.order.factory.OrderDtoFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,8 +14,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.fastcampus.ch4.dto.order.OrderDto.*;
-import static com.fastcampus.ch4.model.order.OrderStatus.ORDER_DONE;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
@@ -76,13 +72,13 @@ public class OrderInsertTest {
         assertEquals(selectedOrderRegId, CREATE_USER_ID);
 
         String selectedOrderStatus = selectedOrderDto.getOrd_stat();
-        assertTrue(BASIC_ORDER_STATUS.isSameStatus(selectedOrderStatus));
+        assertTrue(OrderConstants.BASIC_ORDER_STATUS.isSameStatus(selectedOrderStatus));
 
         String  selectedDeliveryStatus = selectedOrderDto.getDeli_stat();
-        assertTrue(BASIC_DELIVERY_STATUS.isSameStatus(selectedDeliveryStatus));
+        assertTrue(OrderConstants.BASIC_DELIVERY_STATUS.isSameStatus(selectedDeliveryStatus));
 
         String  selectedPaymentStatus = selectedOrderDto.getPay_stat();
-        assertTrue(BASIC_PAYMENT_STATUS.isSameStatus(selectedPaymentStatus));
+        assertTrue(OrderConstants.BASIC_PAYMENT_STATUS.isSameStatus(selectedPaymentStatus));
 
         // 5. 테스트한 order 삭제
         assertTrue(orderDao.deleteBySeq(createdOrderSeq) == SUCCESS_CODE);

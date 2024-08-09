@@ -15,7 +15,8 @@
       created_at, email, tele_num, phon_num, img1,
       img2, img3
     FROM qa
-    WHERE qa_num = #{qa_num};
+    WHERE qa_num = #{qa_num}
+    <!-- 추후에 답변글 등등 조인 -->
   </select>
 
   <select id="selectByUserId" parameterType="string" resultType="QaDto">
@@ -24,7 +25,9 @@
       created_at, email, tele_num, phon_num, img1,
       img2, img3
     FROM qa
-    WHERE user_id = #{user_id};
+    WHERE user_id = #{user_id}
+    <!-- 추후에 상태, 카테고리 조인 -->
+    ORDER BY created_at DESC;
   </select>
 
   <select id="selectForUpdate" parameterType="QaDto" resultType="QaDto">
@@ -69,7 +72,9 @@
         AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL #{period} MONTH) AND now()
       </otherwise>
     </choose>
-    LIMIT #{offSet}, #{pageSize};
+    ORDER BY created_at DESC
+    LIMIT #{offSet}, #{pageSize}
+    <!-- 추후에 상태, 카테고리 조인 -->
   </select>
 
   <insert id="insert" parameterType="QaDto">
@@ -88,14 +93,14 @@
     SET title = #{title}, content = #{content}, email = #{email},
         tele_num = #{tele_num}, phon_num = #{phon_num}, img1 = #{img1},
         img2 = #{img2}, img3 = #{img3}
-    WHERE user_id = #{user_id} AND qa_num = #{qa_num};
+    WHERE user_id = #{user_id}
+    AND qa_num = #{qa_num};
   </update>
 
   <delete id="delete" parameterType="QaDto">
     DELETE
     FROM qa
-    WHERE user_id = #{user_id}
-    AND qa_num = #{qa_num};
+    WHERE qa_num = #{qa_num};
   </delete>
 
   <delete id="deleteAll">

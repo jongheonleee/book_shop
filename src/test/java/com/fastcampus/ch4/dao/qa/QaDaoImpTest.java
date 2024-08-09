@@ -37,21 +37,26 @@ public class QaDaoImpTest {
     @Test
     public void 데이터_넣기() {
         for (int i=0; i<20; i++) {
-            QaDto dto = new QaDto();
-            dto.setUser_id("user1");
-            dto.setQa_cate_num("qa_cate_num1");
-            dto.setTitle("title" + i);
-            dto.setContent("content" + i);
-            dto.setCreated_at("2021-01-01");
-            dto.setEmail("email1");
-            dto.setTele_num("010-1234-5678");
-            dto.setPhon_num("010-1234-5678");
-            dto.setImg1("img1");
-            dto.setImg2("img2");
-            dto.setImg3("img3");
+            QaDto dto = create(i);
 
             assertTrue(1 == dao.insert(dto));
         }
+    }
+
+    private static QaDto create(int i) {
+        QaDto dto = new QaDto();
+        dto.setUser_id("user1");
+        dto.setQa_cate_num("qa_cate_num1");
+        dto.setTitle("title" + i);
+        dto.setContent("content" + i);
+        dto.setCreated_at("2021-01-01");
+        dto.setEmail("email1");
+        dto.setTele_num("010-1234-5678");
+        dto.setPhon_num("010-1234-5678");
+        dto.setImg1("img1");
+        dto.setImg2("img2");
+        dto.setImg3("img3");
+        return dto;
     }
 
     /**
@@ -129,19 +134,7 @@ public class QaDaoImpTest {
         String user_id = "user1";
 
         for (int i=0; i<expected; i++) {
-            QaDto dto = new QaDto();
-            dto.setUser_id(user_id);
-            dto.setQa_cate_num("qa_cate_num1");
-            dto.setTitle("title" + i);
-            dto.setContent("content" + i);
-            dto.setCreated_at("2021-01-01");
-            dto.setEmail("email1");
-            dto.setTele_num("010-1234-5678");
-            dto.setPhon_num("010-1234-5678");
-            dto.setImg1("img1");
-            dto.setImg2("img2");
-            dto.setImg3("img3");
-
+            QaDto dto = create(i);
             assertTrue(1 == dao.insert(dto));
         }
 
@@ -192,19 +185,7 @@ public class QaDaoImpTest {
         String user_id = "user1";
         int expected = 5;
         for (int i=0; i<expected; i++) {
-            QaDto dto = new QaDto();
-            dto.setUser_id(user_id);
-            dto.setQa_cate_num("qa_cate_num1");
-            dto.setTitle("title" + i);
-            dto.setContent("content" + i);
-            dto.setCreated_at("2021-01-01");
-            dto.setEmail("email1");
-            dto.setTele_num("010-1234-5678");
-            dto.setPhon_num("010-1234-5678");
-            dto.setImg1("img1");
-            dto.setImg2("img2");
-            dto.setImg3("img3");
-
+            QaDto dto = create(i);
             assertTrue(1 == dao.insert(dto));
         }
 
@@ -236,18 +217,8 @@ public class QaDaoImpTest {
     @DisplayName("회원 필드값(필수값)이 null, 예외 발생")
     public void 비회원_등록_실패() {
         // given
-        QaDto dto = new QaDto();
+        QaDto dto = create(0);
         dto.setUser_id(null);
-        dto.setQa_cate_num("qa_cate_num1");
-        dto.setTitle("title1");
-        dto.setContent("content1");
-        dto.setCreated_at("2021-01-01");
-        dto.setEmail("email1");
-        dto.setTele_num("010-1234-5678");
-        dto.setPhon_num("010-1234-5678");
-        dto.setImg1("img1");
-        dto.setImg2("img2");
-        dto.setImg3("img3");
 
         // 💥 제약 조건 위배 -> DataIntegrityViolationException 발생
         // 필수값 넣지 않아서 발생하는 예외
@@ -259,18 +230,7 @@ public class QaDaoImpTest {
     @DisplayName("회원의 경우 등록 성공")
     public void 회원_등록_성공() {
         // given
-        QaDto dto = new QaDto();
-        dto.setUser_id("user1");
-        dto.setQa_cate_num("qa_cate_num1");
-        dto.setTitle("title1");
-        dto.setContent("content1");
-        dto.setCreated_at("2021-01-01");
-        dto.setEmail("email1");
-        dto.setTele_num("010-1234-5678");
-        dto.setPhon_num("010-1234-5678");
-        dto.setImg1("img1");
-        dto.setImg2("img2");
-        dto.setImg3("img3");
+        QaDto dto = create(0);
         int expected = 1;
 
         // when
@@ -284,18 +244,8 @@ public class QaDaoImpTest {
     @DisplayName("회원의 경우, 문의글이 null 예외 발생")
     public void 회원_등록_실패1() {
         // given
-        QaDto dto = new QaDto();
-        dto.setUser_id("user1");
-        dto.setQa_cate_num("qa_cate_num1");
-        dto.setTitle("title1");
-        dto.setContent(null); //  칼럼 최소 길이 설정 필요 - 최소 길이 3 설정함
-        dto.setCreated_at("2021-01-01");
-        dto.setEmail("email1");
-        dto.setTele_num("010-1234-5678");
-        dto.setPhon_num("010-1234-5678");
-        dto.setImg1("img1");
-        dto.setImg2("img2");
-        dto.setImg3("img3");
+        QaDto dto = create(0);
+        dto.setContent(null);
 
         // 💥 제약 조건 위배 -> DataIntegrityViolationException 발생
         // 필수값 넣지 않아서 발생하는 예외
@@ -308,18 +258,8 @@ public class QaDaoImpTest {
     @DisplayName("회원의 경우, 필수값 null인 경우 예외 발생")
     public void 회원_등록_실패2() {
         // given
-        QaDto dto = new QaDto();
-        dto.setUser_id("user1");
-        dto.setQa_cate_num("qa_cate_num1");
+        QaDto dto = create(0);
         dto.setTitle(null);
-        dto.setContent("content1");
-        dto.setCreated_at("2021-01-01");
-        dto.setEmail("email1");
-        dto.setTele_num("010-1234-5678");
-        dto.setPhon_num("010-1234-5678");
-        dto.setImg1("img1");
-        dto.setImg2("img2");
-        dto.setImg3("img3");
 
         // 💥 제약 조건 위배 -> DataIntegrityViolationException 발생
         // 필수값 작성하지 않아서 발생하는 예외
@@ -330,18 +270,8 @@ public class QaDaoImpTest {
     @Test
     @DisplayName("회원의 경우, 공백 문의글은 예외 발생 ")
     public void 공백_문의글_예외() {
-        QaDto dto = new QaDto();
-        dto.setUser_id("user1");
-        dto.setQa_cate_num("qa_cate_num1");
-        dto.setTitle("title1");
-        dto.setContent(""); // 최소 길이 3 이상
-        dto.setCreated_at("2021-01-01");
-        dto.setEmail("email1");
-        dto.setTele_num("010-1234-5678");
-        dto.setPhon_num("010-1234-5678");
-        dto.setImg1("img1");
-        dto.setImg2("img2");
-        dto.setImg3("img3");
+        QaDto dto = create(0);
+        dto.setContent("");
 
         // 스프링 예외, UncategorizedSQLException -> 예외에 대해서 명확히 파악 못한 경우 발생
         // 💥
@@ -353,18 +283,8 @@ public class QaDaoImpTest {
     @Test
     @DisplayName("회원의 경우, 공백 제목인 경우 예외 발생 ")
     public void 공백_제목_예외() {
-        QaDto dto = new QaDto();
-        dto.setUser_id("user1");
-        dto.setQa_cate_num("qa_cate_num1");
-        dto.setTitle(""); // 최소 길이 3 이상
-        dto.setContent("content1");
-        dto.setCreated_at("2021-01-01");
-        dto.setEmail("email1");
-        dto.setTele_num("010-1234-5678");
-        dto.setPhon_num("010-1234-5678");
-        dto.setImg1("img1");
-        dto.setImg2("img2");
-        dto.setImg3("img3");
+        QaDto dto = create(0);
+        dto.setTitle("");
 
         // 스프링 예외, UncategorizedSQLException -> 예외에 대해서 명확히 파악 못한 경우 발생
         // 사용자 예외 재정의
@@ -403,21 +323,8 @@ public class QaDaoImpTest {
     public void 비회원_수정_실패() {
         // given
         String user_id = "non-member";
-
-        QaDto dto = new QaDto();
-        dto.setUser_id("user1");
-        dto.setQa_cate_num("qa_cate_num1");
-        dto.setTitle("title1");
-        dto.setContent("content1");
-        dto.setCreated_at("2021-01-01");
-        dto.setEmail("email1");
-        dto.setTele_num("010-1234-5678");
-        dto.setPhon_num("010-1234-5678");
-        dto.setImg1("img1");
-        dto.setImg2("img2");
-        dto.setImg3("img3");
+        QaDto dto = create(0);
         assertTrue(1 == dao.insert(dto));
-
         int expected = 0;
 
         // when
@@ -433,24 +340,11 @@ public class QaDaoImpTest {
     @DisplayName("회원이지만, 해당 회원의 문의 글이 아닌 경우 실패")
     public void 회원_문의글_아님_수정_실패() {
         // given
-        String user_id = "user1";
+        String user_id = "non-member";
         int expected = 1;
 
-        QaDto dto = new QaDto();
-        dto.setUser_id("user2");
-        dto.setQa_cate_num("qa_cate_num1");
-        dto.setTitle("title1");
-        dto.setContent("content1");
-        dto.setCreated_at("2021-01-01");
-        dto.setEmail("email1");
-        dto.setTele_num("010-1234-5678");
-        dto.setPhon_num("010-1234-5678");
-        dto.setImg1("img1");
-        dto.setImg2("img2");
-        dto.setImg3("img3");
+        QaDto dto = create(0);
         assertTrue(1 == dao.insert(dto));
-
-
         dto.setTitle("updated title");
 
         // when
@@ -468,18 +362,7 @@ public class QaDaoImpTest {
         String user_id = "user1";
         int expected = 1;
 
-        QaDto dto = new QaDto();
-        dto.setUser_id(user_id);
-        dto.setQa_cate_num("qa_cate_num1");
-        dto.setTitle("title1");
-        dto.setContent("content1");
-        dto.setCreated_at("2021-01-01");
-        dto.setEmail("email1");
-        dto.setTele_num("010-1234-5678");
-        dto.setPhon_num("010-1234-5678");
-        dto.setImg1("img1");
-        dto.setImg2("img2");
-        dto.setImg3("img3");
+        QaDto dto = create(0);
         assertTrue(1 == dao.insert(dto));
 
         List<QaDto> qaDtos = dao.selectByUserId("user1");
@@ -563,18 +446,7 @@ public class QaDaoImpTest {
         // given
         String user_id = "non-member";
 
-        QaDto dto = new QaDto();
-        dto.setUser_id("user1");
-        dto.setQa_cate_num("qa_cate_num1");
-        dto.setTitle("title1");
-        dto.setContent("content1");
-        dto.setCreated_at("2021-01-01");
-        dto.setEmail("email1");
-        dto.setTele_num("010-1234-5678");
-        dto.setPhon_num("010-1234-5678");
-        dto.setImg1("img1");
-        dto.setImg2("img2");
-        dto.setImg3("img3");
+        QaDto dto = create(0);
         assertTrue(1 == dao.insert(dto));
 
         int expected = 0;
@@ -659,18 +531,7 @@ public class QaDaoImpTest {
     public void 구간_문의글_조회() {
         // given
         for (int i=0; i<=100; i++) {
-            QaDto dto = new QaDto();
-            dto.setUser_id("user1");
-            dto.setQa_cate_num("qa_cate_num1");
-            dto.setTitle("title" + i);
-            dto.setContent("content" + i);
-            dto.setCreated_at("2021-01-01");
-            dto.setEmail("email1");
-            dto.setTele_num("010-1234-5678");
-            dto.setPhon_num("010-1234-5678");
-            dto.setImg1("img1");
-            dto.setImg2("img2");
-            dto.setImg3("img3");
+            QaDto dto = create(i);
 
             assertTrue(1 == dao.insert(dto));
         }
@@ -693,18 +554,7 @@ public class QaDaoImpTest {
     @Test
     public void 제목_검색() {
         for (int i=0; i<10; i++) {
-            QaDto dto = new QaDto();
-            dto.setUser_id("user1");
-            dto.setQa_cate_num("qa_cate_num1");
-            dto.setTitle("title" + i);
-            dto.setContent("content" + i);
-            dto.setCreated_at("2021-01-01");
-            dto.setEmail("email1");
-            dto.setTele_num("010-1234-5678");
-            dto.setPhon_num("010-1234-5678");
-            dto.setImg1("img1");
-            dto.setImg2("img2");
-            dto.setImg3("img3");
+            QaDto dto = create(i);
 
             assertTrue(1 == dao.insert(dto));
         }
@@ -721,18 +571,7 @@ public class QaDaoImpTest {
     @Test
     public void 기간_검색() {
         for (int i=0; i<10; i++) {
-            QaDto dto = new QaDto();
-            dto.setUser_id("user1");
-            dto.setQa_cate_num("qa_cate_num1");
-            dto.setTitle("title" + i);
-            dto.setContent("content" + i);
-            dto.setCreated_at("2021-01-01");
-            dto.setEmail("email1");
-            dto.setTele_num("010-1234-5678");
-            dto.setPhon_num("010-1234-5678");
-            dto.setImg1("img1");
-            dto.setImg2("img2");
-            dto.setImg3("img3");
+            QaDto dto = create(i);
 
             assertTrue(1 == dao.insert(dto));
         }

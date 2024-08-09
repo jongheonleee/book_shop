@@ -13,6 +13,7 @@ public class OrderProductDto {
 
     // 속성
     String ordStat; // 주문 상태
+
     int itemQuan; //주문 상품 수량
     int basicPric; // 상품 가격
     double benePerc; // 상품 할인율

@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
-import static com.fastcampus.ch4.dto.order.OrderStatus.ORDER_DONE;
 import static org.junit.Assert.*;
 
 /*
@@ -27,6 +26,8 @@ import static org.junit.Assert.*;
 public class OrderSelectTest {
     @Autowired
     OrderDao orderDao;
+    @Autowired
+    OrderDtoFactory orderDtoFactory;
 
     final int SUCCESS_CODE = 1; // Query Execute Success
     final int SINGLE = 1;
@@ -37,7 +38,7 @@ public class OrderSelectTest {
     public void 주문조회_select () throws Exception {
         // give
         // 1. 주문을 생성한다.
-        OrderDto createdOrderDto = OrderDtoFactory.getInstance(CREATE_USER_ID);
+        OrderDto createdOrderDto = orderDtoFactory.create(CREATE_USER_ID);
 
         Integer createdOrdSeq = orderDao.insertAndReturnSeq(createdOrderDto);
         assertNotNull(createdOrdSeq);

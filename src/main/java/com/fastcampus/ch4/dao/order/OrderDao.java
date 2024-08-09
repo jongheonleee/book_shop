@@ -20,5 +20,4 @@ public interface OrderDao {
     public int deleteAll() throws Exception;
     public int update(OrderDto orderDto, String upId) throws Exception;
     public int countAll() throws Exception;
-    public List<OrderDto> searchOrder() throws Exception ;
 }

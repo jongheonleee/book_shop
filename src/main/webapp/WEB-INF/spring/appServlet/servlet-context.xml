@@ -23,6 +23,8 @@
 
 	<context:component-scan base-package="com.fastcampus.ch4"/>
 
+<!--	<beans:bean id="orderDtoFactory" class="com.fastcampus.ch4.service.order.factory.OrderDtoFactory" factory-method="getInstance"  />-->
+
 	<view-controller path="/" view-name="index"/>
 
 </beans:beans>

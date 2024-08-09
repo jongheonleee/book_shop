@@ -11,8 +11,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Date;
+import java.util.List;
 
-import static com.fastcampus.ch4.dto.order.OrderStatus.PAYMENT_DONE;
+import static com.fastcampus.ch4.model.order.OrderStatus.PAYMENT_DONE;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assume.assumeTrue;
@@ -44,6 +45,9 @@ public class OrderUpdateTest {
     @Autowired
     OrderDao orderDao;
 
+    @Autowired
+    OrderDtoFactory orderDtoFactory;
+
     final int SUCCESS_CODE = 1; // Query Execute Success
     final String USER_ID_NULL = null; // user id null
     final String CREATE_USER_ID = "createUser"; // 주문 생성 시 사용할 userId
@@ -53,7 +57,7 @@ public class OrderUpdateTest {
     public void 주문변경_update_order() throws Exception {
         // give
         // 1. 주문을 생성한다.
-        OrderDto orderDto = OrderDtoFactory.getInstance(CREATE_USER_ID);
+        OrderDto orderDto = orderDtoFactory.create(CREATE_USER_ID);
         Integer createdOrderSeq = orderDao.insertAndReturnSeq(orderDto);
         assertNotNull(createdOrderSeq);
 
@@ -75,7 +79,7 @@ public class OrderUpdateTest {
         int changeTotalBenePric = 1680;
         int changeDeliveryFee = 3000;
         int changeTotalOrdPric = changeTotalProdPric - changeTotalBenePric + changeDeliveryFee;
-        String changeOrdStat = PAYMENT_DONE.getOrd_stat();
+        String changeOrdStat = PAYMENT_DONE.getCode();
 
         createdOrderDto.setTotal_prod_pric(changeTotalProdPric);
         createdOrderDto.setTotal_bene_pric(changeTotalBenePric);
@@ -117,51 +121,51 @@ public class OrderUpdateTest {
         String updatedUpId = updatedOrderDto.getUp_id();
         assertEquals(updatedUpId, UPDATE_USER_ID);
 
-        // 최근 수정 일자
-        Date updatedUpDate = updatedOrderDto.getUp_date();
-        assertNotEquals(createdUpDate, updatedUpDate);
+        // 최근 수정 일자 => 다른 테스트로 분리.
+//        Date updatedUpDate = updatedOrderDto.getUp_date();
+//        assertNotEquals(createdUpDate, updatedUpDate);
 
         // 5. 주문 삭제
         int deleteResult = orderDao.deleteBySeq(updatedOrdSeq);
         assertEquals(SUCCESS_CODE, deleteResult);
     }
 
-//    @Test
-//    public void 주문변경_update_시스템컬럼 () throws Exception {
-//        // 1. 이미 생성되어 있는 주문 리스트를 조회한다.
-//        List<OrderDto> orderDtoList = orderDao.selectAll("ord_seq", false);
-//
-//        // 이미 생성되어 있는 주문이 없다면 테스트를 실행하지 않는다.
-//        assumeTrue(orderDtoList.size() > 0);
-//
-//        // 무작위 선택
-//        int randomIndex = (int) (Math.random() * orderDtoList.size());
-//
-//        OrderDto firstOrderDto  = orderDtoList.get(randomIndex);
-//        Integer firstOrderDtoSeq = firstOrderDto.getOrd_seq();
-//
-//        // 2. up_date 저장
-//        Date firstOrderDtoUpDate = firstOrderDto.getUp_date();
-//
-//        // 3. order update
-//        int updateResult = orderDao.updateOrder(firstOrderDto, UPDATE_USER_ID);
-//        assertEquals(SUCCESS_CODE, updateResult);
-//
-//        OrderDto updatedOrderDto = orderDao.selectOrderById(firstOrderDtoSeq);
-//        Integer updatedOrdSeq = updatedOrderDto.getOrd_seq();
-//        assertNotNull(updatedOrderDto);
-//        assertEquals(firstOrderDtoSeq, updatedOrdSeq);
-//        Date updatedOrdUpDate = updatedOrderDto.getUp_date();
-//
-//        // 4. 검증
-//        assertNotEquals(firstOrderDtoUpDate, updatedOrdUpDate);
-//    }
+    @Test
+    public void 주문변경_update_시스템컬럼 () throws Exception {
+        // 1. 이미 생성되어 있는 주문 리스트를 조회한다.
+        List<OrderDto> orderDtoList = orderDao.selectAll("ord_seq", false);
+
+        // 이미 생성되어 있는 주문이 없다면 테스트를 실행하지 않는다.
+        assumeTrue(orderDtoList.size() > 0);
+
+        // 무작위 선택
+        int randomIndex = (int) (Math.random() * orderDtoList.size());
+
+        OrderDto firstOrderDto  = orderDtoList.get(randomIndex);
+        Integer firstOrderDtoSeq = firstOrderDto.getOrd_seq();
+
+        // 2. up_date 저장
+        Date firstOrderDtoUpDate = firstOrderDto.getUp_date();
+
+        // 3. order update
+        int updateResult = orderDao.update(firstOrderDto, UPDATE_USER_ID);
+        assertEquals(SUCCESS_CODE, updateResult);
+
+        OrderDto updatedOrderDto = orderDao.selectBySeq(firstOrderDtoSeq);
+        Integer updatedOrdSeq = updatedOrderDto.getOrd_seq();
+        assertNotNull(updatedOrderDto);
+        assertEquals(firstOrderDtoSeq, updatedOrdSeq);
+        Date updatedOrdUpDate = updatedOrderDto.getUp_date();
+
+        // 4. 검증
+        assertNotEquals(firstOrderDtoUpDate, updatedOrdUpDate);
+    }
 
     @Test
     public void 주문변경_update_noOrder() throws Exception {
         // give
         // 1. 주문을 생성한다.
-        OrderDto orderDto = OrderDtoFactory.getInstance(CREATE_USER_ID);
+        OrderDto orderDto = orderDtoFactory.create(CREATE_USER_ID);
         Integer createdOrderSeq = orderDao.insertAndReturnSeq(orderDto);
         OrderDto createdOrderDto = orderDao.selectBySeq(createdOrderSeq);
 
@@ -175,7 +179,7 @@ public class OrderUpdateTest {
         int changeTotalBenePric = 1680;
         int changeDeliveryFee = 3000;
         int changeTotalOrdPric = changeTotalProdPric - changeTotalBenePric + changeDeliveryFee;
-        String changeOrdStat = PAYMENT_DONE.getOrd_stat();
+        String changeOrdStat = PAYMENT_DONE.getCode();
 
         createdOrderDto.setTotal_prod_pric(changeTotalProdPric);
         createdOrderDto.setTotal_bene_pric(changeTotalBenePric);
@@ -194,7 +198,7 @@ public class OrderUpdateTest {
     public void 주문변경_update_UpId_null() throws Exception {
         // give
         // 1. 주문을 생성한다.
-        OrderDto orderDto = OrderDtoFactory.getInstance(CREATE_USER_ID);
+        OrderDto orderDto = orderDtoFactory.create(CREATE_USER_ID);
         Integer createdOrderSeq = orderDao.insertAndReturnSeq(orderDto);
         assertNotNull(createdOrderSeq);
 

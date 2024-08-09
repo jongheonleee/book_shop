@@ -19,6 +19,8 @@ import static org.junit.Assert.*;
 public class OrderDeleteTest {
     @Autowired
     OrderDao orderDao;
+    @Autowired
+    OrderDtoFactory orderDtoFactory;
 
     final int SUCCESS_CODE = 1; // Query Execute Success
     final int SINGLE = 1;
@@ -51,7 +53,7 @@ public class OrderDeleteTest {
         int startCount = orderDao.countAll();
 
         // 2. 주문을 생성한다.
-        OrderDto orderDto = OrderDtoFactory.getInstance(deleteUserId);
+        OrderDto orderDto = orderDtoFactory.create(deleteUserId);
         Integer orderSeq = orderDao.insertAndReturnSeq(orderDto);
         assertNotNull(orderSeq);
 
@@ -92,7 +94,7 @@ public class OrderDeleteTest {
 
         for (int i = 0; i < INSERT_COUNT; i++) {
             userId = "deleteTestUser" + i;
-            orderDto = OrderDtoFactory.getInstance(userId);
+            orderDto = orderDtoFactory.create(userId);
             orderSeq = orderDao.insertAndReturnSeq(orderDto);
             assertNotNull(orderSeq);
             orderSeqSet.add(orderSeq);

@@ -21,6 +21,8 @@ import static org.junit.Assert.assertTrue;
 public class OrderCountTest {
     @Autowired
     OrderDao orderDao;
+    @Autowired
+    OrderDtoFactory orderDtoFactory;
 
     final int SUCCESS_CODE = 1; // Query Execute Success
     final int SINGLE = 1;
@@ -42,7 +44,7 @@ public class OrderCountTest {
         // do
         // 2. 1개 insert
         String userId = "countTestUser";
-        OrderDto orderDto = OrderDtoFactory.getInstance(userId);
+        OrderDto orderDto = orderDtoFactory.create(userId);
         Integer orderSeq = orderDao.insertAndReturnSeq(orderDto);
         assertNotNull(orderSeq);
 
@@ -67,7 +69,7 @@ public class OrderCountTest {
         Integer orderSeq = null;
         for (int i = 0; i < INSERT_COUNT; i++) {
             String userId = "countTestUser" + i;
-            orderDto = OrderDtoFactory.getInstance(userId);
+            orderDto = orderDtoFactory.create(userId);
             // 주문 생성
             orderSeq = orderDao.insertAndReturnSeq(orderDto);
             assertNotNull(orderSeq); // 주문생성 확인
@@ -85,7 +87,7 @@ public class OrderCountTest {
         // give
         // 1. 주문 생성
         String userId = "countTestUser";
-        OrderDto orderDto = OrderDtoFactory.getInstance(userId);
+        OrderDto orderDto = orderDtoFactory.create(userId);
         Integer orderSeq = orderDao.insertAndReturnSeq(orderDto);
         assertNotNull(orderSeq);
 
@@ -121,7 +123,7 @@ public class OrderCountTest {
         Integer orderSeq = null;
         for (int i = 0; i < INSERT_COUNT; i++) {
             userId = "countTestUser" + i;
-            orderDto = OrderDtoFactory.getInstance(userId);
+            orderDto = orderDtoFactory.create(userId);
             orderSeq = orderDao.insertAndReturnSeq(orderDto);
             assertNotNull(orderSeq);
             createdOrdSeqList.add(orderSeq);

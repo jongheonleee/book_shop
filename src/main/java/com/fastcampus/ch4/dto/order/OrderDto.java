@@ -1,8 +1,16 @@
 package com.fastcampus.ch4.dto.order;
 
+import com.fastcampus.ch4.model.order.DeliveryStatus;
+import com.fastcampus.ch4.model.order.OrderStatus;
+import com.fastcampus.ch4.model.order.PaymentStatus;
+
 import java.util.Date;
 
 public class OrderDto {
+    public static final OrderStatus BASIC_ORDER_STATUS = OrderStatus.ORDER_START;
+    public static final DeliveryStatus BASIC_DELIVERY_STATUS = DeliveryStatus.DELIVERY_WAIT;
+    public static final PaymentStatus BASIC_PAYMENT_STATUS = PaymentStatus.PAYMENT_WAIT;
+
     // pk
     // auto increment
     private Integer ord_seq; // 주문 번호
@@ -12,6 +20,8 @@ public class OrderDto {
 
     // NOTNULL
     private String ord_stat; // 주문 상태
+    private String deli_stat;
+    private String pay_stat;
 
     // 속성
     private Integer delivery_fee = 0; // 배송비
@@ -47,6 +57,22 @@ public class OrderDto {
 
     public void setOrd_stat(String ord_stat) {
         this.ord_stat = ord_stat;
+    }
+
+    public String getDeli_stat() {
+        return deli_stat;
+    }
+
+    public void setDeli_stat(String deli_stat) {
+        this.deli_stat = deli_stat;
+    }
+
+    public String getPay_stat() {
+        return pay_stat;
+    }
+
+    public void setPay_stat(String pay_stat) {
+        this.pay_stat = pay_stat;
     }
 
     public Integer getDelivery_fee() {

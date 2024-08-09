@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.fastcampus.ch4.dto.order.OrderStatus.*;
-
 @Repository
 public class OrderDaoImpl implements OrderDao {
     @Autowired
@@ -58,10 +56,5 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public int countAll() throws Exception {
         return sqlSession.selectOne(namespace + "countAll");
-    }
-
-    @Override
-    public List<OrderDto> searchOrder() throws Exception {
-        return List.of();
     }
 }

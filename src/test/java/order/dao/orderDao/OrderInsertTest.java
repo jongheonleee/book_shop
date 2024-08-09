@@ -2,6 +2,9 @@ package order.dao.orderDao;
 
 import com.fastcampus.ch4.dao.order.OrderDao;
 import com.fastcampus.ch4.dto.order.OrderDto;
+import com.fastcampus.ch4.model.order.DeliveryStatus;
+import com.fastcampus.ch4.model.order.OrderStatus;
+import com.fastcampus.ch4.model.order.PaymentStatus;
 import com.fastcampus.ch4.service.order.factory.OrderDtoFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.fastcampus.ch4.dto.order.OrderStatus.ORDER_DONE;
+import static com.fastcampus.ch4.dto.order.OrderDto.*;
+import static com.fastcampus.ch4.model.order.OrderStatus.ORDER_DONE;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
@@ -35,6 +39,8 @@ import static org.junit.Assert.assertTrue;
 public class OrderInsertTest {
     @Autowired
     OrderDao orderDao;
+    @Autowired
+    OrderDtoFactory orderDtoFactory;
 
     final int SUCCESS_CODE = 1; // Query Execute Success
     final String USER_ID_NULL = null; // user id null
@@ -55,8 +61,7 @@ public class OrderInsertTest {
     @Test
     public void 주문생성_insert_single() throws Exception {
         // 1. dto 생성하기
-        String registerUserId = "createTestUser";
-        OrderDto orderDto = OrderDtoFactory.getInstance(CREATE_USER_ID);
+        OrderDto orderDto = orderDtoFactory.create(CREATE_USER_ID);
 
         // 2. insert
         Integer createdOrderSeq = orderDao.insertAndReturnSeq(orderDto);
@@ -65,12 +70,19 @@ public class OrderInsertTest {
         // 3. 생성한 order 조회하기
         OrderDto selectedOrderDto = orderDao.selectBySeq(createdOrderSeq);
         assertNotNull(selectedOrderDto);
-        String selectedOrderRegId = selectedOrderDto.getReg_id();
-        String selectedOrderStatus = selectedOrderDto.getOrd_stat();
 
         // 4. 생성된 order 값 비교
-        assertEquals(selectedOrderRegId, registerUserId);
-        assertTrue(ORDER_DONE.isSameStatus(selectedOrderStatus));
+        String selectedOrderRegId = selectedOrderDto.getReg_id();
+        assertEquals(selectedOrderRegId, CREATE_USER_ID);
+
+        String selectedOrderStatus = selectedOrderDto.getOrd_stat();
+        assertTrue(BASIC_ORDER_STATUS.isSameStatus(selectedOrderStatus));
+
+        String  selectedDeliveryStatus = selectedOrderDto.getDeli_stat();
+        assertTrue(BASIC_DELIVERY_STATUS.isSameStatus(selectedDeliveryStatus));
+
+        String  selectedPaymentStatus = selectedOrderDto.getPay_stat();
+        assertTrue(BASIC_PAYMENT_STATUS.isSameStatus(selectedPaymentStatus));
 
         // 5. 테스트한 order 삭제
         assertTrue(orderDao.deleteBySeq(createdOrderSeq) == SUCCESS_CODE);
@@ -90,7 +102,7 @@ public class OrderInsertTest {
         Set<Integer> orderDtoSeqSet = new HashSet<>();
 
         for (int i = 0; i < INSERT_COUNT; i++) {
-            orderDto = OrderDtoFactory.getInstance(CREATE_USER_ID);
+            orderDto = orderDtoFactory.create(CREATE_USER_ID);
             createOrderSeq = orderDao.insertAndReturnSeq(orderDto);
             assertNotNull(createOrderSeq);
 
@@ -122,7 +134,7 @@ public class OrderInsertTest {
          * 3. DataIntegrityViolationException 가 발생하면 성공
          */
 
-        OrderDto orderDto = OrderDtoFactory.getInstance(CREATE_USER_ID);
+        OrderDto orderDto = orderDtoFactory.create(USER_ID_NULL);
         Integer createdOrderSeq = orderDao.insertAndReturnSeq(orderDto);
         assertNotNull(createdOrderSeq);
         fail();

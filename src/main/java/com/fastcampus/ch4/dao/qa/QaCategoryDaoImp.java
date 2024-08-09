@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class QaCategoryDaoImp {
+public class QaCategoryDaoImp implements QaCategoryDao {
 
     @Autowired
     private SqlSession session;
@@ -27,34 +27,42 @@ public class QaCategoryDaoImp {
      * - (7) 문의 카테고리 모두를 삭제함
      **/
 
+    @Override
     public int count() {
         return session.selectOne(namespace + "count");
     }
 
+    @Override
     public int insert(QaCategoryDto dto) {
         return session.insert(namespace + "insert", dto);
     }
 
+    @Override
     public int deleteAll() {
         return session.delete(namespace + "deleteAll");
     }
 
+    @Override
     public List<QaCategoryDto> selectAll() {
         return session.selectList(namespace + "selectAll");
     }
 
+    @Override
     public QaCategoryDto select(String qa_cate_num) {
         return session.selectOne(namespace + "select", qa_cate_num);
     }
 
+    @Override
     public List<QaCategoryDto> selectByChkUse(String chk_use) {
         return session.selectList(namespace + "selectByChkUse", chk_use);
     }
 
+    @Override
     public int delete(String qa_cate_num) {
         return session.delete(namespace + "delete", qa_cate_num);
     }
 
+    @Override
     public int update(QaCategoryDto dto) {
         return session.update(namespace + "update", dto);
     }

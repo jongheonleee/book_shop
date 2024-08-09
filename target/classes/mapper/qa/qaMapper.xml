@@ -11,69 +11,79 @@
 
   <select id="select" parameterType="int" resultType="QaDto">
     SELECT
-      qa_num, user_id, qa_cate_num, title, content,
-      created_at, email, tele_num, phon_num, img1,
-      img2, img3
-    FROM qa
-    WHERE qa_num = #{qa_num}
+      q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
+      q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
+      q.img2, q.img3, c.name
+    FROM qa AS q
+    INNER JOIN qa_cate AS c
+    ON q.qa_cate_num = c.qa_cate_num
+    WHERE q.qa_num = #{qa_num}
     <!-- 추후에 답변글 등등 조인 -->
   </select>
 
   <select id="selectByUserId" parameterType="string" resultType="QaDto">
     SELECT
-      qa_num, user_id, qa_cate_num, title, content,
-      created_at, email, tele_num, phon_num, img1,
-      img2, img3
-    FROM qa
-    WHERE user_id = #{user_id}
-    <!-- 추후에 상태, 카테고리 조인 -->
-    ORDER BY created_at DESC;
+      q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
+      q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
+      q.img2, q.img3, c.name
+    FROM qa AS q
+    INNER JOIN qa_cate AS c
+    ON q.qa_cate_num = c.qa_cate_num
+    WHERE q.user_id = #{user_id}
+    ORDER BY q.created_at DESC;
   </select>
 
   <select id="selectForUpdate" parameterType="QaDto" resultType="QaDto">
     SELECT
-      qa_num, user_id, qa_cate_num, title, content,
-      created_at, email, tele_num, phon_num, img1,
-      img2, img3
-    FROM qa
-    WHERE qa_num = #{qa_num}
+      q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
+      q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
+      q.img2, q.img3, c.name
+    FROM qa AS q
+    INNER JOIN qa_cate AS c
+    ON q.qa_cate_num = c.qa_cate_num
+    WHERE q.qa_num = #{qa_num}
+    ORDR BY q.created_at DESC
     FOR UPDATE
   </select>
 
   <select id="selectByUserIdAndPh" parameterType="map" resultType="QaDto">
     SELECT
-      qa_num, user_id, qa_cate_num, title, content,
-      created_at, email, tele_num, phon_num, img1,
-      img2, img3
-    FROM qa
-    WHERE user_id = #{user_id}
-    ORDER BY created_at DESC
+      q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
+      q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
+      q.img2, q.img3, c.name AS qa_cate_name
+    FROM qa AS q
+    INNER JOIN qa_cate AS c
+    ON q.qa_cate_num = c.qa_cate_num
+    WHERE q.user_id = #{user_id}
+    ORDER BY q.created_at DESC
     LIMIT #{offSet}, #{pageSize};
   </select>
 
   <select id="selectBySearchCondition" parameterType="map" resultType="QaDto">
     SELECT
-      qa_num, user_id, qa_cate_num, title, content,
-      created_at, email, tele_num, phon_num, img1,
-      img2, img3
-    FROM qa
+      q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
+      q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
+      q.img2, q.img3, c.name AS qa_cate_name
+    FROM qa AS q
+    INNER JOIN qa_cate AS c
+    ON q.qa_cate_num = c.qa_cate_num
     WHERE TRUE
     <choose>
       <when test='option=="title"'>
-        AND user_id = #{user_id}
-        AND title LIKE CONCAT('%', #{titleKeyword}, '%')
+        AND q.user_id = #{user_id}
+        AND q.title LIKE CONCAT('%', #{titleKeyword}, '%')
       </when>
       <when test='option=="period"'>
-        AND user_id = #{user_id}
-        AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL #{period} MONTH) AND now()
+        AND q.user_id = #{user_id}
+        AND q.created_at BETWEEN DATE_SUB(NOW(), INTERVAL #{period} MONTH) AND now()
       </when>
       <otherwise>
-        AND user_id = #{user_id}
-        AND title LIKE CONCAT('%', #{title}, '%')
-        AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL #{period} MONTH) AND now()
+        AND q.user_id = #{user_id}
+        AND q.title LIKE CONCAT('%', #{title}, '%')
+        AND q.created_at BETWEEN DATE_SUB(NOW(), INTERVAL #{period} MONTH) AND now()
       </otherwise>
     </choose>
-    ORDER BY created_at DESC
+    ORDER BY q.created_at DESC
     LIMIT #{offSet}, #{pageSize}
     <!-- 추후에 상태, 카테고리 조인 -->
   </select>

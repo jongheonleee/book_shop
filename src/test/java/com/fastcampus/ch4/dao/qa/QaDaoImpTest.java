@@ -554,15 +554,12 @@ public class QaDaoImpTest {
         // given
         for (int i=0; i<=100; i++) {
             QaDto dto = create(i);
-
             assertTrue(1 == dao.insert(dto));
         }
 
         // when
-        PageHandler ph = new PageHandler(1, 100);
         SearchCondition sc = new SearchCondition(1, 10, "", "", 0);
-        int offSet = (ph.getPage() - 1) * ph.getPageSize();
-        int pageSize = ph.getPageSize();
+        PageHandler ph = new PageHandler(100, sc);
         List<QaDto> selected = dao.selectByUserIdAndPh("user1", sc);
 
 

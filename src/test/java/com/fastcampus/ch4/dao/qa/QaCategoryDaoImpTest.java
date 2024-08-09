@@ -23,14 +23,19 @@ public class QaCategoryDaoImpTest {
     @Autowired
     private QaCategoryDaoImp dao;
 
+    @Autowired
+    private QaDaoImp helper;
+
     @Before
     public void 초기화() {
+        helper.deleteAll();
         assertTrue(dao != null);
         dao.deleteAll();
     }
 
     @Test
     public void 데이터_비우기() {
+        helper.deleteAll();
         dao.deleteAll();
     }
 

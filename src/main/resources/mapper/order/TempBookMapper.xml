@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcampus.ch4.dao.TempBookMapper">
+    <select id="selectByIsbn" resultType="TempBookDto">
+        SELECT
+            isbn,
+            pub_id2,
+            md_stat,
+            book_title,
+            cont,
+            papr_pric,
+            e_pric,
+            papr_point,
+            e_point,
+            prod_md_com,
+            prod_md_com_desc,
+            rating,
+            pub_day,
+            book_desc,
+            book_info,
+            intro_award,
+            recommend,
+            book_inside,
+            pub_review,
+            tot_page_num,
+            tot_book_num,
+            pre_start_page,
+            pre_end_page,
+            ebook_url,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id
+        FROM
+            book_shop.book
+        WHERE
+            isbn = #{isbn}
+    </select>
+</mapper>

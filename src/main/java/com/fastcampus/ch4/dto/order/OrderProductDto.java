@@ -33,44 +33,6 @@ public class OrderProductDto {
     Date up_date; // 최근 수정 일시
     String up_id; // 최근 수정 id
 
-    @Override
-    public String toString() {
-        return "OrderProductDto{" +
-                "ord_prod_num=" + ord_prod_num +
-                ", ord_num=" + ord_num +
-                ", isbn='" + isbn + '\'' +
-                ", prod_type_code='" + prod_type_code + '\'' +
-                ", ord_stat='" + ord_stat + '\'' +
-                ", deli_stat='" + deli_stat + '\'' +
-                ", pay_stat='" + pay_stat + '\'' +
-                ", item_quan=" + item_quan +
-                ", point_perc=" + point_perc +
-                ", point_pric=" + point_pric +
-                ", basic_pric=" + basic_pric +
-                ", bene_perc=" + bene_perc +
-                ", bene_pric=" + bene_pric +
-                ", sale_pric=" + sale_pric +
-                ", ord_pric=" + ord_pric +
-                ", reg_date=" + reg_date +
-                ", regId='" + regId + '\'' +
-                ", up_date=" + up_date +
-                ", up_id='" + up_id + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof OrderProductDto)) return false;
-        OrderProductDto that = (OrderProductDto) o;
-        return item_quan == that.item_quan && Double.compare(point_perc, that.point_perc) == 0 && point_pric == that.point_pric && basic_pric == that.basic_pric && Double.compare(bene_perc, that.bene_perc) == 0 && Double.compare(bene_pric, that.bene_pric) == 0 && sale_pric == that.sale_pric && ord_pric == that.ord_pric && Objects.equals(ord_prod_num, that.ord_prod_num) && Objects.equals(ord_num, that.ord_num) && Objects.equals(isbn, that.isbn) && Objects.equals(prod_type_code, that.prod_type_code) && Objects.equals(ord_stat, that.ord_stat) && Objects.equals(deli_stat, that.deli_stat) && Objects.equals(pay_stat, that.pay_stat) && Objects.equals(reg_date, that.reg_date) && Objects.equals(regId, that.regId) && Objects.equals(up_date, that.up_date) && Objects.equals(up_id, that.up_id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(ord_prod_num, ord_num, isbn, prod_type_code, ord_stat, deli_stat, pay_stat, item_quan, point_perc, point_pric, basic_pric, bene_perc, bene_pric, sale_pric, ord_pric, reg_date, regId, up_date, up_id);
-    }
-
     public Integer getOrd_prod_num() {
         return ord_prod_num;
     }

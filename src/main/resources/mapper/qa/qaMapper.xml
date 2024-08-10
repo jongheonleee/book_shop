@@ -3,6 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.fastcampus.ch4.QaMapper">
+  <!-- Qa 부분 -->
   <select id="count" parameterType="string" resultType="int">
     SELECT COUNT(*)
     FROM qa
@@ -13,7 +14,7 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
       q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
-      q.img2, q.img3, c.name
+      q.img2, q.img3, c.name AS cate_name
     FROM qa AS q
     INNER JOIN qa_cate AS c
     ON q.qa_cate_num = c.qa_cate_num
@@ -25,7 +26,7 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
       q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
-      q.img2, q.img3, c.name
+      q.img2, q.img3, c.name AS cate_name
     FROM qa AS q
     INNER JOIN qa_cate AS c
     ON q.qa_cate_num = c.qa_cate_num
@@ -37,7 +38,7 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
       q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
-      q.img2, q.img3, c.name
+      q.img2, q.img3, c.name AS cate_name
     FROM qa AS q
     INNER JOIN qa_cate AS c
     ON q.qa_cate_num = c.qa_cate_num
@@ -50,7 +51,7 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
       q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
-      q.img2, q.img3, c.name AS qa_cate_name
+      q.img2, q.img3, c.name AS cate_name
     FROM qa AS q
     INNER JOIN qa_cate AS c
     ON q.qa_cate_num = c.qa_cate_num
@@ -63,7 +64,7 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
       q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
-      q.img2, q.img3, c.name AS qa_cate_name
+      q.img2, q.img3, c.name AS cate_name
     FROM qa AS q
     INNER JOIN qa_cate AS c
     ON q.qa_cate_num = c.qa_cate_num
@@ -117,6 +118,64 @@
   <delete id="deleteAll">
     DELETE
     FROM qa;
+  </delete>
+
+  <!-- QaCategory 부분 -->
+
+  <!-- QaState 부분 -->
+  <insert id="insertForQaState" parameterType="QaStateDto">
+    INSERT INTO qa_state (qa_stat_code, name, reg_date,
+                          reg_id, up_date, up_id, qa_num,
+                          appl_begin, appl_end)
+    VALUES (#{qa_stat_code}, #{name}, now(), #{reg_id},
+            '9999-12-31 23:59:59', #{up_id}, #{qa_num},
+            now(), '9999-12-31 23:59:59');
+  </insert>
+
+  <select id="selectForQaState" resultType="QaStateDto">
+    SELECT * FROM qa_state
+    ORDER BY reg_date DESC;
+  </select>
+
+  <select id="selectForQaStateByQaNum" resultType="QaStateDto">
+    SELECT *
+    FROM qa_state
+    WHERE qa_num = #{qa_num};
+  </select>
+
+  <select id="selectForQaStateByQaNumAndQaStateSeq" resultType="QaStateDto">
+    SELECT *
+    FROM qa_state
+    WHERE qa_num = #{qa_num}
+    AND qa_stat_seq = #{qa_stat_seq};
+  </select>
+
+  <update id="updateForQaState">
+    UPDATE qa_state
+    SET qa_stat_code = #{qa_stat_code},
+        name = #{name},
+        appl_begin = #{appl_begin},
+        appl_end = now(),
+        up_date = now(),
+        up_id = #{up_id}
+    WHERE qa_num = #{qa_num}
+    AND qa_stat_seq = #{qa_stat_seq};
+  </update>
+
+
+  <delete id="deleteAllForQaState">
+    DELETE FROM qa_state;
+  </delete>
+
+  <delete id="deleteForQaState">
+    DELETE FROM qa_state
+    WHERE qa_num = #{qa_num}
+    AND qa_stat_seq = #{qa_stat_seq};
+  </delete>
+
+  <delete id="deleteForQaStateOnQaNum">
+    DELETE FROM qa_state
+    WHERE qa_num = #{qa_num};
   </delete>
 
 </mapper>

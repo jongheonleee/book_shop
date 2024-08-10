@@ -17,7 +17,7 @@ public interface QaService {
 
     List<QaDto> read(String userId, SearchCondition sc);
 
-    // (3) 글 검색 - 기간, 제목 대상으로 글 조회
+    // (3) 글 검색 - 기간, 제목 대상으로 글 조회 -> 💥페이징 처리 안됨..
     List<QaDto> readBySearchCondition(String userId, SearchCondition sc);
 
     // (4) 글 작성 - 같은 제목 작성 방지

@@ -281,7 +281,7 @@
                 <tr>
                     <td>${qaDto.qa_num}</td>
                     <td><a href="<c:url value='/qa/${qaDto.qa_num}?page=${ph.page}&pageSize=${ph.pageSize}'/>">${qaDto.title}</a></td>
-                    <td>${qaDto.qa_cate_num}</td>
+                    <td>${qaDto.cate_name}</td>
                     <td>${qaDto.chk_repl}</td>
                     <td>${qaDto.created_at}</td>
                 </tr>

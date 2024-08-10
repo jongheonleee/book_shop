@@ -13,7 +13,7 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
       q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
-      q.img2, q.img3, c.name
+      q.img2, q.img3, c.name AS cate_name
     FROM qa AS q
     INNER JOIN qa_cate AS c
     ON q.qa_cate_num = c.qa_cate_num
@@ -25,7 +25,7 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
       q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
-      q.img2, q.img3, c.name
+      q.img2, q.img3, c.name AS cate_name
     FROM qa AS q
     INNER JOIN qa_cate AS c
     ON q.qa_cate_num = c.qa_cate_num
@@ -37,7 +37,7 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
       q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
-      q.img2, q.img3, c.name
+      q.img2, q.img3, c.name AS cate_name
     FROM qa AS q
     INNER JOIN qa_cate AS c
     ON q.qa_cate_num = c.qa_cate_num
@@ -50,7 +50,7 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
       q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
-      q.img2, q.img3, c.name AS qa_cate_name
+      q.img2, q.img3, c.name AS cate_name
     FROM qa AS q
     INNER JOIN qa_cate AS c
     ON q.qa_cate_num = c.qa_cate_num
@@ -63,7 +63,7 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
       q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
-      q.img2, q.img3, c.name AS qa_cate_name
+      q.img2, q.img3, c.name AS cate_name
     FROM qa AS q
     INNER JOIN qa_cate AS c
     ON q.qa_cate_num = c.qa_cate_num

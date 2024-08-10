@@ -40,7 +40,7 @@ public class QaDaoImpTest {
 
         QaCategoryDto dto = new QaCategoryDto();
         dto.setQa_cate_num("qa_cate_num1");
-        dto.setName("name1");
+        dto.setName("교환/환불 요청");
         dto.setComt("comt1");
         dto.setReg_date("2021-01-01");
         dto.setReg_id("reg_id1");

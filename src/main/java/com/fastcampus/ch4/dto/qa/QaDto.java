@@ -18,10 +18,20 @@ public class QaDto {
     private String img2;
     private String img3;
     private String comt;
+    private String cate_name;
     private String reg_date;
     private String reg_id;
     private String up_date;
     private String up_id;
+
+
+    public String getCate_name() {
+        return cate_name;
+    }
+
+    public void setCate_name(String cate_name) {
+        this.cate_name = cate_name;
+    }
 
     public String getReg_date() {
         return reg_date;
@@ -186,7 +196,7 @@ public class QaDto {
     @Override
     public String toString() {
         return "QaDto{" +
-                "qa_num='" + qa_num + '\'' +
+                "qa_num=" + qa_num +
                 ", user_id='" + user_id + '\'' +
                 ", qa_cate_num='" + qa_cate_num + '\'' +
                 ", admin='" + admin + '\'' +
@@ -202,6 +212,11 @@ public class QaDto {
                 ", img2='" + img2 + '\'' +
                 ", img3='" + img3 + '\'' +
                 ", comt='" + comt + '\'' +
+                ", cate_name='" + cate_name + '\'' +
+                ", reg_date='" + reg_date + '\'' +
+                ", reg_id='" + reg_id + '\'' +
+                ", up_date='" + up_date + '\'' +
+                ", up_id='" + up_id + '\'' +
                 '}';
     }
 }

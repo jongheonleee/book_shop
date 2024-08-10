@@ -543,7 +543,7 @@ public class QaCategoryDaoImpTest {
     private QaCategoryDto create(int i) {
         QaCategoryDto dto = new QaCategoryDto();
         dto.setQa_cate_num("qa-cate-num" + i);
-        dto.setName("name" + i);
+        dto.setName("환불요청");
         dto.setComt("comt" + i);
         dto.setChk_use("Y");
         return dto;

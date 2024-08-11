@@ -12,8 +12,15 @@ public class TempBookDaoImpl implements TempBookDao {
 
     String namespace = "com.fastcampus.ch4.dao.order.temp.TempBookMapper.";
 
+
+    final double TEMP_BENEFIT_PERCENT = 0.1;
+
+    /*
+    여기에서 가격 처리를 하는 것이 좋다.
+     */
     @Override
     public TempBookDto selectByIsbn(String isbn) {
-        return sqlSession.selectOne("selectByIsbn", isbn);
+        TempBookDto bookDto = sqlSession.selectOne("selectByIsbn", isbn);
+        return bookDto;
     }
 }

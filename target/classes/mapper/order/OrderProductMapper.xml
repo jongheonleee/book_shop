@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcampus.ch4.dao.OrderProductMapper">
+    <insert id="insertAndReturnSeq" parameterType="OrderProductDto" useGeneratedKeys="true" keyProperty="ord_prod_seq" >
+        INSERT INTO
+            book_shop.order_prod
+        (
+            ord_seq,
+            isbn,
+            prod_type_code,
+            ord_stat,
+            deli_stat,
+            pay_stat,
+            item_quan,
+            point_perc,
+            point_pric,
+            basic_pric,
+            bene_perc,
+            bene_pric,
+            sale_pric,
+            ord_pric,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id
+        )
+        VALUES
+            (
+                #{ord_seq},
+                #{isbn},
+                #{prod_type_code},
+                #{ord_stat},
+                #{deli_stat},
+                #{pay_stat},
+                #{item_quan},
+                #{point_perc},
+                #{point_pric},
+                #{basic_pric},
+                #{bene_perc},
+                #{bene_pric},
+                #{sale_pric},
+                #{ord_pric},
+                NOW(),
+                #{reg_id},
+                NOW(),
+                #{up_id}
+            )
+    </insert>
+</mapper>

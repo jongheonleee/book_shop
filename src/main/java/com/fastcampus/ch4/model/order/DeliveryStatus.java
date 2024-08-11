@@ -4,13 +4,13 @@ public enum DeliveryStatus {
     DELIVERY_WAIT("delivery_wait", "배송 준비중"),
     DELIVERY_DO("delivery_do", "배송중"),
     DELIVERY_DONE("delivery_done", "배송 완료"),
-    DELIVERY_CANCLE("delivery_cancle", "배송 취소");
+    DELIVERY_CANCLE("delivery_cancel", "배송 취소");
 
     private final String code;
     private final String statusName;
 
-    DeliveryStatus(String code, String statusName) {
-        this.statusName = statusName;
+    DeliveryStatus(String code, String codeName) {
+        this.statusName = codeName;
         this.code = code;
     }
 

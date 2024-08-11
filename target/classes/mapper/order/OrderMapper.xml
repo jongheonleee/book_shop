@@ -114,7 +114,7 @@
             total_prod_pric = #{total_prod_pric},
             total_bene_pric = #{total_bene_pric},
             total_ord_pric = #{total_ord_pric},
-            up_date = now(),
+            up_date = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),
             up_id = #{up_id}
         WHERE
             ord_seq = #{ord_seq}

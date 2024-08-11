@@ -5,7 +5,6 @@
     <select id="selectByIsbn" resultType="TempBookDto">
         SELECT
             isbn,
-            pub_id2,
             md_stat,
             book_title,
             cont,

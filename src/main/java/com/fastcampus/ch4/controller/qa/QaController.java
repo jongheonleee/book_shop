@@ -7,7 +7,9 @@ import static com.fastcampus.ch4.code.error.qa.QaErrorCode.INVALID_VALUE_INPUT;
 import com.fastcampus.ch4.domain.qa.PageHandler;
 import com.fastcampus.ch4.dto.qa.QaDto;
 import com.fastcampus.ch4.domain.qa.SearchCondition;
+import com.fastcampus.ch4.dto.qa.QaStateDto;
 import com.fastcampus.ch4.service.qa.QaService;
+import com.fastcampus.ch4.service.qa.QaServiceImp;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -71,6 +73,10 @@ public class QaController {
         // 로그인 여부 확인, 로그인 x -> 로그인 폼으로 이동
         if (!isLogin(request)) return "redirect:/loginForm";
 
+        // 상태 모두 조회
+        List<QaStateDto> states = service.readAllState();
+        model.addAttribute("states", states);
+
         // 필요 정보 조회 - 1. 유저 문의글, 2. 유저 문의글 수, 3. 페이징
         HttpSession session = request.getSession();
 //        String userId = (String) session.getAttribute("userId");
@@ -94,12 +100,17 @@ public class QaController {
         // 로그인 여부 확인, 로그인 x -> 로그인 폼으로 이동
         if (!isLogin(request)) return "redirect:/loginForm";
 
+        // 상태 모두 조회
+        List<QaStateDto> states = service.readAllState();
+        model.addAttribute("states", states);
+
         // 필요 정보 조회 - 1. 검색 문의글, 2. 검색 문의글 수, 3. 페이징
         HttpSession session = request.getSession();
 //        String userId = (String) session.getAttribute("userId");
         String userId = "user1";
-        List<QaDto> selected = service.readBySearchCondition(userId, sc);
-        int totalCnt = selected.size();
+        List<QaDto> selected = service.readBySearchCondition(userId, sc); // 여기 최대 길이 10임
+
+        int totalCnt = service.count(userId, sc); // 이 부분 고쳐야함 count(userId, sc)
         PageHandler ph = new PageHandler(totalCnt, sc);
 
         // 정보 저장
@@ -148,7 +159,7 @@ public class QaController {
         // 등록 작업 시행
         HttpSession session = request.getSession();
         String userId = (String) session.getAttribute("userId");
-        if (!service.write(userId, sc, qaDto)) {
+        if (!service.write(userId, qaDto)) {
             model.addAttribute("errorMsg", "문의글 등록에 실패했습니다.");
             return "/qa/error";
         }
@@ -184,7 +195,7 @@ public class QaController {
         HttpSession session = request.getSession();
         String userId = (String) session.getAttribute("userId");
         dto.setQa_num(qaNum);
-        if (!service.modify(userId, sc, dto)) {
+        if (!service.modify(userId, dto, sc)) {
             model.addAttribute("msg", "문의글 수정에 실패했습니다");
             return "/qa/error";
         }

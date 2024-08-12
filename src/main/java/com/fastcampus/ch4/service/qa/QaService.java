@@ -2,6 +2,7 @@ package com.fastcampus.ch4.service.qa;
 
 import com.fastcampus.ch4.dto.qa.QaDto;
 import com.fastcampus.ch4.domain.qa.SearchCondition;
+import com.fastcampus.ch4.dto.qa.QaStateDto;
 import java.util.List;
 
 public interface QaService {
@@ -21,11 +22,15 @@ public interface QaService {
     List<QaDto> readBySearchCondition(String userId, SearchCondition sc);
 
     // (4) 글 작성 - 같은 제목 작성 방지
-    boolean write(String userId, SearchCondition sc, QaDto dto);
+    boolean write(String userId, QaDto dto);
 
     // (5) 글 삭제 - 글 번호로 삭제, 글 제목으로 삭제
     boolean remove(QaDto dto);
 
     // (6) 글 수정
-    boolean modify(String userId, SearchCondition sc, QaDto dto);
+    boolean modify(String userId, QaDto dto, SearchCondition sc);
+
+    int count(String userId, SearchCondition sc);
+
+    List<QaStateDto> readAllState();
 }

@@ -23,6 +23,8 @@ public class QaDto {
     private String reg_id;
     private String up_date;
     private String up_id;
+    private String qa_stat_code;
+    private String stat_name;
 
 
     public String getCate_name() {
@@ -31,6 +33,22 @@ public class QaDto {
 
     public void setCate_name(String cate_name) {
         this.cate_name = cate_name;
+    }
+
+    public String getQa_stat_code() {
+        return qa_stat_code;
+    }
+
+    public void setQa_stat_code(String qa_stat_code) {
+        this.qa_stat_code = qa_stat_code;
+    }
+
+    public String getStat_name() {
+        return stat_name;
+    }
+
+    public void setStat_name(String stat_name) {
+        this.stat_name = stat_name;
     }
 
     public String getReg_date() {
@@ -217,6 +235,8 @@ public class QaDto {
                 ", reg_id='" + reg_id + '\'' +
                 ", up_date='" + up_date + '\'' +
                 ", up_id='" + up_id + '\'' +
+                ", qa_stat_code='" + qa_stat_code + '\'' +
+                ", stat_name='" + stat_name + '\'' +
                 '}';
     }
 }

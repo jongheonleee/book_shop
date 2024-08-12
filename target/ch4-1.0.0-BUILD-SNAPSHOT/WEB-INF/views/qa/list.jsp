@@ -255,10 +255,13 @@
 
 <!-- 상태별 구분 칸 -->
 <div id="tabs" class="container">
-    <div class="tab active" data-tab="tab-1">전체</div>
-    <div class="tab" data-tab="tab-2">준비중</div>
-    <div class="tab" data-tab="tab-3">처리중</div>
-    <div class="tab" data-tab="tab-4">답변완료</div>
+    <c:forEach var="state" items="${states}">
+        <div class="tab" data-id="${state.qa_stat_code}">${state.name}</div>
+    </c:forEach>
+<%--    <div class="tab active" data-tab="tab-1">전체</div>--%>
+<%--    <div class="tab" data-tab="tab-2">준비중</div>--%>
+<%--    <div class="tab" data-tab="tab-3">처리중</div>--%>
+<%--    <div class="tab" data-tab="tab-4">답변완료</div>--%>
 </div>
 
 <!-- 문의글 목록-->
@@ -272,6 +275,7 @@
                 <th>제목</th>
                 <th>카테고리</th>
                 <th>상태</th>
+                <th>답변여부</th>
                 <th>날짜</th>
     <%--            <th>작성자</th>--%>
             </tr>
@@ -282,6 +286,7 @@
                     <td>${qaDto.qa_num}</td>
                     <td><a href="<c:url value='/qa/${qaDto.qa_num}?page=${ph.page}&pageSize=${ph.pageSize}'/>">${qaDto.title}</a></td>
                     <td>${qaDto.cate_name}</td>
+                    <td>${qaDto.stat_name}</td>
                     <td>${qaDto.chk_repl}</td>
                     <td>${qaDto.created_at}</td>
                 </tr>

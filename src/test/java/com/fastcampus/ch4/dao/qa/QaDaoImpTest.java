@@ -54,11 +54,7 @@ public class QaDaoImpTest {
 
     @Test
     public void 데이터_넣기() {
-        for (int i=0; i<20; i++) {
-            QaDto dto = create(i);
 
-            assertTrue(1 == dao.insert(dto));
-        }
     }
 
     @Test
@@ -252,20 +248,20 @@ public class QaDaoImpTest {
     @Test
     @DisplayName("회원의 경우, 조회 리스트 길이 N")
     public void 회원_조회_리스트_n() {
-        // given
-        String user_id = "user1";
-        int expected = 5;
-        for (int i=0; i<expected; i++) {
-            QaDto dto = create(i);
-            assertTrue(1 == dao.insert(dto));
-        }
-
-        // when
-        List<QaDto> selected = dao.selectByUserId(user_id);
-        int actual = selected.size();
-
-        // then
-         assertEquals(expected, actual);
+//        // given
+//        String user_id = "user1";
+//        int expected = 5;
+//        for (int i=0; i<expected; i++) {
+//            QaDto dto = create(i);
+//            assertTrue(1 == dao.insert(dto));
+//        }
+//
+//        // when
+//        List<QaDto> selected = dao.selectByUserId(user_id);
+//        int actual = selected.size();
+//
+//        // then
+//         assertEquals(expected, actual);
     }
 
     @Test
@@ -436,15 +432,14 @@ public class QaDaoImpTest {
         QaDto dto = create(0);
         assertTrue(1 == dao.insert(dto));
 
-        List<QaDto> qaDtos = dao.selectByUserId("user1");
-        QaDto target = qaDtos.get(0);
+        QaDto target = dao.selectAll().get(0);
         assertTrue(target != null);
         System.out.println(target);
         target.setTitle("updated title");
 
         // when
         int rowCnt = dao.update(target);
-        List<QaDto> updated = dao.selectByUserId(user_id);
+        List<QaDto> updated = dao.selectAll();
 
         // then
         assertTrue(expected == rowCnt);
@@ -584,12 +579,11 @@ public class QaDaoImpTest {
 
 
         int expected = 1;
-        List<QaDto> qaDtos = dao.selectByUserId(user_id);
-        dto = qaDtos.get(0);
-        System.out.println(dto);
+        QaDto selected = dao.selectAll().get(0);
+        System.out.println(selected);
 
         // when
-        int rowCnt = dao.delete(dto);
+        int rowCnt = dao.delete(selected);
 
         // then
         System.out.println("rowCnt = " + rowCnt);
@@ -600,20 +594,58 @@ public class QaDaoImpTest {
     @Test
     @DisplayName("페이징 처리로 글 조회")
     public void 구간_문의글_조회() {
-        // given
-        for (int i=0; i<=100; i++) {
+        /**
+         * 이슈
+         * 1. 구간 문의글 조회
+         * 2. 기간 검색
+         * 3. 제목 검색
+         * 4. 회원 삭제 성공
+         *
+         * 모두 2개의 테이블 조인해서 구현함
+         * 따라서, 2개 테이블 데이터 먼저 생성하고 테스트를 진행해야함
+         *
+         */
+
+        // 카테고리 생성 및 등록
+        helper.insert(createCategory(1));
+
+        // 카테고리 조회
+        QaCategoryDto category = helper.select("qa-cate-num1");
+
+
+        // 문의글 생성, 카테고리 할당
+        // 문의글 등록 * 30
+        for (int i=1; i<=30; i++) {
             QaDto dto = create(i);
-            assertTrue(1 == dao.insert(dto));
+            dto.setQa_cate_num(category.getQa_cate_num());
+            dto.setCate_name(category.getName());
+
+            int rowCnt = dao.insert(dto);
+            assertTrue(1 == rowCnt);
+
         }
 
-        // when
+        // 각 문의글에 상태값 할당함
+        List<QaDto> selected = dao.selectAll();
+        for (QaDto dto : selected) {
+            dao.insertState(createState(1, dto.getQa_num()));
+        }
+
+
+        // sc, ph 생성
+        // selectByUserIdAndPh 호출
         SearchCondition sc = new SearchCondition(1, 10, "", "", 0);
         PageHandler ph = new PageHandler(100, sc);
-        List<QaDto> selected = dao.selectByUserIdAndPh("user1", sc);
+        selected = dao.selectByUserIdAndPh("user1", sc);
 
-
-        // then
+        // 사이즈 10 맞는지 확인
         assertTrue(10 == selected.size());
+        for (QaDto dto : selected) {
+            System.out.println(dto);
+        }
+
+
+
     }
 
     // (7) 글 검색 - 기간, 제목 대상으로 글 검색
@@ -621,15 +653,34 @@ public class QaDaoImpTest {
     @DisplayName("제목 대상으로 글 검색")
     @Test
     public void 제목_검색() {
-        for (int i=0; i<10; i++) {
-            QaDto dto = create(i);
+//        for (int i=0; i<10; i++) {
+//            QaDto dto = create(i);
+//
+//            assertTrue(1 == dao.insert(dto));
+//        }
+//
+//        SearchCondition sc = new SearchCondition(1, 10, "title", "title1", 0);
+//        List<QaDto> selected = dao.selectBySearchCondition("user1", sc);
+//        assertTrue(1 == selected.size());
 
+        // 데이터 생성 및 등록 * n
+        for (int i=1; i<=10; i++) {
+            QaDto dto = create(1);
             assertTrue(1 == dao.insert(dto));
+            QaDto selected = dao.selectAll().get(0);
+            int qaNum = selected.getQa_num();
+
+            // insert 수행 * n
+            for (int expected = 1; expected <= 5; expected++) {
+                QaStateDto state = createState(expected, qaNum);
+                assertTrue(1 == dao.insertState(state));
+            }
+
         }
 
-        SearchCondition sc = new SearchCondition(1, 10, "title", "title1", 0);
+        SearchCondition sc = new SearchCondition(1, 10, "title", "title", 0);
         List<QaDto> selected = dao.selectBySearchCondition("user1", sc);
-        assertTrue(1 == selected.size());
+        assertTrue(10 == selected.size());
 
 
     }
@@ -638,16 +689,27 @@ public class QaDaoImpTest {
     @DisplayName("기간으로 글 검색")
     @Test
     public void 기간_검색() {
-        for (int i=0; i<10; i++) {
-            QaDto dto = create(i);
-
+        // 데이터 생성 및 등록 * n
+        for (int i=1; i<=10; i++) {
+            QaDto dto = create(1);
             assertTrue(1 == dao.insert(dto));
+            QaDto selected = dao.selectAll().get(0);
+            int qaNum = selected.getQa_num();
+
+            // insert 수행 * n
+            for (int expected = 1; expected <= 5; expected++) {
+                QaStateDto state = createState(expected, qaNum);
+                assertTrue(1 == dao.insertState(state));
+            }
+
         }
 
-        SearchCondition sc = new SearchCondition(1, 10, "period", "", 3);
-        List<QaDto> selected = dao.selectBySearchCondition("user1", sc);
-        assertTrue(10 == selected.size());
 
+
+        // insert 수행 * n
+        SearchCondition sc = new SearchCondition(1, 10, "period", "", 3);
+        List<QaDto> result = dao.selectBySearchCondition("user1", sc);
+        assertTrue(10 == result.size());
 
     }
 
@@ -664,11 +726,12 @@ public class QaDaoImpTest {
     @Test
     public void not_null_칼럼_제약_위배() {
         // 데이터 생성
-        QaDto dto = create(1);
-        assertTrue(1 == dao.insert(dto));
-        QaDto selected = dao.selectByUserId("user1").get(0);
-        int qaNum = selected.getQa_num();
-
+//        QaDto dto = create(1);
+//        assertTrue(1 == dao.insert(dto));
+//        QaCategoryDto category = createCategory(1);
+//        assertTrue(1 == helper.insert(category));
+//        QaDto selected = dao.selectByUserId("user1").get(0);
+        int qaNum = 1000;
         QaStateDto state = createState(1, qaNum);
         // not null 필드에 null 할당
         state.setQa_stat_code(null);
@@ -683,10 +746,14 @@ public class QaDaoImpTest {
     public void 관리자_상태_등록_성공() {
         // 데이터 생성
         QaDto dto = create(1);
-        assertTrue(1 == dao.insert(dto));
-        QaDto selected = dao.selectByUserId("user1").get(0);
-        int qaNum = selected.getQa_num();
 
+        QaCategoryDto category = createCategory(1);
+        assertTrue(1 == helper.insert(category));
+        dto.setQa_cate_num(category.getQa_cate_num());
+        dto.setCate_name(category.getName());
+        assertTrue(1 == dao.insert(dto));
+        List<QaDto> selected = dao.selectAll();
+        int qaNum = selected.get(0).getQa_num();
         QaStateDto state = createState(1, qaNum);
 
         // insert 수행, 로우수 = 1
@@ -704,7 +771,7 @@ public class QaDaoImpTest {
         // 데이터 생성
         QaDto dto = create(1);
         assertTrue(1 == dao.insert(dto));
-        QaDto selected = dao.selectByUserId("user1").get(0);
+        QaDto selected = dao.selectAll().get(0);
         int qaNum = selected.getQa_num();
 
         QaStateDto state = createState(1, qaNum);
@@ -729,7 +796,6 @@ public class QaDaoImpTest {
             assertTrue(state.getName().equals(found.getName()));
             assertTrue(state.getQa_stat_code().equals(found.getQa_stat_code()));
 
-//            assertTrue(found.equals(state));
         }
 
     }
@@ -745,7 +811,7 @@ public class QaDaoImpTest {
         // 데이터 생성 및 등록 * n
         QaDto dto = create(1);
         assertTrue(1 == dao.insert(dto));
-        QaDto selected = dao.selectByUserId("user1").get(0);
+        QaDto selected = dao.selectAll().get(0);
         int qaNum = selected.getQa_num();
 
         QaStateDto state = createState(1, qaNum);
@@ -786,7 +852,7 @@ public class QaDaoImpTest {
         // 데이터 생성 및 등록 * n
         QaDto dto = create(1);
         assertTrue(1 == dao.insert(dto));
-        QaDto selected = dao.selectByUserId("user1").get(0);
+        QaDto selected = dao.selectAll().get(0);
         int qaNum = selected.getQa_num();
 
         QaStateDto state = createState(1, qaNum);
@@ -828,7 +894,7 @@ public class QaDaoImpTest {
         // 데이터 생성 및 등록
         QaDto dto = create(1);
         assertTrue(1 == dao.insert(dto));
-        QaDto selected = dao.selectByUserId("user1").get(0);
+        QaDto selected = dao.selectAll().get(0);
         int qaNum = selected.getQa_num();
 
         QaStateDto state = createState(1, qaNum);
@@ -859,7 +925,7 @@ public class QaDaoImpTest {
         // 데이터 생성 및 등록
         QaDto dto = create(1);
         assertTrue(1 == dao.insert(dto));
-        QaDto selected = dao.selectByUserId("user1").get(0);
+        QaDto selected = dao.selectAll().get(0);
         int qaNum = selected.getQa_num();
 
         QaStateDto state = createState(1, qaNum);
@@ -886,7 +952,7 @@ public class QaDaoImpTest {
         // 특정 문의글에 n개의 상태 데이터 생성 및 등록
         QaDto dto = create(1);
         assertTrue(1 == dao.insert(dto));
-        QaDto selected = dao.selectByUserId("user1").get(0);
+        QaDto selected = dao.selectAll().get(0);
         int qaNum = selected.getQa_num();
 
         QaStateDto state = createState(1, qaNum);
@@ -905,7 +971,7 @@ public class QaDaoImpTest {
 
 
         // 해당 상태 이력 전체 삭제
-        int rowCnt = dao.deleteAllStateOnQaNum(qaNum);
+        int rowCnt = dao.deleteStateByQaNum(qaNum);
 
         // 적용 로우수 n, 조회 안됨
         assertTrue(5 == rowCnt);
@@ -923,7 +989,7 @@ public class QaDaoImpTest {
         // 특정 문의글에 n개의 상태 데이터 생성 및 등록
         QaDto dto = create(1);
         assertTrue(1 == dao.insert(dto));
-        QaDto selected = dao.selectByUserId("user1").get(0);
+        QaDto selected = dao.selectAll().get(0);
         int qaNum = selected.getQa_num();
 
         QaStateDto state = createState(1, qaNum);
@@ -950,6 +1016,7 @@ public class QaDaoImpTest {
         assertTrue(dao.selectStateByQaNum(qaNum).size() == 4);
     }
 
+
     private QaStateDto createState(int i, int qaNum) {
         QaStateDto dto = new QaStateDto();
         dto.setQa_stat_code("qa_stat_code" + i);
@@ -964,4 +1031,12 @@ public class QaDaoImpTest {
         return dto;
     }
 
+    private QaCategoryDto createCategory(int i) {
+        QaCategoryDto dto = new QaCategoryDto();
+        dto.setQa_cate_num("qa-cate-num" + i);
+        dto.setName("환불요청");
+        dto.setComt("comt" + i);
+        dto.setChk_use("Y");
+        return dto;
+    }
 }

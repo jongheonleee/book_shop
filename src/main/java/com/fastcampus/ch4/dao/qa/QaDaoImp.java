@@ -1,5 +1,6 @@
 package com.fastcampus.ch4.dao.qa;
 
+import com.fastcampus.ch4.dto.qa.QaCategoryDto;
 import com.fastcampus.ch4.dto.qa.QaDto;
 import com.fastcampus.ch4.domain.qa.SearchCondition;
 import com.fastcampus.ch4.dto.qa.QaStateDto;
@@ -36,10 +37,25 @@ public class QaDaoImp implements QaDao {
         return session.selectOne(namespace + "count", user_id);
     }
 
+    public int countBySearchCondition(String user_id, SearchCondition sc) {
+        Map map = new HashMap();
+
+        map.put("user_id", user_id);
+        map.put("option", sc.getOption());
+        map.put("titleKeyword", sc.getTitleKeyword());
+        map.put("period", sc.getPeriod());
+
+        return session.selectOne(namespace + "countBySearchCondition", map);
+    }
+
     // (8) 문의글 일련번호로 조회
     @Override
     public QaDto select(int qa_num) {
         return session.selectOne(namespace + "select", qa_num);
+    }
+
+    public List<QaDto> selectAll() {
+        return session.selectList(namespace + "selectAll");
     }
 
     // (3) 유저의 문의글 등록
@@ -142,8 +158,18 @@ public class QaDaoImp implements QaDao {
         return session.delete(namespace + "deleteForQaState", qa_stat_seq);
     }
 
-    public int deleteAllStateOnQaNum(int qaNum) {
-        return session.delete(namespace + "deleteForQaStateOnQaNum", qaNum);
+    public int deleteStateByQaNum(int qaNum) {
+        return session.delete(namespace + "deleteForQaStateByQaNum", qaNum);
     }
 
+    public int selectMaxQaSeq() {
+        return session.selectOne(namespace + "selectMaxQaSeq");
+    }
+
+    public QaDto selectByTitle(String userId, String title) {
+        HashMap map = new HashMap();
+        map.put("user_id", userId);
+        map.put("title", title);
+        return session.selectOne(namespace + "selectByTitle", map);
+    }
 }

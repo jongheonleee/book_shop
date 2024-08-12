@@ -3,6 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.fastcampus.ch4.QaMapper">
+  <!-- Qa 부분 -->
   <select id="count" parameterType="string" resultType="int">
     SELECT COUNT(*)
     FROM qa
@@ -117,6 +118,83 @@
   <delete id="deleteAll">
     DELETE
     FROM qa;
+  </delete>
+
+  <!-- QaCategory 부분 -->
+
+  <!-- QaState 부분 -->
+  <insert id="insertForQaState" parameterType="QaStateDto">
+    INSERT INTO qa_state (qa_stat_code, name, reg_date,
+                          reg_id, up_date, up_id, qa_num,
+                          appl_begin, appl_end)
+    VALUES (#{qa_stat_code}, #{name}, now(), #{reg_id},
+            '9999-12-31 23:59:59', #{up_id}, #{qa_num},
+            now(), '9999-12-31 23:59:59');
+  </insert>
+
+  <select id="selectAllState" resultType="QaStateDto">
+    SELECT * FROM qa_state
+    ORDER BY reg_date DESC;
+  </select>
+
+  <select id="selectForQaStateByQaNum" resultType="QaStateDto">
+    SELECT *
+    FROM qa_state
+    WHERE qa_num = #{qa_num};
+  </select>
+
+  <select id="selectStateForLast" resultType="QaStateDto">
+    SELECT s.qa_stat_seq,
+           s.qa_stat_code,
+           s.name,
+           s.reg_date,
+           s.reg_id,
+           s.up_date,
+           s.up_id,
+           s.qa_num,
+           s.appl_begin,
+           s.appl_end
+    FROM ( SELECT *
+           FROM qa_state
+           ORDER BY CONVERT(appl_begin, time) DESC
+           ) AS s
+    LIMIT 1;
+  </select>
+
+  <select id="selectForQaStateByQaNumAndQaStateSeq" resultType="QaStateDto">
+    SELECT *
+    FROM qa_state
+    WHERE qa_num = #{qa_num}
+    AND qa_stat_seq = #{qa_stat_seq};
+  </select>
+
+  <update id="updateForQaState">
+    UPDATE qa_state
+    SET qa_stat_code = #{qa_stat_code},
+        name = #{name},
+        appl_begin = #{appl_begin},
+        appl_end = now(),
+        up_date = now(),
+        up_id = #{up_id}
+    WHERE qa_num = #{qa_num}
+    AND qa_stat_seq = #{qa_stat_seq};
+  </update>
+
+
+  <delete id="deleteAllForQaState">
+    DELETE
+    FROM qa_state;
+  </delete>
+
+  <delete id="deleteForQaState">
+    DELETE
+    FROM qa_state
+    WHERE qa_stat_seq = #{qa_stat_seq};
+  </delete>
+
+  <delete id="deleteForQaStateOnQaNum">
+    DELETE FROM qa_state
+    WHERE qa_num = #{qa_num};
   </delete>
 
 </mapper>

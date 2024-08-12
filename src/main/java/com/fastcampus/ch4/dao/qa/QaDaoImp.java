@@ -2,6 +2,7 @@ package com.fastcampus.ch4.dao.qa;
 
 import com.fastcampus.ch4.dto.qa.QaDto;
 import com.fastcampus.ch4.domain.qa.SearchCondition;
+import com.fastcampus.ch4.dto.qa.QaStateDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,9 +102,48 @@ public class QaDaoImp implements QaDao {
 
     @Override
     public int deleteAll() {
+        session.delete(namespace + "deleteAllForQaState");
         return session.delete(namespace + "deleteAll");
     }
 
+    /**
+     * 3차 기능 요구 사항 정리
+     * - (1) 문의글 상태 등록
+     * - (2) 문의글 상태 조회 (모두 조회)
+     * - (3) 특정 문의글 상태 이력 조회(해당 문의글 상태 이력)
+     * - (4) 특정 문의글에 한 가지 상태 조회
+     * - (5) 특정 문의글 상태 내용 업데이트
+     * - (6) 문의글 상태 모두 삭제
+     * - (7) 특정 문의글에 대한 상태 이력 모두 삭제
+     * - (8) 특정 문의글의 한 가지 상태 삭제
+     **/
 
+    public int insertState(QaStateDto dto) {
+        return session.insert(namespace + "insertForQaState", dto);
+    }
+
+    public List<QaStateDto> selectStateByQaNum(int qaNum) {
+        return session.selectList(namespace + "selectForQaStateByQaNum", qaNum);
+    }
+
+    public List<QaStateDto> selectAllState() {
+        return session.selectList(namespace + "selectAllState");
+    }
+
+    public QaStateDto selectStateForLast(int qaNum) {
+        return session.selectOne(namespace + "selectStateForLast", qaNum);
+    }
+
+    public int updateState(QaStateDto dto) {
+        return session.update(namespace + "updateForQaState", dto);
+    }
+
+    public int deleteState(int qa_stat_seq) {
+        return session.delete(namespace + "deleteForQaState", qa_stat_seq);
+    }
+
+    public int deleteAllStateOnQaNum(int qaNum) {
+        return session.delete(namespace + "deleteForQaStateOnQaNum", qaNum);
+    }
 
 }

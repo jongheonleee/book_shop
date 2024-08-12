@@ -8,6 +8,7 @@ import com.fastcampus.ch4.dto.qa.QaCategoryDto;
 import com.fastcampus.ch4.dto.qa.QaDto;
 
 import com.fastcampus.ch4.domain.qa.SearchCondition;
+import com.fastcampus.ch4.dto.qa.QaStateDto;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -131,7 +132,55 @@ public class QaDaoImpTest {
      *
      */
 
-    // 1차 기능 구현 테스트
+
+    /**
+     * 3차 기능 구현[]
+     * - (1) 문의글 상태 등록
+     * - (2) 문의글 상태 조회 (모두 조회)
+     * - (3) 특정 문의글 상태 이력 조회(해당 문의글 상태 이력)
+     * - (4) 특정 문의글에 한 가지 상태 조회
+     * - (5) 특정 문의글 상태 내용 업데이트
+     * - (6) 문의글 상태 모두 삭제
+     * - (7) 특정 문의글에 대한 상태 이력 모두 삭제
+     * - (8) 특정 문의글의 한 가지 상태 삭제
+     *
+     * 3차 요구사항 정리
+     * - (1) 문의글 상태 등록[✅]
+     * - 관리자가 아닌 경우 상태 등록 실패
+     * - not null 칼럼에 null 넣으면 예외 발생
+     * - 관리자의 경우, 상태 등록 성공
+     *
+     * - (2) 문의글 상태 조회 (모두 조회)[✅]
+     * - 회원이 아닌 경우, 상태 조회 실패
+     * - 회원의 경우, n개 만큼 상태 조회
+     * -
+     * - (3) 특정 문의글 상태 이력 조회(해당 문의글 상태 이력)[✅]
+     * - 비회원의 경우, 특정 문의글의 상태 이력 조회 실패
+     * - 회원의 경우, 특정 문의글의 상태 이력 모두 조회 (등록된 상태 이력만큼 조회)
+     *
+     * - (4) 특정 문의글에 가장 최근 상태 조회[✅]
+     * - 비회원의 경우, 조회 실패
+     * - 회원의 경우, 특정 문의글의 최근 상태 조회 성공
+     *
+     * - (5) 특정 문의글 상태 내용 업데이트[✅]
+     * - 관리자가 아닌 경우, 상태 내용 업데이트 실패
+     * - 관리자의 경우, 상태 내용 업데이트 가능. 하지만, 이력으로서 등록해야함
+     *
+     * - (6) 문의글 상태 모두 삭제[✅]
+     * - 관리자가 아닌 경우, 상태 모두 삭제 실패
+     * - 관리자의 경우, 상태 모두 삭제 성공
+     * -
+     * - (7) 특정 문의글에 대한 상태 이력 모두 삭제[]
+     * - 관리자가 아닌 경우, 특정 문의글의 상태 이력 모두 삭제 실패
+     * - 관리자의 경우, 특정 문의글의 상태 이력 모두 삭제 성공
+     *
+     * - (8) 특정 문의글의 한 가지 상태 삭제[]
+     * - 관리자가 아닌 경우, 특정 문의글의 특정 상태 삭제 실패
+     * - 관리자의 경우, 특정 문의글의 특정 상태 삭제 성공
+     *
+     */
+
+    // 1차 기능 구현 테스트 -> 문의글 자체 작업#
     // (1) 기능 테스트
     @Test
     @DisplayName("비회원 유저 문의글 카운팅 0")
@@ -600,6 +649,319 @@ public class QaDaoImpTest {
         assertTrue(10 == selected.size());
 
 
+    }
+
+    // 2차 기능 테스트 -> 문의글 카테고리 관련 작업
+
+    // 3차 기능 테스트 -> 문의글 상태 관련 작업
+
+    // (1) 문의글 상태 등록
+    @Test
+    public void 관리자_아님_상태_등록_실패() {
+        // 서비스 로직이나 컨트롤러 로직에서 처리
+    }
+
+    @Test
+    public void not_null_칼럼_제약_위배() {
+        // 데이터 생성
+        QaDto dto = create(1);
+        assertTrue(1 == dao.insert(dto));
+        QaDto selected = dao.selectByUserId("user1").get(0);
+        int qaNum = selected.getQa_num();
+
+        QaStateDto state = createState(1, qaNum);
+        // not null 필드에 null 할당
+        state.setQa_stat_code(null);
+
+        // insert 수행 -> 예외 발생
+        assertThrows(DataIntegrityViolationException.class,
+                () -> dao.insertState(state));
+
+    }
+
+    @Test
+    public void 관리자_상태_등록_성공() {
+        // 데이터 생성
+        QaDto dto = create(1);
+        assertTrue(1 == dao.insert(dto));
+        QaDto selected = dao.selectByUserId("user1").get(0);
+        int qaNum = selected.getQa_num();
+
+        QaStateDto state = createState(1, qaNum);
+
+        // insert 수행, 로우수 = 1
+        assertTrue(1 == dao.insertState(state));
+    }
+
+    // (2) 문의글 상태 조회 (모두 조회)
+    @Test
+    public void 회원_아님_상태_조회_실패() {
+        // 서비스 로직이나 컨트롤러 로직에서 처리
+    }
+
+    @Test
+    public void 회원_상태_조회_성공() {
+        // 데이터 생성
+        QaDto dto = create(1);
+        assertTrue(1 == dao.insert(dto));
+        QaDto selected = dao.selectByUserId("user1").get(0);
+        int qaNum = selected.getQa_num();
+
+        QaStateDto state = createState(1, qaNum);
+
+        // insert 수행 * n
+        for (int expected = 1; expected <= 5; expected++) {
+            state = createState(expected, qaNum);
+            assertTrue(1 == dao.insertState(state));
+        }
+
+
+        // n개 만큼 조회
+        List<QaStateDto> target = dao.selectAllState();
+        assertTrue(5 == target.size());
+
+        // 내용 비교
+        for (int expected = 1; expected <= 5; expected++) {
+            state = createState(expected, qaNum);
+            QaStateDto found = target.get(expected - 1);
+
+
+            assertTrue(state.getName().equals(found.getName()));
+            assertTrue(state.getQa_stat_code().equals(found.getQa_stat_code()));
+
+//            assertTrue(found.equals(state));
+        }
+
+    }
+
+    // (3) 특정 문의글 상태 이력 조회(해당 문의글 상태 이력)
+    @Test
+    public void 회원_아님_상태_이력_조회_실패() {
+        // 서비스 로직이나 컨트롤러 로직에서 처리
+    }
+
+    @Test
+    public void 회원_상태_이력_조회_성공() {
+        // 데이터 생성 및 등록 * n
+        QaDto dto = create(1);
+        assertTrue(1 == dao.insert(dto));
+        QaDto selected = dao.selectByUserId("user1").get(0);
+        int qaNum = selected.getQa_num();
+
+        QaStateDto state = createState(1, qaNum);
+
+        // insert 수행 * n
+        for (int expected = 1; expected <= 5; expected++) {
+            state = createState(expected, qaNum);
+            assertTrue(1 == dao.insertState(state));
+        }
+
+
+        // 특정 문의글의 상태 이력 조회
+        List<QaStateDto> target = dao.selectStateByQaNum(qaNum);
+
+        // 사이즈 n, 내용 비교
+        assertTrue(target.size() == 5);
+
+        for (int expected = 1; expected <= 5; expected++) {
+            state = createState(expected, qaNum);
+            QaStateDto found = target.get(expected-1);
+
+            System.out.println(state);
+            System.out.println(found);
+
+            assertTrue(state.getQa_stat_code().equals(found.getQa_stat_code()));
+            assertTrue(state.getName().equals(found.getName()));
+        }
+    }
+
+    // (4) 특정 문의글에 한 가지 상태 조회
+    @Test
+    public void 회원_아님_가장_최근_상태_조회_실패() {
+        // 서비스 로직이나 컨트롤러 로직에서 처리
+    }
+
+    @Test
+    public void 회원_가장_최근_상태_조회_성공() {
+        // 데이터 생성 및 등록 * n
+        QaDto dto = create(1);
+        assertTrue(1 == dao.insert(dto));
+        QaDto selected = dao.selectByUserId("user1").get(0);
+        int qaNum = selected.getQa_num();
+
+        QaStateDto state = createState(1, qaNum);
+
+        // insert 수행 * n
+        for (int expected = 1; expected <= 5; expected++) {
+            state = createState(expected, qaNum);
+            // 1초씩 딜레이
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+
+
+            assertTrue(1 == dao.insertState(state));
+        }
+
+        // 특정 문의글의 가장 최근 상태 이력 조회
+        QaStateDto target = dao.selectStateForLast(qaNum);
+        System.out.println(target);
+
+        // 내용 비교
+        state = createState(5, qaNum);
+        System.out.println(state);
+
+        assertTrue(target.getName().equals(state.getName()));
+        assertTrue(target.getQa_stat_code().equals(state.getQa_stat_code()));
+
+    }
+
+    // (5) 특정 문의글 상태 내용 업데이트
+    @Test
+    public void 관리자_아님_상태_업데이트_실패() {
+        // 관리자 확인 로직은 서비스나 컨트롤러에서 처리
+    }
+
+    @Test
+    public void 관리자_상태_업데이트_성공() {
+        // 데이터 생성 및 등록
+        QaDto dto = create(1);
+        assertTrue(1 == dao.insert(dto));
+        QaDto selected = dao.selectByUserId("user1").get(0);
+        int qaNum = selected.getQa_num();
+
+        QaStateDto state = createState(1, qaNum);
+        assertTrue(1 == dao.insertState(state));
+
+        // 해당 데이터 조회
+        QaStateDto target = dao.selectStateForLast(qaNum);
+
+        // 해당 데이터 필드 수정
+        target.setName("new name!");
+
+        // 업데이트 작업 수행
+        int rowCnt = dao.updateState(target);
+
+        // 로우수 1, 내용 비교
+        assertTrue(1 == rowCnt);
+        assertTrue(target.getName().equals(dao.selectStateForLast(qaNum).getName()));
+        assertTrue(target.getQa_stat_code().equals(dao.selectStateForLast(qaNum).getQa_stat_code()));
+    }
+
+    // (6) 문의글 상태 모두 삭제
+    @Test
+    public void 관리자_아님_상태_삭제_실패() {
+        // 관리자 확인 로직은 서비스나 컨트롤러에서 처리
+    }
+    @Test
+    public void 관리자_상태_삭제_성공() {
+        // 데이터 생성 및 등록
+        QaDto dto = create(1);
+        assertTrue(1 == dao.insert(dto));
+        QaDto selected = dao.selectByUserId("user1").get(0);
+        int qaNum = selected.getQa_num();
+
+        QaStateDto state = createState(1, qaNum);
+        assertTrue(1 == dao.insertState(state));
+
+        // 해당 데이터 삭제
+        QaStateDto target = dao.selectStateForLast(qaNum);
+        int seq = target.getQa_stat_seq();
+        int rowCnt = dao.deleteState(seq);
+
+        // 로우수 1, 조회 안됨
+        assertTrue(1 == rowCnt);
+        assertTrue(dao.selectStateForLast(qaNum) == null);
+    }
+
+
+    // (7) 특정 문의글에 대한 상태 이력 모두 삭제
+    @Test
+    public void 관리자_아님_특정_문의글_상태_이력_삭제_실패() {
+        // 관리자 확인 로직은 서비스나 컨트롤러에서 처리
+    }
+    @Test
+    public void 관리자_특정_문의글_상태_이력_삭제() {
+        // 특정 문의글에 n개의 상태 데이터 생성 및 등록
+        QaDto dto = create(1);
+        assertTrue(1 == dao.insert(dto));
+        QaDto selected = dao.selectByUserId("user1").get(0);
+        int qaNum = selected.getQa_num();
+
+        QaStateDto state = createState(1, qaNum);
+
+        // insert 수행 * n
+        for (int expected = 1; expected <= 5; expected++) {
+            state = createState(expected, qaNum);
+            // 1초씩 딜레이
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+
+            assertTrue(1 == dao.insertState(state));
+        }
+
+
+        // 해당 상태 이력 전체 삭제
+        int rowCnt = dao.deleteAllStateOnQaNum(qaNum);
+
+        // 적용 로우수 n, 조회 안됨
+        assertTrue(5 == rowCnt);
+        List<QaStateDto> target = dao.selectStateByQaNum(qaNum);
+        assertTrue(0 == target.size());
+    }
+
+    // (8) 특정 문의글의 한 가지 상태 삭제
+    @Test
+    public void 관리자_아님_특정_문의글_특정_상태_삭제_실패() {
+        // 관리자 확인 로직은 서비스나 컨트롤러에서 처리
+    }
+    @Test
+    public void 관리자_특정_문의글_특정_상태_삭제_성공() {
+        // 특정 문의글에 n개의 상태 데이터 생성 및 등록
+        QaDto dto = create(1);
+        assertTrue(1 == dao.insert(dto));
+        QaDto selected = dao.selectByUserId("user1").get(0);
+        int qaNum = selected.getQa_num();
+
+        QaStateDto state = createState(1, qaNum);
+
+        // insert 수행 * n
+        for (int expected = 1; expected <= 5; expected++) {
+            state = createState(expected, qaNum);
+            // 1초씩 딜레이
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+
+            assertTrue(1 == dao.insertState(state));
+        }
+
+        // 특정 상태 삭제
+        QaStateDto target = dao.selectStateForLast(qaNum);
+        int seq = target.getQa_stat_seq();
+
+        // 적용 로우수 1, 조회 안됨
+        int rowCnt = dao.deleteState(seq);
+        assertTrue(1 == rowCnt);
+        assertTrue(dao.selectStateByQaNum(qaNum).size() == 4);
+    }
+
+    private QaStateDto createState(int i, int qaNum) {
+        QaStateDto dto = new QaStateDto();
+        dto.setQa_stat_code("qa_stat_code" + i);
+        dto.setQa_num(qaNum);
+        dto.setName("state" + i);
+        dto.setReg_date("2021-01-01");
+        dto.setReg_id("reg_id1");
+        dto.setUp_date("2021-01-01");
+        dto.setUp_id("up_id1");
+        dto.setAppl_begin("2021-01-01");
+        dto.setAppl_end("2021-01-01");
+        return dto;
     }
 
 }

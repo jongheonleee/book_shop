@@ -1,5 +1,7 @@
 package com.fastcampus.ch4.dto.qa;
 
+import java.util.Objects;
+
 public class QaStateDto {
 
     private int qa_stat_seq;
@@ -91,5 +93,41 @@ public class QaStateDto {
 
     public void setAppl_end(String appl_end) {
         this.appl_end = appl_end;
+    }
+
+    @Override
+    public String toString() {
+        return "QaStateDto{" +
+                "qa_stat_seq=" + qa_stat_seq +
+                ", qa_stat_code='" + qa_stat_code + '\'' +
+                ", name='" + name + '\'' +
+                ", reg_date='" + reg_date + '\'' +
+                ", reg_id='" + reg_id + '\'' +
+                ", up_date='" + up_date + '\'' +
+                ", up_id='" + up_id + '\'' +
+                ", qa_num=" + qa_num +
+                ", appl_begin='" + appl_begin + '\'' +
+                ", appl_end='" + appl_end + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        QaStateDto that = (QaStateDto) o;
+        return qa_stat_seq == that.qa_stat_seq && qa_num == that.qa_num && Objects.equals(
+                qa_stat_code, that.qa_stat_code) && Objects.equals(name, that.name)
+                && Objects.equals(appl_begin, that.appl_begin) && Objects.equals(
+                appl_end, that.appl_end);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(qa_stat_seq, qa_stat_code, name, qa_num, appl_begin, appl_end);
     }
 }

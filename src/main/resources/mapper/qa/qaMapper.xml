@@ -132,7 +132,7 @@
             now(), '9999-12-31 23:59:59');
   </insert>
 
-  <select id="selectForQaState" resultType="QaStateDto">
+  <select id="selectAllState" resultType="QaStateDto">
     SELECT * FROM qa_state
     ORDER BY reg_date DESC;
   </select>
@@ -141,6 +141,24 @@
     SELECT *
     FROM qa_state
     WHERE qa_num = #{qa_num};
+  </select>
+
+  <select id="selectStateForLast" resultType="QaStateDto">
+    SELECT s.qa_stat_seq,
+           s.qa_stat_code,
+           s.name,
+           s.reg_date,
+           s.reg_id,
+           s.up_date,
+           s.up_id,
+           s.qa_num,
+           s.appl_begin,
+           s.appl_end
+    FROM ( SELECT *
+           FROM qa_state
+           ORDER BY CONVERT(appl_begin, time) DESC
+           ) AS s
+    LIMIT 1;
   </select>
 
   <select id="selectForQaStateByQaNumAndQaStateSeq" resultType="QaStateDto">
@@ -164,13 +182,14 @@
 
 
   <delete id="deleteAllForQaState">
-    DELETE FROM qa_state;
+    DELETE
+    FROM qa_state;
   </delete>
 
   <delete id="deleteForQaState">
-    DELETE FROM qa_state
-    WHERE qa_num = #{qa_num}
-    AND qa_stat_seq = #{qa_stat_seq};
+    DELETE
+    FROM qa_state
+    WHERE qa_stat_seq = #{qa_stat_seq};
   </delete>
 
   <delete id="deleteForQaStateOnQaNum">

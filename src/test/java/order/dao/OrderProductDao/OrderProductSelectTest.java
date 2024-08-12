@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.fastcampus.ch4.model.order.OrderConstants.*;
 import static org.junit.Assert.*;
@@ -134,12 +136,29 @@ public class OrderProductSelectTest {
 
     /*
     selectedByCondition 으로 조회한 숫자와 orderSeq 로 조회한 숫자
+
      */
     @Test
-    public void 주문상품_selectListByCondition () {
-        List<OrderProductDto> list1 = orderProductDao.selectListByCondition(TEST_USER);
-        System.out.println(list1.size());
+    public void 주문상품_selectListByCondition () throws Exception {
+        // userId 로 조건을 걸어서 조회
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("userId", TEST_USER);
+        List<OrderProductDto> selectedList = orderProductDao.selectListByCondition(userMap);
+        int beforeCount = selectedList.size();
 
+        // 유저가 생성한 주문을 전부 조회해서 주문 각각에 연결된 주문상품을 전부 조회하여 갯수 비교
+        List<OrderDto> orderDtoList = orderDao.selectListByCondition(TEST_USER);
+        int afterCount = orderDtoList.stream()
+                .mapToInt(OrderDto::getOrd_seq)
+                .mapToObj(orderSeq -> {
+                    Map<String, Object> seqMap = new HashMap<>();
+                    seqMap.put("ord_seq", orderSeq);
+                    return orderProductDao.selectListByCondition(seqMap);
+                })
+                .mapToInt(List::size)
+                .sum();
+
+        assertEquals(beforeCount, afterCount);
     }
 
 }

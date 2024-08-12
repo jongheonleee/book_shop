@@ -38,10 +38,7 @@ public class OrderProductDaoImpl implements OrderProductDao {
     }
 
     @Override
-    public List<OrderProductDto> selectListByCondition(String userId) {
-        Map map = new HashMap();
-        map.put("userId", userId);
-
+    public List<OrderProductDto> selectListByCondition(Map map) {
         return sqlSession.selectList(namespace + "selectListByCondition", map);
     }
 

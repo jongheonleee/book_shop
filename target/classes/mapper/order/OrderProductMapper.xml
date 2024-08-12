@@ -139,5 +139,8 @@
                 <if test="userId != null">
                     AND ord.userId = #{userId}
                 </if>
+                <if test="ord_seq != null">
+                    AND ordProd.ord_seq = #{ord_seq}
+                </if>
     </select>
 </mapper>

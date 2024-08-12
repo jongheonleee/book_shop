@@ -38,6 +38,14 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
+    public List<OrderDto> selectListByCondition(String userId) throws Exception {
+        Map map = new HashMap<>();
+        map.put("userId", userId);
+
+        return sqlSession.selectList(namespace + "selectListByCondition", map);
+    }
+
+    @Override
     public int deleteBySeq(Integer ordSeq) throws Exception {
         return sqlSession.delete(namespace + "deleteById", ordSeq);
     }

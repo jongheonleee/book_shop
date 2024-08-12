@@ -16,6 +16,7 @@ public interface OrderDao {
     public Integer insertAndReturnSeq(OrderDto orderDto) throws Exception;
     public OrderDto selectBySeq(Integer ordSeq) throws Exception;
     public List<OrderDto> selectAll(String columnName, boolean isDesc) throws Exception;
+    public List<OrderDto> selectListByCondition(String userId) throws Exception;
     public int deleteBySeq(Integer ordSeq) throws Exception;
     public int deleteAll() throws Exception;
     public int update(OrderDto orderDto, String upId) throws Exception;

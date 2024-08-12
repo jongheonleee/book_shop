@@ -2,6 +2,7 @@ package order.dao.OrderDao;
 
 import com.fastcampus.ch4.dao.order.OrderDao;
 import com.fastcampus.ch4.dto.order.OrderDto;
+import com.fastcampus.ch4.dto.order.OrderProductDto;
 import com.fastcampus.ch4.service.order.factory.OrderDtoFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,5 +78,26 @@ public class OrderSelectTest {
 
         OrderDto selectedOrderDto = orderDao.selectBySeq(toSelectSeq);
         assertNull(selectedOrderDto);
+    }
+
+    @Test
+    public void 주문조회_selectListByCondition () throws Exception {
+        final String TEST_USER_ID = "SELECT_CONDITION";
+
+        // 1. 조회
+        List<OrderDto> beforeOrderList = orderDao.selectListByCondition(TEST_USER_ID);
+        int beforeCount = beforeOrderList.size();
+
+        // 2. 주문 생성
+        OrderDto createdOrderDto = orderDtoFactory.create(TEST_USER_ID);
+
+        Integer createdOrdSeq = orderDao.insertAndReturnSeq(createdOrderDto);
+        assertNotNull(createdOrdSeq);
+
+        // 3. 검증
+        List<OrderDto> afterOrderList = orderDao.selectListByCondition(TEST_USER_ID);
+        int afterCount = afterOrderList.size();
+
+        assertEquals(beforeCount + 1, afterCount);
     }
 }

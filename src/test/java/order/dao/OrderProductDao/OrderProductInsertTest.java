@@ -52,11 +52,11 @@ public class OrderProductInsertTest {
     OrderDtoFactory orderDtoFactory;
 
     // Fake Object 사용을 위함
-    final TempBookService bookService = new FakeBookServiceImpl();
-    final String TEST_USER = "ORD_PROD_INSERT";
-    final String PRINTED_BOOK = "printed";
-    final String E_BOOK = "eBook";
-    final Integer ITEM_QUANTITY_SINGLE = 1;
+    private final TempBookService bookService = new FakeBookServiceImpl();
+    private final String TEST_USER = "ORD_PROD_INSERT";
+    private final String PRINTED_BOOK = "printed";
+    private final String E_BOOK = "eBook";
+    private final Integer ITEM_QUANTITY_SINGLE = 1;
 
 
     @Test

@@ -47,26 +47,19 @@ public class OrderProductDto {
 
      */
 
-    private OrderProductDto(Builder builder) {
-        this.ord_prod_seq = builder.ord_prod_seq;
-        this.ord_seq = builder.ord_seq;
-        this.isbn = builder.isbn;
-        this.prod_type_code = builder.prod_type_code;
-        this.ord_stat = builder.ord_stat;
-        this.deli_stat = builder.deli_stat;
-        this.pay_stat = builder.pay_stat;
-        this.item_quan = builder.item_quan;
-        this.point_perc = builder.point_perc;
-        this.point_pric = builder.point_pric;
-        this.basic_pric = builder.basic_pric;
-        this.bene_perc = builder.bene_perc;
-        this.bene_pric = builder.bene_pric;
-        this.sale_pric = builder.sale_pric;
-        this.ord_pric = builder.ord_pric;
-        this.reg_date = builder.reg_date;
-        this.reg_id = builder.reg_id;
-        this.up_date = builder.up_date;
-        this.up_id = builder.up_id;
+    private OrderProductDto() {}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OrderProductDto)) return false;
+        OrderProductDto that = (OrderProductDto) o;
+        return Objects.equals(ord_seq, that.ord_seq) && Objects.equals(isbn, that.isbn) && Objects.equals(prod_type_code, that.prod_type_code) && Objects.equals(ord_stat, that.ord_stat) && Objects.equals(deli_stat, that.deli_stat) && Objects.equals(pay_stat, that.pay_stat) && Objects.equals(item_quan, that.item_quan) && Objects.equals(point_perc, that.point_perc) && Objects.equals(point_pric, that.point_pric) && Objects.equals(basic_pric, that.basic_pric) && Objects.equals(bene_perc, that.bene_perc) && Objects.equals(bene_pric, that.bene_pric) && Objects.equals(sale_pric, that.sale_pric) && Objects.equals(ord_pric, that.ord_pric) && Objects.equals(reg_id, that.reg_id) && Objects.equals(up_id, that.up_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ord_seq, isbn, prod_type_code, ord_stat, deli_stat, pay_stat, item_quan, point_perc, point_pric, basic_pric, bene_perc, bene_pric, sale_pric, ord_pric, reg_id, up_id);
     }
 
     @Override
@@ -92,19 +85,6 @@ public class OrderProductDto {
                 ", up_date=" + up_date +
                 ", up_id='" + up_id + '\'' +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof OrderProductDto)) return false;
-        OrderProductDto that = (OrderProductDto) o;
-        return Objects.equals(ord_prod_seq, that.ord_prod_seq) && Objects.equals(ord_seq, that.ord_seq) && Objects.equals(isbn, that.isbn) && Objects.equals(prod_type_code, that.prod_type_code) && Objects.equals(ord_stat, that.ord_stat) && Objects.equals(deli_stat, that.deli_stat) && Objects.equals(pay_stat, that.pay_stat) && Objects.equals(item_quan, that.item_quan) && Objects.equals(point_perc, that.point_perc) && Objects.equals(point_pric, that.point_pric) && Objects.equals(basic_pric, that.basic_pric) && Objects.equals(bene_perc, that.bene_perc) && Objects.equals(bene_pric, that.bene_pric) && Objects.equals(sale_pric, that.sale_pric) && Objects.equals(ord_pric, that.ord_pric);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(ord_prod_seq, ord_seq, isbn, prod_type_code, ord_stat, deli_stat, pay_stat, item_quan, point_perc, point_pric, basic_pric, bene_perc, bene_pric, sale_pric, ord_pric);
     }
 
     public static class Builder {
@@ -233,7 +213,109 @@ public class OrderProductDto {
         }
 
         public OrderProductDto build() {
-            return new OrderProductDto(this);
+            OrderProductDto orderProductDto = new OrderProductDto();
+
+            orderProductDto.ord_prod_seq = this.ord_prod_seq;
+            orderProductDto.ord_seq = this.ord_seq;
+            orderProductDto.isbn = this.isbn;
+            orderProductDto.prod_type_code = this.prod_type_code;
+            orderProductDto.ord_stat = this.ord_stat;
+            orderProductDto.deli_stat = this.deli_stat;
+            orderProductDto.pay_stat = this.pay_stat;
+            orderProductDto.item_quan = this.item_quan;
+            orderProductDto.point_perc = this.point_perc;
+            orderProductDto.point_pric = this.point_pric;
+            orderProductDto.basic_pric = this.basic_pric;
+            orderProductDto.bene_perc = this.bene_perc;
+            orderProductDto.bene_pric = this.bene_pric;
+            orderProductDto.sale_pric = this.sale_pric;
+            orderProductDto.ord_pric = this.ord_pric;
+            orderProductDto.reg_date = this.reg_date;
+            orderProductDto.reg_id = this.reg_id;
+            orderProductDto.up_date = this.up_date;
+            orderProductDto.up_id = this.up_id;
+
+            return orderProductDto;
         }
+    }
+
+    public void setOrd_prod_seq(Integer ord_prod_seq) {
+        this.ord_prod_seq = ord_prod_seq;
+    }
+
+    public Integer getOrd_prod_seq() {
+        return ord_prod_seq;
+    }
+
+    public Integer getOrd_seq() {
+        return ord_seq;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public String getProd_type_code() {
+        return prod_type_code;
+    }
+
+    public String getOrd_stat() {
+        return ord_stat;
+    }
+
+    public String getDeli_stat() {
+        return deli_stat;
+    }
+
+    public String getPay_stat() {
+        return pay_stat;
+    }
+
+    public Integer getItem_quan() {
+        return item_quan;
+    }
+
+    public Double getPoint_perc() {
+        return point_perc;
+    }
+
+    public Integer getPoint_pric() {
+        return point_pric;
+    }
+
+    public Integer getBasic_pric() {
+        return basic_pric;
+    }
+
+    public Double getBene_perc() {
+        return bene_perc;
+    }
+
+    public Integer getBene_pric() {
+        return bene_pric;
+    }
+
+    public Integer getSale_pric() {
+        return sale_pric;
+    }
+
+    public Integer getOrd_pric() {
+        return ord_pric;
+    }
+
+    public Date getReg_date() {
+        return reg_date;
+    }
+
+    public String getReg_id() {
+        return reg_id;
+    }
+
+    public Date getUp_date() {
+        return up_date;
+    }
+
+    public String getUp_id() {
+        return up_id;
     }
 }

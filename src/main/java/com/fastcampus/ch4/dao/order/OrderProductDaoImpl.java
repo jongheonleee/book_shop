@@ -5,27 +5,44 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class OrderProductDaoImpl implements OrderProductDao {
     @Autowired
     SqlSession sqlSession;
 
+    String namespace = "com.fastcampus.ch4.dao.OrderProductMapper.";
+
     @Override
     public Integer insertAndReturnSeq(OrderProductDto orderProductDto) {
-        System.out.println(orderProductDto);
-        return sqlSession.insert("insertAndReturnSeq", orderProductDto);
+        sqlSession.insert(namespace + "insertAndReturnSeq", orderProductDto);
+        return orderProductDto.getOrd_prod_seq();
     }
 
     @Override
-    public OrderProductDto selectById(String ord_seq, String isbn) {
-        return null;
+    public int count() {
+        return sqlSession.selectOne(namespace +"count");
+    }
+
+    @Override
+    public OrderProductDto selectBySeq(Integer OrderProductSeq) {
+        return sqlSession.selectOne(namespace + "selectBySeq", OrderProductSeq);
     }
 
     @Override
     public List<OrderProductDto> selectAll() {
-        return List.of();
+        return sqlSession.selectList(namespace + "selectAll");
+    }
+
+    @Override
+    public List<OrderProductDto> selectListByCondition(String userId) {
+        Map map = new HashMap();
+        map.put("userId", userId);
+
+        return sqlSession.selectList(namespace + "selectListByCondition", map);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.fastcampus.ch4.dto.order;
 
 import java.util.Date;
+import java.util.List;
 
 public class OrderDto {
 
@@ -27,6 +28,8 @@ public class OrderDto {
     private String reg_id; // 최초 등록 id
     private Date up_date; // 최근 수정 일시
     private String up_id; // 최근 수정 id
+
+    private List<OrderProductDto> itemList;
 
     public Integer getOrd_seq() {
         return ord_seq;
@@ -130,5 +133,13 @@ public class OrderDto {
 
     public void setUp_id(String up_id) {
         this.up_id = up_id;
+    }
+
+    public List<OrderProductDto> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(List<OrderProductDto> itemList) {
+        this.itemList = itemList;
     }
 }

@@ -7,6 +7,8 @@ import com.fastcampus.ch4.model.order.OrderConstants;
 import com.fastcampus.ch4.model.order.PaymentStatus;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 @Component
 public class OrderDtoFactory {
     final int BASIC_PRICE = 0;

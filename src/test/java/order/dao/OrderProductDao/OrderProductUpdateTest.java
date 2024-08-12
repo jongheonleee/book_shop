@@ -5,17 +5,13 @@ import com.fastcampus.ch4.dao.order.OrderProductDao;
 import com.fastcampus.ch4.dto.order.OrderDto;
 import com.fastcampus.ch4.dto.order.OrderProductDto;
 import com.fastcampus.ch4.dto.order.temp.TempBookDto;
-import com.fastcampus.ch4.model.order.DeliveryStatus;
-import com.fastcampus.ch4.model.order.OrderConstants;
-import com.fastcampus.ch4.model.order.OrderStatus;
-import com.fastcampus.ch4.model.order.PaymentStatus;
+import com.fastcampus.ch4.model.order.*;
 import com.fastcampus.ch4.service.order.factory.OrderDtoFactory;
 import com.fastcampus.ch4.service.order.factory.OrderProductDtoFactory;
-import order.dao.fake.FakeBookServiceImpl;
-import order.dao.fake.TempBookService;
+import com.fastcampus.ch4.service.order.fake.FakeBookServiceImpl;
+import com.fastcampus.ch4.service.order.fake.TempBookService;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +45,8 @@ public class OrderProductUpdateTest {
     @Before
     public void setUp() throws Exception {
         final String TEST_ISBN = "9791158395155";
-        final String PRINTED_BOOK = OrderConstants.PRINTED_BOOK;
-        final String E_BOOK = OrderConstants.E_BOOK;
+        final String PRINTED_BOOK = BookType.PRINTED.getCode();
+        final String E_BOOK = BookType.EBOOK.getCode();
         final int ITEM_QUANTITY_SINGLE = 1;
 
         tempBookDto = bookService.getBookByIsbn(TEST_ISBN);
@@ -60,7 +56,7 @@ public class OrderProductUpdateTest {
         Integer orderSeq = orderDao.insertAndReturnSeq(orderDto);
         assertNotNull(orderSeq);
 
-        orderProductDto = OrderProductDtoFactory.create(tempBookDto, PRINTED_BOOK, orderDto, ITEM_QUANTITY_SINGLE);
+        orderProductDto = OrderProductDtoFactory.create(orderDto, tempBookDto, PRINTED_BOOK, ITEM_QUANTITY_SINGLE);
     }
 
     @After

@@ -3,14 +3,15 @@ package com.fastcampus.ch4.service.order.factory;
 import com.fastcampus.ch4.dto.order.OrderDto;
 import com.fastcampus.ch4.dto.order.OrderProductDto;
 import com.fastcampus.ch4.dto.order.temp.TempBookDto;
+import com.fastcampus.ch4.model.order.BookType;
 
 import static com.fastcampus.ch4.model.order.OrderConstants.*;
 
 public class OrderProductDtoFactory {
-    static final String PRINTED_BOOK = "printed";
-    static final String E_BOOK = "e_book";
+    static final String PRINTED = BookType.PRINTED.getCode();
+    static final String EBOOK = BookType.EBOOK.getCode();
 
-    static public OrderProductDto create(TempBookDto bookDto, String prodTypeCode, OrderDto orderDto, Integer itemQuantity) {
+    static public OrderProductDto create(OrderDto orderDto, TempBookDto bookDto, String prodTypeCode, Integer itemQuantity) {
         String isbn = bookDto.getIsbn();
         String orderStatus = BASIC_ORDER_STATUS.getCode();
         String deliveryStatus = BASIC_DELIVERY_STATUS.getCode();
@@ -24,11 +25,11 @@ public class OrderProductDtoFactory {
         Integer salePrice;
         Integer orderPrice;
 
-        if (prodTypeCode.equals(PRINTED_BOOK)) {
+        if (prodTypeCode.equals(PRINTED)) {
             basicPrice = bookDto.getPapr_pric();
             pointPercent = bookDto.getPapr_point();
             benefitPercent = bookDto.getPapr_disc();
-        } else if (prodTypeCode.equals(E_BOOK)) {
+        } else if (prodTypeCode.equals(EBOOK)) {
             pointPercent = bookDto.getE_point();
             basicPrice = bookDto.getE_pric();
             benefitPercent = bookDto.getE_disc();
@@ -45,7 +46,7 @@ public class OrderProductDtoFactory {
         return new OrderProductDto.Builder()
                 .ord_seq(orderSeq)
                 .isbn(isbn)
-                .prod_type_code(PRINTED_BOOK)
+                .prod_type_code(PRINTED)
                 .ord_stat(orderStatus)
                 .deli_stat(deliveryStatus)
                 .pay_stat(paymentStatus)

@@ -2,5 +2,71 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fastcampus.ch4.dao.CartMapper">
+    <insert id="insertAndReturnSeq" parameterType="CartDto" useGeneratedKeys="true" keyProperty="cart_seq">
+        INSERT INTO
+            book_shop.cart
+            (
+                userId,
+                reg_date,
+                reg_id,
+                up_date,
+                up_id,
+                created_at
+            )
+        VALUES
+            (
+                #{userId},
+                NOW(),
+                #{reg_id},
+                NOW(),
+                #{up_id},
+                NOW()
+            )
+    </insert>
 
+    <select id="selectByMap" parameterType="map" resultType="CartDto">
+        SELECT
+            cart_seq,
+            userId,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id,
+            created_at
+        FROM
+            book_shop.cart
+        WHERE
+            1 = 1
+            <if test="cart_seq != null">
+                AND cart_seq = #{cart_seq}
+            </if>
+            <if test="userId != null">
+                AND userId = #{userId}
+            </if>
+    </select>
+
+    <delete id="deleteByMap" parameterType="map">
+        DELETE
+        FROM
+        book_shop.cart
+        WHERE
+        1 = 1
+        <if test="cart_seq != null">
+            AND cart_seq = #{cart_seq}
+        </if>
+        <if test="userId != null">
+            AND userId = #{userId}
+        </if>
+    </delete>
+
+    <delete id="deleteAll" parameterType="String">
+        DELETE
+        FROM
+            book_shop.cart
+        WHERE
+            1 = 1
+            <if test="userId != null">
+                AND userId = #{userId}
+            </if>
+    </delete>
 </mapper>

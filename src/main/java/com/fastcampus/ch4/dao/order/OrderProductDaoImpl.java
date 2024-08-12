@@ -28,8 +28,8 @@ public class OrderProductDaoImpl implements OrderProductDao {
     }
 
     @Override
-    public OrderProductDto selectBySeq(Integer OrderProductSeq) {
-        return sqlSession.selectOne(namespace + "selectBySeq", OrderProductSeq);
+    public OrderProductDto selectBySeq(Integer orderProductSeq) {
+        return sqlSession.selectOne(namespace + "selectBySeq", orderProductSeq);
     }
 
     @Override
@@ -48,12 +48,12 @@ public class OrderProductDaoImpl implements OrderProductDao {
     }
 
     @Override
-    public int deleteById(String ord_seq, String isbn) {
-        return 0;
+    public int deleteBySeq(Integer orderProductSeq) {
+        return sqlSession.delete(namespace + "deleteBySeq", orderProductSeq);
     }
 
     @Override
     public int deleteAll() {
-        return 0;
+        return sqlSession.delete(namespace + "deleteAll");
     }
 }

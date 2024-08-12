@@ -143,4 +143,18 @@
                     AND ordProd.ord_seq = #{ord_seq}
                 </if>
     </select>
+
+    <delete id="deleteBySeq" parameterType="int">
+        DELETE
+        FROM
+            book_shop.order_prod
+        WHERE
+            ord_prod_seq = #{ord_prod_seq}
+    </delete>
+
+    <delete id="deleteAll">
+        DELETE
+        FROM
+            book_shop.order_prod
+    </delete>
 </mapper>

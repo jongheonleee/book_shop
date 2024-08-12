@@ -8,10 +8,10 @@ import java.util.Map;
 public interface OrderProductDao {
     public Integer insertAndReturnSeq(OrderProductDto orderProductDto);
     public int count ();
-    public OrderProductDto selectBySeq(Integer OrderProductSeq);
+    public OrderProductDto selectBySeq(Integer orderProductSeq);
     public List<OrderProductDto> selectAll();
     public List<OrderProductDto> selectListByCondition(Map map);
     public int update(OrderProductDto orderProductDto);
-    public int deleteById(String ord_seq, String isbn);
+    public int deleteBySeq(Integer orderProductSeq);
     public int deleteAll();
 }

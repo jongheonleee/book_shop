@@ -144,6 +144,32 @@
                 </if>
     </select>
 
+    <update id="update" parameterType="OrderProductDto">
+        UPDATE
+            book_shop.order_prod
+        SET
+            ord_seq = #{ord_seq},
+            isbn = #{isbn},
+            prod_type_code = #{prod_type_code},
+            ord_stat = #{ord_stat},
+            deli_stat = #{deli_stat},
+            pay_stat = #{pay_stat},
+            item_quan = #{item_quan},
+            point_perc = #{point_perc},
+            point_pric = #{point_pric},
+            basic_pric = #{basic_pric},
+            bene_perc = #{bene_perc},
+            bene_pric = #{bene_pric},
+            sale_pric = #{sale_pric},
+            ord_pric = #{ord_pric},
+            reg_date = now(),
+            reg_id = #{reg_id},
+            up_date = now(),
+            up_id = #{up_id}
+        WHERE
+            ord_prod_seq = #{ord_prod_seq}
+    </update>
+
     <delete id="deleteBySeq" parameterType="int">
         DELETE
         FROM

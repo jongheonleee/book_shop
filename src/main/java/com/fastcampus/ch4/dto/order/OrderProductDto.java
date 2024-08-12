@@ -45,6 +45,8 @@ public class OrderProductDto {
 
     => select 의 결과는 mybatis 에서 select 부분의 ResultType 을 설정해주는 것으로 가능하다.
 
+    - DTO 를 Builder 로 하는 것은 비용대비 시간이 좋지 않다.
+
      */
 
     private OrderProductDto() {}
@@ -239,83 +241,155 @@ public class OrderProductDto {
         }
     }
 
-    public void setOrd_prod_seq(Integer ord_prod_seq) {
-        this.ord_prod_seq = ord_prod_seq;
-    }
-
     public Integer getOrd_prod_seq() {
         return ord_prod_seq;
+    }
+
+    public void setOrd_prod_seq(Integer ord_prod_seq) {
+        this.ord_prod_seq = ord_prod_seq;
     }
 
     public Integer getOrd_seq() {
         return ord_seq;
     }
 
+    public void setOrd_seq(Integer ord_seq) {
+        this.ord_seq = ord_seq;
+    }
+
     public String getIsbn() {
         return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public String getProd_type_code() {
         return prod_type_code;
     }
 
+    public void setProd_type_code(String prod_type_code) {
+        this.prod_type_code = prod_type_code;
+    }
+
     public String getOrd_stat() {
         return ord_stat;
+    }
+
+    public void setOrd_stat(String ord_stat) {
+        this.ord_stat = ord_stat;
     }
 
     public String getDeli_stat() {
         return deli_stat;
     }
 
+    public void setDeli_stat(String deli_stat) {
+        this.deli_stat = deli_stat;
+    }
+
     public String getPay_stat() {
         return pay_stat;
+    }
+
+    public void setPay_stat(String pay_stat) {
+        this.pay_stat = pay_stat;
     }
 
     public Integer getItem_quan() {
         return item_quan;
     }
 
+    public void setItem_quan(Integer item_quan) {
+        this.item_quan = item_quan;
+    }
+
     public Double getPoint_perc() {
         return point_perc;
+    }
+
+    public void setPoint_perc(Double point_perc) {
+        this.point_perc = point_perc;
     }
 
     public Integer getPoint_pric() {
         return point_pric;
     }
 
+    public void setPoint_pric(Integer point_pric) {
+        this.point_pric = point_pric;
+    }
+
     public Integer getBasic_pric() {
         return basic_pric;
+    }
+
+    public void setBasic_pric(Integer basic_pric) {
+        this.basic_pric = basic_pric;
     }
 
     public Double getBene_perc() {
         return bene_perc;
     }
 
+    public void setBene_perc(Double bene_perc) {
+        this.bene_perc = bene_perc;
+    }
+
     public Integer getBene_pric() {
         return bene_pric;
+    }
+
+    public void setBene_pric(Integer bene_pric) {
+        this.bene_pric = bene_pric;
     }
 
     public Integer getSale_pric() {
         return sale_pric;
     }
 
+    public void setSale_pric(Integer sale_pric) {
+        this.sale_pric = sale_pric;
+    }
+
     public Integer getOrd_pric() {
         return ord_pric;
+    }
+
+    public void setOrd_pric(Integer ord_pric) {
+        this.ord_pric = ord_pric;
     }
 
     public Date getReg_date() {
         return reg_date;
     }
 
+    public void setReg_date(Date reg_date) {
+        this.reg_date = reg_date;
+    }
+
     public String getReg_id() {
         return reg_id;
+    }
+
+    public void setReg_id(String reg_id) {
+        this.reg_id = reg_id;
     }
 
     public Date getUp_date() {
         return up_date;
     }
 
+    public void setUp_date(Date up_date) {
+        this.up_date = up_date;
+    }
+
     public String getUp_id() {
         return up_id;
+    }
+
+    public void setUp_id(String up_id) {
+        this.up_id = up_id;
     }
 }

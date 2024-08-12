@@ -10,7 +10,7 @@ public interface OrderProductDao {
     public int count ();
     public OrderProductDto selectBySeq(Integer orderProductSeq);
     public List<OrderProductDto> selectAll();
-    public List<OrderProductDto> selectListByCondition(Map map);
+    public List<OrderProductDto> selectListByCondition(Map<String, Object> map);
     public int update(OrderProductDto orderProductDto);
     public int deleteBySeq(Integer orderProductSeq);
     public int deleteAll();

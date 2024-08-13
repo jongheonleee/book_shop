@@ -24,7 +24,7 @@
             )
     </insert>
 
-    <select id="selectByMap" parameterType="map" resultType="CartDto">
+    <select id="selectByCondition" parameterType="map" resultType="CartDto">
         SELECT
             cart_seq,
             userId,
@@ -35,28 +35,28 @@
             created_at
         FROM
             book_shop.cart
-        WHERE
-            1 = 1
+        <where>
             <if test="cart_seq != null">
-                AND cart_seq = #{cart_seq}
+                cart_seq = #{cart_seq}
             </if>
             <if test="userId != null">
                 AND userId = #{userId}
             </if>
+        </where>
     </select>
 
     <delete id="deleteByMap" parameterType="map">
         DELETE
         FROM
         book_shop.cart
-        WHERE
-        1 = 1
-        <if test="cart_seq != null">
-            AND cart_seq = #{cart_seq}
-        </if>
-        <if test="userId != null">
-            AND userId = #{userId}
-        </if>
+        <where>
+            <if test="cart_seq != null">
+                cart_seq = #{cart_seq}
+            </if>
+            <if test="userId != null">
+                AND userId = #{userId}
+            </if>
+        </where>
     </delete>
 
     <delete id="deleteAll">

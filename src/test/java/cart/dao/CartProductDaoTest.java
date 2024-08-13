@@ -372,7 +372,7 @@ public class CartProductDaoTest {
     => 나머지는 전부 새로 생성하는 것으로 하기 때문에 item_quan 만 업데이트 할 수 있도록 한다.
      */
     @Test
-    public void 장바구니_updateItemQuantity () {
+    public void 장바구니상품_updateItemQuantity () {
         // cartDto 생성 & insert
         CartDto cartDto = CartDto.create();
         cartDto.setUserId(TEST_USER);

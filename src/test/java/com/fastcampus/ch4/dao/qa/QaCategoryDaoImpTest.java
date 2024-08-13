@@ -39,6 +39,14 @@ public class QaCategoryDaoImpTest {
         dao.deleteAll();
     }
 
+    @Test
+    public void 테스트용_데이타() {
+        for (int i=1; i<=5; i++) {
+            QaCategoryDto dto = create(i);
+            assertTrue(1 == dao.insert(dto));
+        }
+    }
+
     /**
      *
      * 1차 기능 구현[✅]
@@ -542,7 +550,7 @@ public class QaCategoryDaoImpTest {
 
     private QaCategoryDto create(int i) {
         QaCategoryDto dto = new QaCategoryDto();
-        dto.setQa_cate_num("qa-cate-num" + i);
+        dto.setQa_cate_num("qa-cate-" + i);
         dto.setName("환불요청");
         dto.setComt("comt" + i);
         dto.setChk_use("Y");

@@ -54,7 +54,10 @@ public class QaDaoImpTest {
 
     @Test
     public void 데이터_넣기() {
-
+        for (int i=1; i<=20; i++) {
+            QaDto dto = create(i);
+            assertTrue(1 == dao.insert(dto));
+        }
     }
 
     @Test
@@ -66,8 +69,11 @@ public class QaDaoImpTest {
         QaDto dto = new QaDto();
         dto.setUser_id("user1");
         dto.setQa_cate_num("qa_cate_num1");
-        dto.setTitle("title" + i);
-        dto.setContent("content" + i);
+        dto.setCate_name("교환/환불 요청");
+        dto.setStat_name("답변대기");
+        dto.setChk_repl("Y");
+        dto.setTitle("문의글입니다." + i);
+        dto.setContent("바람이 세차게 불어오는 저녁, 해변을 따라 걷던 엘레나는 발밑에서 부서지는 파도 소리를 들으며 잠시 멈춰 섰다. 하늘은 붉은 노을에 물들어 있었고, 태양은 서서히 수평선 아래로 사라지고 있었다. 그녀는 손을 주머니에 넣고, 바다를 응시하며 깊은 생각에 잠겼다. 몇 년 전, 이곳에서의 추억들이 그녀의 마음속에 선명하게 떠올랐다. 그때는 모든 것이 단순하고 아름다웠다. 하지만 지금, 시간은 모든 것을 변화시키고, 사람들 사이에 놓인 거리는 점점 더 멀어져만 갔다. 엘레나는 서늘한 바람에 얼굴을 내맡기며, 아직 끝나지 않은 이야기를 다시 써 내려갈 용기를 다짐했다. 그녀의 발걸음은 다시 앞으로 향했고, 바다는 여전히 그녀의 곁에서 잔잔하게 출렁이고 있었다." + i);
         dto.setCreated_at("2021-01-01");
         dto.setEmail("email1");
         dto.setTele_num("010-1234-5678");

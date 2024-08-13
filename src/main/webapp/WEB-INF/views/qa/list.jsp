@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>교보문고</title>
+    <title>서점📚</title>
     <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
     <style>
       .container {
@@ -212,7 +212,7 @@
 <!-- 메뉴 영역 -->
 <div id="menu">
     <ul>
-        <li id="logo">교보문고</li>
+        <li id="logo">서점📚</li>
         <li><a href="<c:url value='/'/>">Home</a></li>
         <li><a href="<c:url value='/qa/list'/>">QA</a></li>
         <%--        <li><a href="<c:url value='${loginOutLink}'/>">${loginOut}</a></li>--%>
@@ -255,13 +255,9 @@
 
 <!-- 상태별 구분 칸 -->
 <div id="tabs" class="container">
-<%--    <c:forEach var="state" items="${states}">--%>
-<%--        <div class="tab" data-id="${state.qa_stat_code}">${state.name}</div>--%>
-<%--    </c:forEach>--%>
-    <div class="tab active" data-tab="tab-1">전체</div>
-    <div class="tab" data-tab="tab-2">준비중</div>
-    <div class="tab" data-tab="tab-3">처리중</div>
-    <div class="tab" data-tab="tab-4">답변완료</div>
+    <c:forEach var="state" items="${states}">
+        <div class="tab" data-id="${state.code}">${state.code_name}</div>
+    </c:forEach>
 </div>
 
 <!-- 문의글 목록-->
@@ -317,7 +313,7 @@
 </div>
 
 <!-- 문의 작성 버튼 -->
-<button class="inquiry-button">
+<button id="write-button" class="inquiry-button" >
     <span class="icon">✏️</span> 1:1문의하기
 </button>
 
@@ -331,6 +327,7 @@
       // 선택한 옵션의 값을 조회
       const selectedOption = $('.dropdown').val();
       alert(selectedOption);
+
       // 서버에 get 파라미터로 요청
       location.href = 'http://localhost:8080/ch4/qa/search?option=' + SEARCH_KEYWORD_PERIOD + '&period=' + selectedOption;
       alert(location.href);
@@ -342,6 +339,11 @@
       const titleKeyword = document.getElementById('search-title-input').value;
       // 서버에 get 파라미터로 요청
       location.href = 'http://localhost:8080/ch4/qa/search?option=' + SEARCH_KEYWORD_TITLE + '&titleKeyword=' + titleKeyword;
+    });
+
+    // 작성하기 버튼 누름
+    $('#write-button').click(function (e) {
+      location.href = 'http://localhost:8080/ch4/qa/form';
     });
   });
 </script>

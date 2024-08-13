@@ -25,6 +25,7 @@ public class QaDto {
     private String up_id;
     private String qa_stat_code;
     private String stat_name;
+    private String cate_code;
 
 
     public String getCate_name() {
@@ -33,6 +34,14 @@ public class QaDto {
 
     public void setCate_name(String cate_name) {
         this.cate_name = cate_name;
+    }
+
+    public String getCate_code() {
+        return cate_code;
+    }
+
+    public void setCate_code(String cate_code) {
+        this.cate_code = cate_code;
     }
 
     public String getQa_stat_code() {
@@ -237,6 +246,7 @@ public class QaDto {
                 ", up_id='" + up_id + '\'' +
                 ", qa_stat_code='" + qa_stat_code + '\'' +
                 ", stat_name='" + stat_name + '\'' +
+                ", cate_code='" + cate_code + '\'' +
                 '}';
     }
 }

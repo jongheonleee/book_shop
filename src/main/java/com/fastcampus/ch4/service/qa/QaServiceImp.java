@@ -1,14 +1,18 @@
 package com.fastcampus.ch4.service.qa;
 
 
+import com.fastcampus.ch4.dao.global.CodeDaoImp;
 import com.fastcampus.ch4.dao.qa.QaCategoryDao;
 import com.fastcampus.ch4.dao.qa.QaDao;
 import com.fastcampus.ch4.dao.qa.QaDaoImp;
+import com.fastcampus.ch4.dto.global.CodeDto;
 import com.fastcampus.ch4.dto.qa.QaCategoryDto;
 import com.fastcampus.ch4.dto.qa.QaDto;
 import com.fastcampus.ch4.domain.qa.SearchCondition;
 import com.fastcampus.ch4.dto.qa.QaStateDto;
+import java.sql.SQLOutput;
 import java.util.List;
+import org.aspectj.apache.bcel.classfile.Code;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +22,15 @@ public class QaServiceImp implements QaService {
 
     private final QaDaoImp qaDao;
     private final QaCategoryDao qaCategoryDao;
+    private final CodeDaoImp codeDao;
+    // private final QaStateDao qaStateDao;
     // private final AnswerDao answerDao;
 
     @Autowired
-    public QaServiceImp(QaDaoImp qaDao, QaCategoryDao qaCategoryDao) {
+    public QaServiceImp(QaDaoImp qaDao, QaCategoryDao qaCategoryDao, CodeDaoImp codeDao) {
         this.qaDao = qaDao;
         this.qaCategoryDao = qaCategoryDao;
+        this.codeDao = codeDao;
     }
 
     /** 1차 기능 요구 사항 정리
@@ -42,8 +49,14 @@ public class QaServiceImp implements QaService {
         return qaDao.count(userId);
     }
 
+    @Override
     public int count(String userId, SearchCondition sc) {
         return qaDao.countBySearchCondition(userId, sc);
+    }
+
+    @Override
+    public List<CodeDto> readAllCategory(String cateNum) {
+        return codeDao.selectByCate(cateNum); // 01
     }
 
     // (1) ⚙️ 특정 글 상세 조회(시퀀스라 테스트 하기 어려움)
@@ -74,12 +87,17 @@ public class QaServiceImp implements QaService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean write(String userId, QaDto dto) {
-        // 카테고리 값 유효한지 확인
-        QaCategoryDto found = qaCategoryDao.select(dto.getQa_cate_num());
+        // 카테고리 값 유효한지 확인 - 통합 코드 테이블에서 조회
+        System.out.println("start write()");
+
+        CodeDto found = codeDao.selectByCode(dto.getQa_cate_num());
         if (found == null) return false;
 
         // 현재 작성한 문의글과 중복되는 제목이 있는지 확인
+        System.out.println(userId);
+        System.out.println(dto.getTitle());
         QaDto isDuplicated = qaDao.selectByTitle(userId, dto.getTitle());
+        System.out.println(isDuplicated);
 
         // 중복된 제목이 있으면 등록 실패
         if (isDuplicated != null) return false;
@@ -90,7 +108,10 @@ public class QaServiceImp implements QaService {
         // 방금 등록한 Qa의 번호 조회 - 이 부분 max() + 1로 바꾸기
         int qaNum = qaDao.selectMaxQaSeq();
 
-        // 상태 DTO 생성 및 등록, 상수 enum으로서 사용하기
+
+        // 상태 DTO 생성 및 등록, 이 상태 코드 테이블에서 읽어다가 사용할 수 있게 만들기 💥 - 통합 코드 테이블에서 조회
+        // QaStateDto state = qaStateDao.selectByCode(DEFAULT_CODE);
+        // qaDao.insert(state.setQa_num(qaNum));
         QaStateDto state = new QaStateDto();
         state.setName("처리 대기중");
         state.setQa_num(qaNum);
@@ -107,9 +128,7 @@ public class QaServiceImp implements QaService {
     public boolean remove(QaDto dto) {
         // 문의글과 관련된 테이블 데이터 부터 삭제
         // 상태
-        System.out.println(dto);
         int rowCnt = qaDao.deleteStateByQaNum(dto.getQa_num());
-        System.out.println(rowCnt);
         // 문의글 삭제
         rowCnt += qaDao.delete(dto);
         return rowCnt == 2;

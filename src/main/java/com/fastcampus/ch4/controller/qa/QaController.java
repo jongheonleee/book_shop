@@ -5,6 +5,7 @@ import static com.fastcampus.ch4.code.error.qa.QaErrorCode.DUPLICATED_KEY;
 import static com.fastcampus.ch4.code.error.qa.QaErrorCode.INVALID_VALUE_INPUT;
 
 import com.fastcampus.ch4.domain.qa.PageHandler;
+import com.fastcampus.ch4.dto.global.CodeDto;
 import com.fastcampus.ch4.dto.qa.QaDto;
 import com.fastcampus.ch4.domain.qa.SearchCondition;
 import com.fastcampus.ch4.dto.qa.QaStateDto;
@@ -74,7 +75,7 @@ public class QaController {
         if (!isLogin(request)) return "redirect:/loginForm";
 
         // 상태 모두 조회
-        List<QaStateDto> states = service.readAllState();
+        List<CodeDto> states = readState();
         model.addAttribute("states", states);
 
         // 필요 정보 조회 - 1. 유저 문의글, 2. 유저 문의글 수, 3. 페이징
@@ -101,7 +102,7 @@ public class QaController {
         if (!isLogin(request)) return "redirect:/loginForm";
 
         // 상태 모두 조회
-        List<QaStateDto> states = service.readAllState();
+        List<CodeDto> states = readState();
         model.addAttribute("states", states);
 
         // 필요 정보 조회 - 1. 검색 문의글, 2. 검색 문의글 수, 3. 페이징
@@ -118,7 +119,7 @@ public class QaController {
         model.addAttribute("totalCnt", totalCnt);
         model.addAttribute("ph", ph);
 
-        // 뷰 반환
+        // 뷰 반환 -> /qa/search로 변경
         return "/qa/list";
     }
 
@@ -145,6 +146,11 @@ public class QaController {
         // 로그인 여부 확인, 로그인 x -> 로그인 폼으로 이동
         if (!isLogin(request)) return "redirect:/loginForm";
 
+        // 문의 유형 정보 조회
+        List<CodeDto> categories = readCategory();
+        categories.stream().forEach(System.out::println);
+        model.addAttribute("categories", categories);
+
         // 뷰 반환
         return "/qa/form";
     }
@@ -152,20 +158,25 @@ public class QaController {
 
     // (6) 유저 문의글 작성
     @PostMapping("/qa/form")
-    public String sendQaForm(HttpServletRequest request, @RequestParam QaDto qaDto, SearchCondition sc, Model model) {
+    public String sendQaForm(HttpServletRequest request, QaDto qaDto, SearchCondition sc, Model model) {
         // 로그인 여부 확인, 로그인 x -> 로그인 폼으로 이동
         if (!isLogin(request)) return "redirect:/loginForm";
+
+        System.out.println(qaDto);
 
         // 등록 작업 시행
         HttpSession session = request.getSession();
         String userId = (String) session.getAttribute("userId");
+        userId = "user1";
+
         if (!service.write(userId, qaDto)) {
-            model.addAttribute("errorMsg", "문의글 등록에 실패했습니다.");
+            String errorMsg = "서버 내부 오류가 발생했거나, 동일한 제목의 문의글이 존재합니다.";
+            model.addAttribute("errorMsg", errorMsg);
             return "/qa/error";
         }
 
         // 등록 성공하면 문의글 리스트로 이동
-        return "/qa/list";
+        return "redirect:/qa/list";
     }
 
     // (7) 유저 문의글 삭제
@@ -220,5 +231,13 @@ public class QaController {
     // (1) 유저 관련 문의글 카운팅
     private int count(String userId) {
         return service.count(userId);
+    }
+
+    private List<CodeDto> readCategory() {
+        return service.readAllCategory("01");
+    }
+
+    private List<CodeDto> readState() {
+        return service.readAllCategory("02");
     }
 }

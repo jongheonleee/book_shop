@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fastcampus.ch4.CodeMapper">
+
+  <!-- 문의글 카테고리 -->
+  <select id="selectByCate" parameterType="string" resultType="CodeDto">
+    SELECT *
+    FROM code
+    WHERE cate_num = #{cate_num}
+    ORDER BY ord;
+  </select>
+
+  <select id="selectByCode" parameterType="string" resultType="CodeDto">
+    SELECT *
+    FROM code
+    WHERE code = #{code}
+  </select>
+
+  <select id="selectAll" resultType="CodeDto">
+    SELECT *
+    FROM code
+    ORDER BY cate_num, ord;
+  </select>
+
+  <insert id="insert" parameterType="CodeDto">
+    INSERT INTO code(cate_num, code, code_name, ord, chk_use,
+                     comt, reg_date, reg_id, up_date, up_id)
+    VALUES (#{cate_num}, #{code}, #{code_name}, #{ord}, #{chk_use},
+            #{comt}, now(), #{reg_id}, now(), #{up_id});
+  </insert>
+
+  <update id="update" parameterType="CodeDto">
+    UPDATE code
+    set cate_num = #{cate_num},
+        code = #{code},
+        code_name = #{code_name},
+        ord = #{ord},
+        chk_use = #{chk_use},
+        comt = #{comt}
+    where code_id = #{code_id};
+  </update>
+
+  <delete id="delete" parameterType="int">
+    DELETE
+    FROM code
+    where code_id = #{code_id};
+  </delete>
+
+  <delete id="deleteAllOnCate" parameterType="CodeDto">
+    DELETE
+    FROM code
+    where cate_num = #{cate_num};
+  </delete>
+
+  <delete id="deleteAll">
+    DELETE
+    FROM code;
+  </delete>
+</mapper>

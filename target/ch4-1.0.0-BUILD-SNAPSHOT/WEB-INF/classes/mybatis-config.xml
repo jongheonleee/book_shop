@@ -17,6 +17,6 @@
     <typeAlias alias="SearchCondition" type="com.fastcampus.ch4.domain.qa.SearchCondition"/>
     <typeAlias alias="QaCategoryDto" type="com.fastcampus.ch4.dto.qa.QaCategoryDto"/>
     <typeAlias alias="QaStateDto" type="com.fastcampus.ch4.dto.qa.QaStateDto"/>
-
+    <typeAlias alias="CodeDto" type="com.fastcampus.ch4.dto.global.CodeDto"/>
   </typeAliases>
 </configuration>

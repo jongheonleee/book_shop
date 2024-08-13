@@ -1,5 +1,7 @@
 package com.fastcampus.ch4.dto.cart;
 
+import com.fastcampus.ch4.model.cart.UserType;
+
 import java.util.Date;
 import java.util.Objects;
 
@@ -20,10 +22,6 @@ public class CartProductDto {
     private Date up_date; // 최근 수정 일시
     private String up_id; // 최근 수정 id
 
-    public static CartProductDto create() {
-        return new CartProductDto();
-    }
-
     public static CartProductDto create(Integer cart_seq, String isbn, String prod_type_code, Integer item_quan, String userId) {
         CartProductDto cartProductDto = new CartProductDto();
         cartProductDto.setCart_seq(cart_seq);
@@ -32,6 +30,15 @@ public class CartProductDto {
         cartProductDto.setItem_quan(item_quan);
         cartProductDto.setReg_id(userId);
         cartProductDto.setUp_id(userId);
+        return cartProductDto;
+    }
+
+    public static CartProductDto create(Integer cart_seq, String isbn, String prod_type_code, Integer item_quan, String userId, UserType userType) {
+        CartProductDto cartProductDto = create(cart_seq, isbn, prod_type_code, item_quan, userId);
+        if (UserType.NON_MEMBERSHIP.equals(userType)) {
+            cartProductDto.setReg_id(UserType.NON_MEMBERSHIP.getCode());
+            cartProductDto.setUp_id(UserType.NON_MEMBERSHIP.getCode());
+        }
         return cartProductDto;
     }
 

@@ -1,5 +1,7 @@
 package com.fastcampus.ch4.dto.cart;
 
+import com.fastcampus.ch4.model.cart.UserType;
+
 import java.util.Date;
 import java.util.Objects;
 
@@ -19,8 +21,27 @@ public class CartDto {
     private Date up_date; // 최근 수정 일시
     private String up_id; // 최근 수정 id
 
-    public static CartDto create () {
+    public static CartDto create() {
         return new CartDto();
+    }
+
+    public static CartDto create(String userId) {
+        CartDto cartDto = new CartDto();
+        cartDto.setUserId(userId);
+        cartDto.setReg_id(userId);
+        cartDto.setUp_id(userId);
+        return cartDto;
+    }
+
+    // 비회원 장바구니 생성 정적 팩토리 메서드
+    public static CartDto create(UserType userType) {
+        if (!userType.equals(UserType.NON_MEMBERSHIP)) {
+            throw new IllegalArgumentException("비회원 장바구니 생성에만 가능합니다.");
+        }
+        CartDto cartDto = new CartDto();
+        cartDto.setReg_id(UserType.NON_MEMBERSHIP.getCode());
+        cartDto.setUp_id(UserType.NON_MEMBERSHIP.getCode());
+        return cartDto;
     }
 
     @Override

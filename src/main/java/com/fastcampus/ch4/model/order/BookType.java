@@ -25,4 +25,8 @@ public enum BookType {
 
         return false;
     }
+
+    public boolean isSameType(String typeCode) {
+        return typeCode.equals(this.code);
+    }
 }

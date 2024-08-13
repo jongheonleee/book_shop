@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -99,11 +100,17 @@ public class CartDaoTest {
         Map map = new HashMap<>();
         map.put("cart_seq", cartSeq);
 
-        // select
+        // selectOne
         CartDto selectedCartDto = cartDao.selectByMap(map);
         assertNotNull(selectedCartDto);
 
         assertTrue(cartDto.equals(selectedCartDto));
+
+        // selectList
+        List<CartDto> selectedList = cartDao.selectListByCondition(cartSeq, null);
+        assertFalse(selectedList.isEmpty());
+        CartDto listElementDto = selectedList.get(0);
+        assertTrue(selectedCartDto.equals(listElementDto));
     }
 
     @Test
@@ -124,10 +131,16 @@ public class CartDaoTest {
         // select
         CartDto selectedCartDto = cartDao.selectByMap(map);
         assertNotNull(selectedCartDto);
+
+        // selectList
+        List<CartDto> selectedList = cartDao.selectListByCondition(null, TEST_USER);
+        assertFalse(selectedList.isEmpty());
+        CartDto listElementDto = selectedList.get(0);
+        assertTrue(selectedCartDto.equals(listElementDto));
     }
 
     @Test
-    public void 장바구니조회_조건두개 () {
+    public void select_조건두개 () {
         CartDto cartDto = CartDto.create();
         cartDto.setUserId(TEST_USER);
         cartDto.setReg_id(TEST_USER);
@@ -145,6 +158,12 @@ public class CartDaoTest {
         // select
         CartDto selectedCartDto = cartDao.selectByMap(map);
         assertNotNull(selectedCartDto);
+
+        // selectList
+        List<CartDto> selectedList = cartDao.selectListByCondition(cartSeq, TEST_USER);
+        assertFalse(selectedList.isEmpty());
+        CartDto listElementDto = selectedList.get(0);
+        assertTrue(selectedCartDto.equals(listElementDto));
     }
 
     @Test
@@ -168,11 +187,8 @@ public class CartDaoTest {
         assertNotNull(selectedCartDto);
     }
 
-
-
-
     @Test(expected = MyBatisSystemException.class)
-    public void 장바구니조회_조회결과2개이상 () {
+    public void selectOne_조회결과2개이상 () {
         CartDto firstCartDto = CartDto.create();
         firstCartDto.setUserId(TEST_USER);
         firstCartDto.setReg_id(TEST_USER);
@@ -199,6 +215,36 @@ public class CartDaoTest {
         assertNotNull(selectedCartDto);
 
         fail();
+    }
+
+    @Test
+    public void selectList_조회결과2개이상 () {
+        CartDto firstCartDto = CartDto.create();
+        firstCartDto.setUserId(TEST_USER);
+        firstCartDto.setReg_id(TEST_USER);
+        firstCartDto.setUp_id(TEST_USER);
+
+        // insert 1
+        Integer firstCartSeq = cartDao.insertAndReturnSeq(firstCartDto);
+        assertNotNull(firstCartSeq);
+
+        CartDto secondCartDto = CartDto.create();
+        secondCartDto.setUserId(TEST_USER);
+        secondCartDto.setReg_id(TEST_USER);
+        secondCartDto.setUp_id(TEST_USER);
+
+        // insert 2
+        Integer secondCartSeq = cartDao.insertAndReturnSeq(secondCartDto);
+        assertNotNull(secondCartSeq);
+
+        // selectList
+        List<CartDto> selectedList = cartDao.selectListByCondition(null, TEST_USER);
+        assertFalse(selectedList.isEmpty());
+        CartDto firstElementDto = selectedList.get(0);
+        assertTrue(firstCartDto.equals(firstElementDto));
+
+        CartDto secondElementDto = selectedList.get(1);
+        assertTrue(secondCartDto.equals(secondElementDto));
     }
 
     @Test

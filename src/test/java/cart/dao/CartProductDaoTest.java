@@ -30,7 +30,7 @@ insert
 
 select
 1. cart_seq 와 일치하는 ROW 들을 조회한다.
-2. 도서 의 정보를 JOIN 하는 것으로 상품 정보를 줘야한다.
+2. 도서 의 정보를 JOIN 하는 것으로 상품 정보를 줘야한다. => 잘못된 도서정보를 걸러주는 것은 service에서 처리해야한다.
 
 delete
 1. cart_seq 와 일치하는 ROW 들을 삭제한다.
@@ -49,9 +49,10 @@ update
 public class CartProductDaoTest {
     @Autowired
     CartDao cartDao;
-
     @Autowired
     CartProductDao cartProductDao;
+    @Autowired
+    private CartProductDaoImpl cartProductDaoImpl;
 
     private static final String TEST_USER = "CART_PROD_INSERT";
     final String UPDATE_TEST_USER = "CART_PROD_UPDATE";
@@ -59,8 +60,6 @@ public class CartProductDaoTest {
     private static final Integer SINGLE = 1;
     private static final Integer MULTIPLE = 5;
     private static final int SUCCESS = 1;
-    @Autowired
-    private CartProductDaoImpl cartProductDaoImpl;
 
     @Test
     public void 장바구니상품_insertSingle () {

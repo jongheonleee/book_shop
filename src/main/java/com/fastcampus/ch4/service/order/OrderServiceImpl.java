@@ -6,7 +6,6 @@ import com.fastcampus.ch4.dto.order.OrderDto;
 import com.fastcampus.ch4.dto.order.OrderProductDto;
 import com.fastcampus.ch4.dto.order.temp.TempBookDto;
 import com.fastcampus.ch4.model.order.BookType;
-import com.fastcampus.ch4.model.order.OrderConstants;
 import com.fastcampus.ch4.service.order.factory.OrderDtoFactory;
 import com.fastcampus.ch4.service.order.factory.OrderProductDtoFactory;
 import com.fastcampus.ch4.service.order.fake.FakeBookServiceImpl;

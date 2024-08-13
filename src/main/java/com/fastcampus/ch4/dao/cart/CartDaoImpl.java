@@ -5,6 +5,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -22,7 +24,15 @@ public class CartDaoImpl implements CartDao {
 
     @Override
     public CartDto selectByMap (Map map) {
-        return sqlSession.selectOne(namespace + "selectByMap", map);
+        return sqlSession.selectOne(namespace + "selectByCondition", map);
+    }
+
+    @Override
+    public List<CartDto> selectListByCondition(Integer cartSeq, String userId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("cart_seq", cartSeq);
+        map.put("user_id", userId);
+        return sqlSession.selectList(namespace + "selectByCondition", map);
     }
 
     @Override

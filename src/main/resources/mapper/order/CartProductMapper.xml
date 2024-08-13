@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcampus.ch4.dao.CartProductMapper">
+    <insert id="insert" parameterType="CartProductDto">
+        INSERT INTO book_shop.cart_prod
+        (cart_seq, isbn, prod_type_code, item_quan, reg_date, reg_id, up_date, up_id, created_at, updated_at)
+        VALUES (#{cart_seq}, #{isbn}, #{prod_type_code}, #{item_quan}, NOW(), #{reg_id}, NOW(), #{up_id}, NOW(), NOW())
+    </insert>
+
+    <select id="selectOne" parameterType="map" resultType="CartProductDto">
+        SELECT cart_seq,
+               isbn,
+               prod_type_code,
+               item_quan,
+               reg_date,
+               reg_id,
+               up_date,
+               up_id,
+               created_at
+        FROM book_shop.cart_prod
+        WHERE cart_seq = #{cart_seq}
+          AND isbn = #{isbn}
+          AND prod_type_code = #{prod_type_code}
+    </select>
+
+    <select id="selectListByCartSeq" parameterType="int" resultType="CartProductDto">
+        SELECT cart_seq,
+               isbn,
+               prod_type_code,
+               item_quan,
+               reg_date,
+               reg_id,
+               up_date,
+               up_id,
+               created_at
+        FROM book_shop.cart_prod
+        WHERE cart_seq = #{cart_seq}
+    </select>
+
+    <select id="selectOneJoinBook" parameterType="map" resultType="CartProductDetailDto">
+        SELECT cp.cart_seq,
+               cp.isbn,
+               cp.prod_type_code,
+               cp.item_quan,
+               book.book_title,
+               book.papr_pric,
+               book.e_pric,
+               book.papr_point,
+               book.e_point
+        FROM book_shop.cart_prod cp
+                 INNER JOIN book_shop.book book
+                            ON cp.isbn = book.isbn
+        <where>
+            <if test="cart_seq != null">
+                cp.cart_seq = #{cart_seq}
+            </if>
+            <if test="isbn != null">
+                AND cp.isbn = #{isbn}
+            </if>
+            <if test="prod_type_code != null">
+                AND cp.prod_type_code = #{prod_type_code}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByMap" parameterType="map">
+        DELETE
+        FROM
+        book_shop.cart_prod
+        WHERE
+        cart_seq = #{cart_seq}
+        <if test="isbn != null">
+            AND isbn = #{isbn}
+        </if>
+        <if test="prod_type_code">
+            AND prod_type_code = #{prod_type_code}
+        </if>
+    </delete>
+
+    <update id="updateItemQuantity" parameterType="map">
+        UPDATE
+        book_shop.cart_prod
+        <set>
+            up_date = NOW(),
+            up_id = #{userId},
+            updated_at = NOW(),
+            <if test="isPlus == true">
+                item_quan = item_quan + 1
+            </if>
+            <if test="isPlus == false">
+                item_quan = item_quan - 1
+            </if>
+        </set>
+        WHERE
+        cart_seq = #{cart_seq}
+        AND isbn = #{isbn}
+        AND prod_type_code = #{prod_type_code}
+    </update>
+</mapper>

@@ -59,14 +59,9 @@
         </if>
     </delete>
 
-    <delete id="deleteAll" parameterType="String">
+    <delete id="deleteAll">
         DELETE
         FROM
             book_shop.cart
-        WHERE
-            1 = 1
-            <if test="userId != null">
-                AND userId = #{userId}
-            </if>
     </delete>
 </mapper>

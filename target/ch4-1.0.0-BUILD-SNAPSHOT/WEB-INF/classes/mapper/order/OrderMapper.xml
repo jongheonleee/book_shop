@@ -13,6 +13,8 @@
         (
             userId,
             ord_stat,
+            deli_stat,
+            pay_stat,
             delivery_fee,
             total_prod_pric,
             total_bene_pric,
@@ -26,6 +28,8 @@
         (
             #{userId},
             #{ord_stat},
+            #{deli_stat},
+            #{pay_stat},
             #{delivery_fee},
             #{total_prod_pric},
             #{total_bene_pric},
@@ -41,6 +45,8 @@
         SELECT
             ord_seq,
             ord_stat,
+            deli_stat,
+            pay_stat,
             delivery_fee,
             total_prod_pric,
             total_bene_pric,
@@ -59,6 +65,8 @@
     <select id="selectAll" parameterType="map" resultType="OrderDto">
         SELECT
             ord_seq,
+            deli_stat,
+            pay_stat,
             delivery_fee,
             total_prod_pric,
             total_bene_pric,
@@ -81,6 +89,36 @@
             </choose>
     </select>
 
+    <select id="selectListByCondition" parameterType="map" resultType="OrderDto">
+        SELECT
+            ord_seq,
+            ord_stat,
+            deli_stat,
+            pay_stat,
+            userId,
+            delivery_fee,
+            total_prod_pric,
+            total_bene_pric,
+            total_ord_pric,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id
+        FROM
+            book_shop.order
+        WHERE
+            userId = #{userId}
+            <if test="ord_stat != null">
+                AND ord_stat = ${ord_stat}
+            </if>
+            <if test="deli_stat != null">
+                AND deli_stat = ${deli_stat}
+            </if>
+            <if test="pay_stat != null">
+                AND pay_stat = ${pay_stat}
+            </if>
+    </select>
+
     <delete id="deleteById" parameterType="int">
         DELETE
         FROM
@@ -100,11 +138,13 @@
             book_shop.order
         SET
             ord_stat = #{ord_stat},
+            deli_stat = #{deli_stat},
+            pay_stat = #{pay_stat},
             delivery_fee = #{delivery_fee},
             total_prod_pric = #{total_prod_pric},
             total_bene_pric = #{total_bene_pric},
             total_ord_pric = #{total_ord_pric},
-            up_date = now(),
+            up_date = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),
             up_id = #{up_id}
         WHERE
             ord_seq = #{ord_seq}

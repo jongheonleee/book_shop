@@ -13,6 +13,10 @@
     <!-- order  -->
     <typeAlias alias="OrderDto" type="com.fastcampus.ch4.dto.order.OrderDto"/>
     <typeAlias alias="OrderProductDto" type="com.fastcampus.ch4.dto.order.OrderProductDto"/>
+    <typeAlias alias="TempBookDto" type="com.fastcampus.ch4.dto.order.temp.TempBookDto" />
+    <typeAlias alias="CartDto" type="com.fastcampus.ch4.dto.cart.CartDto" />
+    <typeAlias alias="CartProductDto" type="com.fastcampus.ch4.dto.cart.CartProductDto" />
+    <typeAlias alias="CartProductDetailDto" type="com.fastcampus.ch4.dto.cart.CartProductDetailDto" />
     <!-- qa  -->
   </typeAliases>
 </configuration>

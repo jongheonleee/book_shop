@@ -1,7 +1,5 @@
 package com.fastcampus.ch4.dto.order;
 
-import com.fastcampus.ch4.dto.order.temp.TempBookDto;
-
 import java.util.Date;
 import java.util.Objects;
 

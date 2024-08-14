@@ -5,7 +5,7 @@ import com.fastcampus.ch4.dto.order.temp.TempBookDto;
 import java.util.List;
 
 public class FakeBookServiceImpl implements TempBookService {
-    List<TempBookDto> BookDtoList = List.of(new TempBookDto[]{
+    private List<TempBookDto> BookDtoList = List.of(new TempBookDto[]{
             new TempBookDto("9788994492032", 3, "자바의 정석", 30000, null, 0.1, null, 0.1, null, 3000, null),
             new TempBookDto("9788966261024", 1, "테스트 주도 개발", 22000, null, 0.1, null, 0.1, null, 2200, null),
             new TempBookDto("9791169212427", 1, "켄트 벡의 Tidy First?: 더 나은 소프트웨어 설계를 위한 32가지 코드 정리법", 16800, 15840, 0.1, 0.1, 0.1, 0.1, 1680, 1584),
@@ -24,5 +24,10 @@ public class FakeBookServiceImpl implements TempBookService {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<TempBookDto> getBookList() {
+        return BookDtoList;
     }
 }

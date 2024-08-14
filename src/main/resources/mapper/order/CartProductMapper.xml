@@ -39,18 +39,25 @@
     </select>
 
     <select id="selectOneJoinBook" parameterType="map" resultType="CartProductDetailDto">
-        SELECT cp.cart_seq,
-               cp.isbn,
-               cp.prod_type_code,
-               cp.item_quan,
-               book.book_title,
-               book.papr_pric,
-               book.e_pric,
-               book.papr_point,
-               book.e_point
+        SELECT
+        cp.cart_seq,
+        cp.isbn,
+        cp.prod_type_code,
+        cp.item_quan,
+        book.book_title,
+        book.papr_pric,
+        book.e_pric,
+        book.papr_point,
+        book.e_point,
+        bdh.papr_disc,
+        bdh.e_disc
         FROM book_shop.cart_prod cp
-                 INNER JOIN book_shop.book book
-                            ON cp.isbn = book.isbn
+        INNER JOIN book_shop.book book
+        ON cp.isbn = book.isbn
+        INNER JOIN book_shop.book_disc_hist bdh
+        ON cp.isbn = book.isbn
+        AND book.isbn = bdh.isbn
+        AND NOW() BETWEEN bdh.disc_start_date AND bdh.disc_end_date
         <where>
             <if test="cart_seq != null">
                 cp.cart_seq = #{cart_seq}

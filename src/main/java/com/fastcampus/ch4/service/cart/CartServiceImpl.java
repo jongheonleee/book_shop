@@ -3,9 +3,12 @@ package com.fastcampus.ch4.service.cart;
 import com.fastcampus.ch4.dao.cart.CartDao;
 import com.fastcampus.ch4.dao.cart.CartProductDao;
 import com.fastcampus.ch4.dto.cart.CartDto;
+import com.fastcampus.ch4.dto.cart.CartProductDetailDto;
 import com.fastcampus.ch4.dto.cart.CartProductDto;
 import com.fastcampus.ch4.dto.order.temp.TempBookDto;
+import com.fastcampus.ch4.model.cart.PriceHandler;
 import com.fastcampus.ch4.model.cart.UserType;
+import com.fastcampus.ch4.model.order.BookType;
 import com.fastcampus.ch4.service.order.fake.FakeBookServiceImpl;
 import com.fastcampus.ch4.service.order.fake.TempBookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,5 +123,58 @@ public class CartServiceImpl implements CartService {
         int insertResult = cartProductDao.insert(cartProductDto);
 
         return insertResult;
+    }
+
+    @Override
+    public List<CartProductDetailDto> getItemList(Integer cartSeq, String userId) {
+        // 매개변수 둘 중 하나는 있어야 한다.
+        if (cartSeq == null && (userId == null || userId.isEmpty())) {
+            throw new IllegalArgumentException("장바구니 번호나 userId 를 사용하여 요청해주세요.");
+        }
+
+        Integer targetCartSeq = cartSeq;
+
+        // userId 만 있는 경우
+        if (cartSeq == null) {
+            List<CartDto> cartList = cartDao.selectListByCondition(null, userId);
+            System.out.println("cartList = " + cartList);
+            targetCartSeq = cartList.get(0).getCart_seq();
+        }
+
+        // 장바구니 상품 정보 불러오기
+        List<CartProductDetailDto> cartProductList = cartProductDao.selectListDetailByCartSeq(targetCartSeq);
+        // 정보를 셋팅해줘야 한다.
+        for (CartProductDetailDto cpDetailDto : cartProductList) {
+            Integer basicPrice = null;
+            Integer benefitPrice = null;
+            Integer pointPrice = null;
+            Integer salePrice = null;
+
+            // 상품 유형에 따라서 가격정보를 다르게 셋팅
+            String prod_type_code = cpDetailDto.getProd_type_code();
+            // - 고려 사항
+            // PriceHandler 의 메서드들의 매개변수를 CartProductDto 로 받음
+            // 지금 사용하는 타입은 CartProductDetailDto 이라서 매개변수를 받을 수 없다.
+            // 생각나는 방법 : 상속, 인터페이스, 인스턴스 생성하기?
+            // => interface 를 사용하여 처리
+            if(BookType.PRINTED.isSameType(prod_type_code)) {
+                basicPrice = cpDetailDto.getPapr_pric();
+                benefitPrice = PriceHandler.pritedBenefitPrice(cpDetailDto);
+                pointPrice = PriceHandler.printedPointPrice(cpDetailDto);
+            } else if (BookType.EBOOK.isSameType(prod_type_code)) {
+                basicPrice = cpDetailDto.getE_pric();
+                benefitPrice = PriceHandler.eBookBenefitPrice(cpDetailDto);
+                pointPrice = PriceHandler.eBookBenefitPrice(cpDetailDto);
+            }
+            // 상품 판매가
+            salePrice = basicPrice - benefitPrice;
+
+            cpDetailDto.setBasicPrice(basicPrice);
+            cpDetailDto.setBene_pric(benefitPrice);
+            cpDetailDto.setPoint_pric(pointPrice);
+            cpDetailDto.setSalePrice(salePrice);
+        }
+
+        return cartProductList;
     }
 }

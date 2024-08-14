@@ -33,6 +33,8 @@ import static org.junit.Assert.*;
 - userId 를 받아서 삭제하기
 - 삭제 후 조회 확인 할 것
 
+- 업데이트 테스트
+
  */
 
 
@@ -48,7 +50,6 @@ public class CartDaoTest {
     public void afterTest () {
         int result = cartDao.deleteAll();
     }
-
 
     @Test
     public void 장바구니생성_withUserId (){
@@ -70,8 +71,16 @@ public class CartDaoTest {
         cartDto.setUp_id(TEST_USER);
 
         // insert
-        Integer cart_num = cartDao.insertAndReturnSeq(cartDto);
-        assertNotNull(cart_num);
+        Integer cart_seq = cartDao.insertAndReturnSeq(cartDto);
+        assertNotNull(cart_seq);
+
+        // 구체적으로 작성하도록!!
+        // 해당 seq로 조회하여 userId 여부를 확인한다.
+        Map map = new HashMap();
+        map.put("cart_seq", cart_seq);
+        CartDto cartDto1 = cartDao.selectByMap(map);
+        assertNotNull(cartDto1);
+        assertNotNull(cartDto1.getUserId());
     }
 
     @Test(expected = DataIntegrityViolationException.class)
@@ -82,7 +91,6 @@ public class CartDaoTest {
         Integer cartSeq = cartDao.insertAndReturnSeq(cartDto);
         assertNotNull(cartSeq);
     }
-
 
     // 조회 후 비교
     @Test
@@ -107,6 +115,7 @@ public class CartDaoTest {
         assertTrue(cartDto.equals(selectedCartDto));
 
         // selectList
+        // 정리할 것
         List<CartDto> selectedList = cartDao.selectListByCondition(cartSeq, null);
         assertFalse(selectedList.isEmpty());
         CartDto listElementDto = selectedList.get(0);
@@ -138,6 +147,8 @@ public class CartDaoTest {
         CartDto listElementDto = selectedList.get(0);
         assertTrue(selectedCartDto.equals(listElementDto));
     }
+
+    // 장바구니 번호가 비회원의 번호와 같도록, 세션 ID => 유니크 ID 만들기
 
     @Test
     public void select_조건두개 () {
@@ -237,6 +248,7 @@ public class CartDaoTest {
         Integer secondCartSeq = cartDao.insertAndReturnSeq(secondCartDto);
         assertNotNull(secondCartSeq);
 
+        // sort 하는 것으로 순서를 보장시킨다.
         // selectList
         List<CartDto> selectedList = cartDao.selectListByCondition(null, TEST_USER);
         assertFalse(selectedList.isEmpty());
@@ -265,6 +277,8 @@ public class CartDaoTest {
         // delete & assert
         int result = cartDao.deleteByMap(deleteCondition);
         assertEquals(1, result);
+
+        // 삭제한 것 또 삭제하는 TEST
 
         // select condition
         Map selectCondition = new HashMap<>();

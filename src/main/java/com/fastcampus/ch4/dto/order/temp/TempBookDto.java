@@ -1,8 +1,8 @@
 package com.fastcampus.ch4.dto.order.temp;
 
-import java.util.Date;
+import com.fastcampus.ch4.dto.cart.PriceManipulatable;
 
-public class TempBookDto {
+public class TempBookDto implements PriceManipulatable {
     String isbn;
     Integer md_stat;
     String book_title;
@@ -19,7 +19,6 @@ public class TempBookDto {
     Double e_disc;
     Integer paper_bene_pric;
     Integer e_bene_pric;
-
 
     // 시스템컬럼
 //    Date reg_date;

@@ -1,8 +1,7 @@
 package com.fastcampus.ch4.dto.cart;
 
-import java.util.Date;
-
-public class CartProductDetailDto {
+public class CartProductDetailDto implements PriceManipulatable {
+//public class CartProductDetailDto {
     // CartProductDto
     // fk
     Integer cart_seq;
@@ -14,22 +13,30 @@ public class CartProductDetailDto {
     String created_at;
     String updated_at;
 
-
     // BookDto
     String book_title;
 
     // 정가
     Integer papr_pric;
     Integer e_pric;
-    // 적립
-    Double papr_point; // 적립
+
+    // 적립율
+    Double papr_point;
     Double e_point;
+
+    double point_perc; // prod_type_code 에 따라서 선택
+    int point_pric; // 계산 필요
 
     // 할인 - 임시로 넣어준 값
     Double papr_disc;
     Double e_disc;
     Integer paper_bene_pric;
     Integer e_bene_pric;
+
+    int basicPrice; // 상품정가
+    double bene_perc; // prod_type_code 에 따라서 선택
+    int bene_pric; // 할인액 (정가 * 할인율) 계산 필요
+    int salePrice; // 상품 판매가 (상품정가 - 할인액)
 
     public Integer getCart_seq() {
         return cart_seq;
@@ -119,6 +126,22 @@ public class CartProductDetailDto {
         this.e_point = e_point;
     }
 
+    public double getPoint_perc() {
+        return point_perc;
+    }
+
+    public void setPoint_perc(double point_perc) {
+        this.point_perc = point_perc;
+    }
+
+    public int getPoint_pric() {
+        return point_pric;
+    }
+
+    public void setPoint_pric(int point_pric) {
+        this.point_pric = point_pric;
+    }
+
     public Double getPapr_disc() {
         return papr_disc;
     }
@@ -149,5 +172,37 @@ public class CartProductDetailDto {
 
     public void setE_bene_pric(Integer e_bene_pric) {
         this.e_bene_pric = e_bene_pric;
+    }
+
+    public int getBasicPrice() {
+        return basicPrice;
+    }
+
+    public void setBasicPrice(int basicPrice) {
+        this.basicPrice = basicPrice;
+    }
+
+    public double getBene_perc() {
+        return bene_perc;
+    }
+
+    public void setBene_perc(double bene_perc) {
+        this.bene_perc = bene_perc;
+    }
+
+    public int getBene_pric() {
+        return bene_pric;
+    }
+
+    public void setBene_pric(int bene_pric) {
+        this.bene_pric = bene_pric;
+    }
+
+    public int getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(int salePrice) {
+        this.salePrice = salePrice;
     }
 }

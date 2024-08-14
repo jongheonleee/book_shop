@@ -1,6 +1,7 @@
 package order.factory;
 
 import com.fastcampus.ch4.dto.order.OrderDto;
+import com.fastcampus.ch4.model.order.OrderConstants;
 import com.fastcampus.ch4.service.order.factory.OrderDtoFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +31,7 @@ public class OrderDtoFactoryTest {
     public void orderDtoFactoryTest_생성값비교() {
         final String DTO_TEST_USER_ID = "orderDtoTestUser";
         final int EXPECTED_PRICE = 0;
-        final String EXPECTED_ORD_STAT = ORDER_DONE.getCode();
+        final String EXPECTED_ORD_STAT = OrderConstants.BASIC_ORDER_STATUS.getCode();
 
         // 1. 생성
         OrderDto orderDto = orderDtoFactory.create(DTO_TEST_USER_ID);
@@ -50,8 +51,6 @@ public class OrderDtoFactoryTest {
 
         String ord_stat = orderDto.getOrd_stat();
         assertEquals(EXPECTED_ORD_STAT, ord_stat);
-
-
 
         String regId = orderDto.getReg_id();
         assertEquals(DTO_TEST_USER_ID, regId);

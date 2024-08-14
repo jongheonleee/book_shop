@@ -30,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
     private final TempBookService bookService = new FakeBookServiceImpl();
 
     public OrderDto createOrder (String userId, List<Map<String, Object>> ordProdList) throws Exception {
+        // 비회원 주문 미허용 처리
         if (userId == null || userId.isEmpty()) {
             throw new NullPointerException("비회원 주문은 미지원입니다.");
         }
@@ -52,11 +53,13 @@ public class OrderServiceImpl implements OrderService {
                 throw new IllegalArgumentException("itemQuantity 는 1 이상부터 가능합니다.");
             }
 
+            // 찾을 수 없는 도서 예외처리
             TempBookDto bookDto = bookService.getBookByIsbn(isbn);
             if (bookDto == null) {
                 throw new IllegalArgumentException("도서를 찾을 수 없습니다.");
             }
 
+            // 상품 유형별 가격정보 셋팅
             if (prodTypeCode.equals(BookType.PRINTED.getCode())) {
                 Integer paperPrice = bookDto.getPapr_pric();
                 Double paperPointPercent = bookDto.getPapr_point();
@@ -77,6 +80,7 @@ public class OrderServiceImpl implements OrderService {
             orderDto.getItemList().add(orderProductDto);
         }
 
+        // 주문상품 전부의 가격을 합산
         int totalProductPrice = orderDto.getItemList().stream().mapToInt(item -> item.getBasic_pric() * item.getItem_quan()).sum();
         int totalBenefitPrice = orderDto.getItemList().stream().mapToInt(item -> item.getBene_pric() * item.getItem_quan()).sum();
         int totalOrderPrice = orderDto.getItemList().stream().mapToInt(OrderProductDto::getOrd_pric).sum();

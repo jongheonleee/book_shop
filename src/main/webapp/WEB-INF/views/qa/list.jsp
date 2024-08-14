@@ -202,8 +202,6 @@
         margin-left: 42.5%;
         padding: 10px;
       }
-
-
     </style>
     <link rel="stylesheet" href="<c:url value='/css/menu.css'/>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
@@ -215,7 +213,6 @@
         <li id="logo">서점📚</li>
         <li><a href="<c:url value='/'/>">Home</a></li>
         <li><a href="<c:url value='/qa/list'/>">QA</a></li>
-        <%--        <li><a href="<c:url value='${loginOutLink}'/>">${loginOut}</a></li>--%>
         <li><a href="<c:url value='/register/add'/>">Sign in</a></li>
     </ul>
 </div>
@@ -249,19 +246,14 @@
 </div>
 
 
-<%--<div class="note">--%>
-<%--    • 1:1문의내역 조회는 최대 3년까지 가능합니다.--%>
-<%--</div>--%>
-
 <!-- 상태별 구분 칸 -->
 <div id="tabs" class="container">
     <c:forEach var="state" items="${states}">
-        <div class="tab" data-id="${state.code}">${state.code_name}</div>
+        <div class="tab" data-id="${state.code}" data-value="${state.code}" ><a style="color: black" href="<c:url value='/qa/list/${state.code}'/>">${state.code_name}</a></div>
     </c:forEach>
 </div>
 
 <!-- 문의글 목록-->
-<%--<div id="list" style="text-align: center">--%>
 <div class="board-container">
     <h1> 1 : 1 문의(Q&A)</h1>
     <table class="board">
@@ -273,7 +265,6 @@
                 <th>상태</th>
                 <th>답변여부</th>
                 <th>날짜</th>
-    <%--            <th>작성자</th>--%>
             </tr>
         </thead>
         <tbody>
@@ -292,10 +283,6 @@
         </tbody>
     </table>
     <div class="pagination">
-<%--        <c:if test="${ph.totalCnt == 0}">--%>
-<%--            <div>문의글 없음</div>--%>
-<%--        </c:if>--%>
-
         <c:if test="${ph.totalCnt != null && ph.totalCnt != 0}">
             <c:if test="${ph.prev}">
                 <a class="page" href="<c:url value="/qa/list?page=${ph.page-1}&pageSize=${ph.pageSize}"/>">&lt;</a>
@@ -320,23 +307,61 @@
 <script>
   const SEARCH_KEYWORD_PERIOD = 'period';
   const SEARCH_KEYWORD_TITLE = 'title';
+  const BASE_URL = 'http://localhost:8080/ch4/qa/';
 
   $(document).ready(function() {
     // 기간 검색 버튼 핸들러
     $('#search-period-button').click(function (e) {
       // 선택한 옵션의 값을 조회
       const selectedOption = $('.dropdown').val();
-      alert(selectedOption);
+
+      // 추후에 비동기 처리 적용
+      // $.ajax({
+      //   url: 'http://localhost:8080/ch4/qa/search?option=' + SEARCH_KEYWORD_PERIOD + '&period=' + selectedOption,
+      //   type: 'GET',
+      //   data: {
+      //     option: SEARCH_KEYWORD_PERIOD,
+      //     period: selectedOption
+      //   },
+      //   success: function(response) {
+      //     // 요청이 성공했을 때 해당 부분만 응답 데이터를 넣어주기
+      //   },
+      //   error: function(xhr, status, error) {
+      //     // 요청이 실패했을 때 실행되는 콜백
+      //   }
+      // });
 
       // 서버에 get 파라미터로 요청
-      location.href = 'http://localhost:8080/ch4/qa/search?option=' + SEARCH_KEYWORD_PERIOD + '&period=' + selectedOption;
-      alert(location.href);
+      // http://localhost:8080/ch4/qa/search?option=period&period=3
+       location.href = 'http://localhost:8080/ch4/qa/search?option=' + SEARCH_KEYWORD_PERIOD + '&period=' + selectedOption;
     });
 
     // // 제목 검색 버튼 핸들러
     $('#search-title-button').click(function (e) {
       // 입력값 조회
       const titleKeyword = document.getElementById('search-title-input').value;
+
+
+      // 추후에 비동기 처리 적용
+      // $.ajax({
+      //   url: 'http://localhost:8080/ch4/qa/search?option=' + SEARCH_KEYWORD_TITLE + '&title=' + titleKeyword,
+      //   type: 'GET',
+      //   data: {
+      //     option: SEARCH_KEYWORD_TITLE,
+      //     title: titleKeyword
+      //   },
+      //   success: function(response) {
+      //     // 요청이 성공했을 때 실행되는 콜백
+      //     alert('Success:' +  response);
+      //     // 이곳에서 응답 데이터를 사용하여 다른 작업을 수행
+      //   },
+      //   error: function(xhr, status, error) {
+      //     // 요청이 실패했을 때 실행되는 콜백
+      //     alert('Error:' +  error);
+      //   }
+      // });
+
+
       // 서버에 get 파라미터로 요청
       location.href = 'http://localhost:8080/ch4/qa/search?option=' + SEARCH_KEYWORD_TITLE + '&titleKeyword=' + titleKeyword;
     });

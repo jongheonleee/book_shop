@@ -88,16 +88,11 @@ public class QaServiceImp implements QaService {
     @Transactional(rollbackFor = Exception.class)
     public boolean write(String userId, QaDto dto) {
         // 카테고리 값 유효한지 확인 - 통합 코드 테이블에서 조회
-        System.out.println("start write()");
-
         CodeDto found = codeDao.selectByCode(dto.getQa_cate_num());
         if (found == null) return false;
 
         // 현재 작성한 문의글과 중복되는 제목이 있는지 확인
-        System.out.println(userId);
-        System.out.println(dto.getTitle());
         QaDto isDuplicated = qaDao.selectByTitle(userId, dto.getTitle());
-        System.out.println(isDuplicated);
 
         // 중복된 제목이 있으면 등록 실패
         if (isDuplicated != null) return false;
@@ -105,18 +100,12 @@ public class QaServiceImp implements QaService {
         // 문의글 등록
         int rowCnt = qaDao.insert(dto);
 
-        // 방금 등록한 Qa의 번호 조회 - 이 부분 max() + 1로 바꾸기
+        // 방금 등록한 Qa의 번호 조회 - 이 부분 max() + 1로 바꾸기, 이 부분 수정 해야함...
         int qaNum = qaDao.selectMaxQaSeq();
 
 
         // 상태 DTO 생성 및 등록, 이 상태 코드 테이블에서 읽어다가 사용할 수 있게 만들기 💥 - 통합 코드 테이블에서 조회
-        // QaStateDto state = qaStateDao.selectByCode(DEFAULT_CODE);
-        // qaDao.insert(state.setQa_num(qaNum));
-        QaStateDto state = new QaStateDto();
-        state.setName("처리 대기중");
-        state.setQa_num(qaNum);
-        state.setQa_stat_code("qa-stat-01");
-
+        QaStateDto state = new QaStateDto("처리 대기중", qaNum, "qa-stat-01");
         rowCnt += qaDao.insertState(state);
         return rowCnt == 2;
 
@@ -155,6 +144,14 @@ public class QaServiceImp implements QaService {
     @Override
     public List<QaStateDto> readAllState() {
         return qaDao.selectAllState();
+    }
+
+    public int countByState(String userId, String qaCateCode) {
+        return qaDao.countByState(userId, qaCateCode);
+    }
+
+    public List<QaDto> readByState(String userId, String qaCateCode, SearchCondition sc) {
+        return qaDao.selectByState(userId, qaCateCode, sc);
     }
 
 }

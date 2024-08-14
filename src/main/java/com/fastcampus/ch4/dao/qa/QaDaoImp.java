@@ -172,4 +172,23 @@ public class QaDaoImp implements QaDao {
         map.put("title", title);
         return session.selectOne(namespace + "selectByTitle", map);
     }
+
+    public int countByState(String userId, String qa_stat_code) {
+        HashMap map = new HashMap();
+        map.put("user_id", userId);
+        map.put("qa_stat_code", qa_stat_code);
+
+        return session.selectOne(namespace + "countByState", map);
+    }
+
+    public List<QaDto> selectByState(String userId, String qa_stat_code, SearchCondition sc) {
+        HashMap map = new HashMap();
+        map.put("user_id", userId);
+        map.put("qa_stat_code", qa_stat_code);
+        map.put("offSet", (sc.getPage() - 1) * sc.getPageSize());
+        map.put("pageSize", sc.getPageSize());
+
+        return session.selectList(namespace + "selectByState", map);
+    }
+
 }

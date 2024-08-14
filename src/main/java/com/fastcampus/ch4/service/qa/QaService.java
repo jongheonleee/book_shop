@@ -39,4 +39,8 @@ public interface QaService {
     boolean modify(String userId, QaDto dto, SearchCondition sc);
 
     List<QaStateDto> readAllState();
+
+    int countByState(String userId, String qaCateCode);
+
+    List<QaDto> readByState(String userId, String qaCateCode, SearchCondition sc);
 }

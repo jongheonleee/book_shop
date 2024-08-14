@@ -25,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +36,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Controller
 public class QaController {
 
-    private final QaService service;
+    private final QaService service; // 이름 명확히
 
     @Autowired
     public QaController(QaService service) {
@@ -74,14 +75,12 @@ public class QaController {
         // 로그인 여부 확인, 로그인 x -> 로그인 폼으로 이동
         if (!isLogin(request)) return "redirect:/loginForm";
 
-        // 상태 모두 조회
-        List<CodeDto> states = readState();
-        model.addAttribute("states", states);
+        // 조회 하는 코드
 
         // 필요 정보 조회 - 1. 유저 문의글, 2. 유저 문의글 수, 3. 페이징
         HttpSession session = request.getSession();
-//        String userId = (String) session.getAttribute("userId");
-        String userId = "user1";
+        String userId = (String) session.getAttribute("userId");
+        userId = "user1";
         List<QaDto> selected = service.read(userId, sc);
         int totalCnt = count(userId);
         PageHandler ph = new PageHandler(totalCnt, sc);
@@ -99,16 +98,12 @@ public class QaController {
     @GetMapping("/qa/search")
     public String getSearch(HttpServletRequest request, Model model, SearchCondition sc) {
         // 로그인 여부 확인, 로그인 x -> 로그인 폼으로 이동
-        if (!isLogin(request)) return "redirect:/loginForm";
-
-        // 상태 모두 조회
-        List<CodeDto> states = readState();
-        model.addAttribute("states", states);
+        if (!isLogin(request)) return "redirect:/loginForm"; // 이 부분도 중복 제거하기, 스프링 시큐리티(필터), 세션에서 처리
 
         // 필요 정보 조회 - 1. 검색 문의글, 2. 검색 문의글 수, 3. 페이징
         HttpSession session = request.getSession();
-//        String userId = (String) session.getAttribute("userId");
-        String userId = "user1";
+        String userId = (String) session.getAttribute("userId");
+        userId = "user1";
         List<QaDto> selected = service.readBySearchCondition(userId, sc); // 여기 최대 길이 10임
 
         int totalCnt = service.count(userId, sc); // 이 부분 고쳐야함 count(userId, sc)
@@ -131,6 +126,7 @@ public class QaController {
 
         // 필요 정보 조회 - 1. 해당 문의글, 2. 답변글(추후에 개발)
         QaDto qa = service.readDetail(qaNum);
+
         // AnswerList 조회
 
         // 정보 저장
@@ -146,11 +142,6 @@ public class QaController {
         // 로그인 여부 확인, 로그인 x -> 로그인 폼으로 이동
         if (!isLogin(request)) return "redirect:/loginForm";
 
-        // 문의 유형 정보 조회
-        List<CodeDto> categories = readCategory();
-        categories.stream().forEach(System.out::println);
-        model.addAttribute("categories", categories);
-
         // 뷰 반환
         return "/qa/form";
     }
@@ -162,13 +153,12 @@ public class QaController {
         // 로그인 여부 확인, 로그인 x -> 로그인 폼으로 이동
         if (!isLogin(request)) return "redirect:/loginForm";
 
-        System.out.println(qaDto);
-
         // 등록 작업 시행
         HttpSession session = request.getSession();
         String userId = (String) session.getAttribute("userId");
         userId = "user1";
 
+        // 등록 실패 시 에러 메시지 전달
         if (!service.write(userId, qaDto)) {
             String errorMsg = "서버 내부 오류가 발생했거나, 동일한 제목의 문의글이 존재합니다.";
             model.addAttribute("errorMsg", errorMsg);
@@ -205,7 +195,9 @@ public class QaController {
         // 수정 작업 시행
         HttpSession session = request.getSession();
         String userId = (String) session.getAttribute("userId");
+        userId = "user1";
         dto.setQa_num(qaNum);
+
         if (!service.modify(userId, dto, sc)) {
             model.addAttribute("msg", "문의글 수정에 실패했습니다");
             return "/qa/error";
@@ -215,14 +207,41 @@ public class QaController {
         return "/qa/list";
     }
 
+    @GetMapping("/qa/list/{qa_stat_code}")
+    public String getListByQaState(@PathVariable String qa_stat_code, HttpServletRequest request, Model model, SearchCondition sc) {
+        // 로그인 여부 확인
+        if (!isLogin(request)) return "redirect:/loginForm";
+
+        // 세션에 저장된 유저 정보 조회
+        HttpSession session = request.getSession();
+        String userId = (String) session.getAttribute("userId");
+        userId = "user1";
+
+
+        // 상태를 기반으로 관련 문의글 카운트 및 조회
+        int totalCnt = service.countByState(userId, qa_stat_code);
+        List<QaDto> selected = service.readByState(userId, qa_stat_code, sc);
+
+        // 페이지 핸들러 생성
+        PageHandler ph = new PageHandler(totalCnt, sc);
+
+        // 웹 페이지에 보여줘야할 정보 저장
+        model.addAttribute("selected", selected);
+        model.addAttribute("totalCnt", totalCnt);
+        model.addAttribute("ph", ph);
+
+        // 뷰 반환
+        return "/qa/list";
+    }
+
 
     // 공통 로직 : 로그인 여부 확인
     private boolean isLogin(HttpServletRequest request) {
-        // 서버에 저장된 사용자 아이디 조회
-        String userId = "asdf";
         // 세션에서 로그인 정보 조회
         HttpSession session = request.getSession();
         String sessionId = (String) session.getAttribute("userId");
+        String userId = "user1";
+
         // 정보 서로 일치하는지 비교
         boolean check = userId.equals(sessionId);
         return true;
@@ -233,11 +252,14 @@ public class QaController {
         return service.count(userId);
     }
 
-    private List<CodeDto> readCategory() {
+
+    @ModelAttribute("states")
+    private List<CodeDto> readState() {
         return service.readAllCategory("01");
     }
 
-    private List<CodeDto> readState() {
+    @ModelAttribute("categories")
+    private List<CodeDto> readCategory() {
         return service.readAllCategory("02");
     }
 }

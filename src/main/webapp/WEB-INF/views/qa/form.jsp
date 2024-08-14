@@ -105,7 +105,6 @@
         <li id="logo">서점📚</li>
         <li><a href="<c:url value='/'/>">Home</a></li>
         <li><a href="<c:url value='/qa/list'/>">QA</a></li>
-        <%--        <li><a href="<c:url value='${loginOutLink}'/>">${loginOut}</a></li>--%>
         <li><a href="<c:url value='/register/add'/>">Sign in</a></li>
     </ul>
 </div>
@@ -130,29 +129,12 @@
 
 
         <!-- 제목 & 내용-->
-<%--        <input type="hidden" name="bno" value="${boardDto.bno}">--%>
-
         <input name="user_id" value="user1" type="hidden">
         <input id="category" name="qa_cate_num" type="hidden" >
-        <input name="title" type="text" value="${boardDto.title}" placeholder="제목을 입력해 주세요."><br>
-        <textarea name="content" rows="20" placeholder=" 내용을 입력해 주세요.">${boardDto.content}</textarea><br>
-
+        <input name="title" type="text" placeholder="제목을 입력해 주세요."><br>
+        <textarea name="content" rows="20" placeholder=" 내용을 입력해 주세요."></textarea><br>
         <button type="button" id="writeBtn" class="btn btn-write"><i class="fa fa-pencil"></i> 등록</button>
-<%--        <button type="button" id="writeNewBtn" class="btn btn-write"><i class="fa fa-pencil"></i> 글쓰기</button>--%>
-<%--        <button type="button" id="modifyBtn" class="btn btn-modify"><i class="fa fa-edit"></i> 수정</button>--%>
-<%--        <button type="button" id="removeBtn" class="btn btn-remove"><i class="fa fa-trash"></i> 삭제</button>--%>
         <button type="button" id="listBtn" class="btn btn-list"><i class="fa fa-bars"></i> 목록</button>
-<%--        <c:if test="${mode eq 'new'}">--%>
-<%--            <button type="button" id="writeBtn" class="btn btn-write"><i class="fa fa-pencil"></i> 등록</button>--%>
-<%--        </c:if>--%>
-<%--        <c:if test="${mode ne 'new'}">--%>
-<%--            <button type="button" id="writeNewBtn" class="btn btn-write"><i class="fa fa-pencil"></i> 글쓰기</button>--%>
-<%--        </c:if>--%>
-<%--        <c:if test="${boardDto.writer eq loginId}">--%>
-<%--            <button type="button" id="modifyBtn" class="btn btn-modify"><i class="fa fa-edit"></i> 수정</button>--%>
-<%--            <button type="button" id="removeBtn" class="btn btn-remove"><i class="fa fa-trash"></i> 삭제</button>--%>
-<%--        </c:if>--%>
-<%--        <button type="button" id="listBtn" class="btn btn-list"><i class="fa fa-bars"></i> 목록</button>--%>
     </form>
 </div>
 <script>
@@ -180,9 +162,6 @@
       return true;
     }
 
-    $("#writeNewBtn").on("click", function(){
-      location.href="<c:url value='/board/write'/>";
-    });
 
     $("#writeBtn").on("click", function(){
       let form = $("#form");
@@ -193,38 +172,6 @@
         form.submit();
     });
 
-    $("#modifyBtn").on("click", function(){
-      let form = $("#form");
-      let isReadonly = $("input[name=title]").attr('readonly');
-
-      // 1. 읽기 상태이면, 수정 상태로 변경
-      if(isReadonly=='readonly') {
-        $(".writing-header").html("게시판 수정");
-        $("input[name=title]").attr('readonly', false);
-        $("textarea").attr('readonly', false);
-        $("#modifyBtn").html("<i class='fa fa-pencil'></i> 등록");
-        return;
-      }
-
-      // 2. 수정 상태이면, 수정된 내용을 서버로 전송
-      form.attr("action", "<c:url value='/board/modify${searchCondition.queryString}'/>");
-      form.attr("method", "post");
-      if(formCheck())
-        form.submit();
-    });
-
-    $("#removeBtn").on("click", function(){
-      if(!confirm("정말로 삭제하시겠습니까?")) return;
-
-      let form = $("#form");
-      form.attr("action", "<c:url value='/board/remove${searchCondition.queryString}'/>");
-      form.attr("method", "post");
-      form.submit();
-    });
-
-    $("#listBtn").on("click", function(){
-      location.href="<c:url value='/qa/list${searchCondition.queryString}'/>";
-    });
   });
 </script>
 </body>

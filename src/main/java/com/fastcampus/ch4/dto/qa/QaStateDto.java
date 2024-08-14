@@ -15,6 +15,14 @@ public class QaStateDto {
     private String appl_begin;
     private String appl_end;
 
+    public QaStateDto() {}
+
+    public QaStateDto(String name, int qa_num, String qa_stat_code) {
+        this.name = name;
+        this.qa_num = qa_num;
+        this.qa_stat_code = qa_stat_code;
+    }
+
     public int getQa_stat_seq() {
         return qa_stat_seq;
     }

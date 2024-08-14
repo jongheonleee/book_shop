@@ -10,7 +10,6 @@ public enum QaErrorCode implements ErrorCode {
     // http 코드 409 : 요청한 값과 서버의 값 간의 충돌이 발생한 경우
     DUPLICATED_KEY(HttpStatus.CONFLICT, "중복된 키 값이 존재합니다.");
 
-
     private final HttpStatus httpStatus;
     private final String message;
 

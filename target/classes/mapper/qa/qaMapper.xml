@@ -108,6 +108,32 @@
     <!-- 추후에 상태, 카테고리 조인 -->
   </select>
 
+  <select id="selectByState" parameterType="map" resultType="QaDto">
+    SELECT
+      q.qa_num, q.user_id, q.qa_cate_num, q.title,
+      q.content, q.created_at, q.email, q.tele_num, q.chk_repl,
+      q.phon_num, q.img1,q.img2, q.img3, c.name AS cate_name,
+      s.qa_stat_code AS qa_stat_code, s.name AS stat_name
+    FROM qa AS q
+    INNER JOIN qa_state AS s
+    ON q.qa_num = s.qa_num
+    INNER JOIN qa_cate AS c
+    ON q.qa_cate_num = c.qa_cate_num
+    WHERE s.qa_stat_code = #{qa_stat_code}
+    AND q.user_id = #{user_id}
+    ORDER BY q.created_at DESC
+    LIMIT #{offSet}, #{pageSize};
+  </select>
+
+  <select id="countByState" parameterType="map" resultType="int">
+    SELECT count(*)
+    FROM qa AS q
+    INNER JOIN qa_state AS s
+    ON q.qa_num = s.qa_num
+    WHERE s.qa_stat_code = #{qa_stat_code}
+    AND q.user_id = #{user_id};
+  </select>
+
   <insert id="insert" parameterType="QaDto">
     INSERT INTO qa
         (qa_num, user_id, qa_cate_num, title, content,
@@ -218,7 +244,7 @@
 
 
   <select id="selectMaxQaSeq" resultType="int">
-    SELECT MAX(qa_num) FROM qa;
+    SELECT MAX(qa_num) FROM qa FOR UPDATE;
   </select>
 
   <select id="selectByTitle" parameterType="map" resultType="QaDto">

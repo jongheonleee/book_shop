@@ -50,7 +50,8 @@
         book.papr_point,
         book.e_point,
         bdh.papr_disc,
-        bdh.e_disc
+        bdh.e_disc,
+        bi.img_url
         FROM book_shop.cart_prod cp
         INNER JOIN book_shop.book book
         ON cp.isbn = book.isbn
@@ -58,6 +59,8 @@
         ON cp.isbn = book.isbn
         AND book.isbn = bdh.isbn
         AND NOW() BETWEEN bdh.disc_start_date AND bdh.disc_end_date
+        INNER JOIN book_shop.book_image bi
+        ON cp.isbn = bi.isbn
         <where>
             <if test="cart_seq != null">
                 cp.cart_seq = #{cart_seq}

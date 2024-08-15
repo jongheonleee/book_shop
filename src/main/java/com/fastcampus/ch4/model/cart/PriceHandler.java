@@ -5,12 +5,12 @@ import com.fastcampus.ch4.dto.cart.PriceManipulatable;
 public class PriceHandler {
     // 할인액 계산 함수
     private static int benefitPrice (PriceManipulatable bookDto, int basicPrice, double benefitPercent) {
-        return basicPrice * (int) (basicPrice * benefitPercent);
+
+        return (int) (basicPrice * benefitPercent);
     }
 
     // PRINTED 도서 할인액 산출 함수
     public static int pritedBenefitPrice (PriceManipulatable dtoInstance) {
-        System.out.println(dtoInstance.getPapr_pric() + "");
         return benefitPrice(dtoInstance, dtoInstance.getPapr_pric(), dtoInstance.getPapr_disc());
     }
 
@@ -21,7 +21,7 @@ public class PriceHandler {
 
     // 적립액 계산 함수
     private static int pointPrice (PriceManipulatable bookDto, int basicPrice, double pointPercent) {
-        return basicPrice * (int) (basicPrice *pointPercent);
+        return (int) (basicPrice * pointPercent);
     }
 
     // PRINTED 도서 적립액 산출 함수

@@ -55,7 +55,6 @@ ul > li > a:hover {
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #f9f9f9;
-    margin-bottom: 20px;
 }
 
 .cart-container h2 {
@@ -129,6 +128,20 @@ ul > li > a:hover {
 .reward-points {
     font-size: 16px;
     color: #007bff;
+}
+
+/* 상품 판매가 스타일 */
+.item-total-price {
+    font-size: 18px;
+    color: #000;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.item-total-price .label {
+    font-size: 16px;
+    color: #888;
+    font-weight: normal;
 }
 
 /* 수량 조절 버튼 */
@@ -289,4 +302,59 @@ ul > li > a:hover {
 .summary-footer p.point {
     color: #5bc0de;
     font-weight: bold;
+}
+
+/* 장바구니 비었을 때 스타일 */
+.empty-cart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.empty-cart-message .icon img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 20px;
+}
+
+.empty-cart-message .message {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.empty-cart-message .sub-message {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+.empty-cart-message .login-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.empty-cart-message .btn-later {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.empty-cart-message .login-button:hover {
+    background-color: #0056b3;
 }

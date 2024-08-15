@@ -129,7 +129,7 @@ public class CartServiceImpl implements CartService {
     public List<CartProductDetailDto> getItemList(Integer cartSeq, String userId) {
         // 매개변수 둘 중 하나는 있어야 한다.
         if (cartSeq == null && (userId == null || userId.isEmpty())) {
-            throw new IllegalArgumentException("장바구니 번호나 userId 를 사용하여 요청해주세요.");
+            return null;
         }
 
         Integer targetCartSeq = cartSeq;
@@ -137,7 +137,6 @@ public class CartServiceImpl implements CartService {
         // userId 만 있는 경우
         if (cartSeq == null) {
             List<CartDto> cartList = cartDao.selectListByCondition(null, userId);
-            System.out.println("cartList = " + cartList);
             targetCartSeq = cartList.get(0).getCart_seq();
         }
 
@@ -146,6 +145,7 @@ public class CartServiceImpl implements CartService {
         // 정보를 셋팅해줘야 한다.
         for (CartProductDetailDto cpDetailDto : cartProductList) {
             Integer basicPrice = null;
+            Double benefitPercent = null;
             Integer benefitPrice = null;
             Integer pointPrice = null;
             Integer salePrice = null;
@@ -159,10 +159,12 @@ public class CartServiceImpl implements CartService {
             // => interface 를 사용하여 처리
             if(BookType.PRINTED.isSameType(prod_type_code)) {
                 basicPrice = cpDetailDto.getPapr_pric();
+                benefitPercent = cpDetailDto.getPapr_disc();
                 benefitPrice = PriceHandler.pritedBenefitPrice(cpDetailDto);
                 pointPrice = PriceHandler.printedPointPrice(cpDetailDto);
             } else if (BookType.EBOOK.isSameType(prod_type_code)) {
                 basicPrice = cpDetailDto.getE_pric();
+                benefitPercent = cpDetailDto.getE_disc();
                 benefitPrice = PriceHandler.eBookBenefitPrice(cpDetailDto);
                 pointPrice = PriceHandler.eBookBenefitPrice(cpDetailDto);
             }
@@ -171,6 +173,7 @@ public class CartServiceImpl implements CartService {
 
             cpDetailDto.setBasicPrice(basicPrice);
             cpDetailDto.setBene_pric(benefitPrice);
+            cpDetailDto.setBene_perc(benefitPercent);
             cpDetailDto.setPoint_pric(pointPrice);
             cpDetailDto.setSalePrice(salePrice);
         }

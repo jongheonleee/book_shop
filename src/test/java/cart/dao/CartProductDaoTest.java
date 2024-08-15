@@ -137,7 +137,6 @@ public class CartProductDaoTest {
 
         // selectOne
         CartProductDto selectedDto = cartProductDao.selectOne(cartSeq, TEST_ISBN, bookType);
-        System.out.println(selectedDto);
         assertNotNull(selectedDto);
         assertTrue(cartProdDto.equals(selectedDto));
     }

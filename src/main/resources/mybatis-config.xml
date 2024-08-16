@@ -4,7 +4,13 @@
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
   <typeAliases>
+    <!-- admin -->
+    <typeAlias alias="AdminDto" type="com.fastcampus.ch4.dto.admin.AdminDto"/>
+
     <!-- faq  -->
+    <typeAlias alias="FaqDto" type="com.fastcampus.ch4.dto.faq.FaqDto"/>
+    <typeAlias alias="FaqCateDto" type="com.fastcampus.ch4.dto.faq.FaqCateDto"/>
+    <typeAlias alias="SearchCondition" type="com.fastcampus.ch4.domain.SearchCondition"/>
 
     <!-- item  -->
 

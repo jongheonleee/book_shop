@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.fastcampus.ch4.dao.faq.FaqCateMapper">
+    <select id="count" resultType="int">
+        select count(*) from faq_cate
+    </select>
+
+    <sql id="selectFromFaqCate">
+        select cate_code, name, use_chk, parent_code, reg_date, reg_id, up_date, up_id
+        from faq_cate
+    </sql>
+
+    <select id="selectByCode" parameterType="string" resultType="FaqCateDto">
+        <include refid="selectFromFaqCate"/>
+        where cate_code = #{cate_code}
+    </select>
+
+    <!--  ??? order by? 분류가 같은 것들 정렬순서 지정해주고 싶으면 컬럼으로 주는지?  -->
+    <!--  상위 카테고리의 하위 카테고리 선택  -->
+    <select id="selectChildByParent" parameterType="string" resultType="FaqCateDto">
+        <include refid="selectFromFaqCate"/>
+        where parent_code = #{cate_code}
+    </select>
+
+    <!--  상위 카테고리와 그 하위 카테고리 선택  -->
+    <select id="selectChildAndParent" parameterType="string" resultType="FaqCateDto">
+        <include refid="selectFromFaqCate"/>
+        where parent_code = #{cate_code}
+        or cate_code = #{catd_code}
+    </select>
+    
+    <select id="selectByName" parameterType="string" resultType="FaqCateDto">
+        <include refid="selectFromFaqCate"/>
+        where name = #{name}
+    </select>
+
+    <!-- 메인 카테고리 가져오기 -->
+    <select id="selectMainCate" resultType="FaqCateDto">
+        <include refid="selectFromFaqCate"/>
+        where parent_code = '00'
+    </select>
+
+    <!--  서브 카테고리만 가져오기  -->
+    <select id="selectSubCate" resultType="FaqCateDto">
+        <include refid="selectFromFaqCate"/>
+        where parent_code like '00%'
+        and not parent_code = '00'
+    </select>
+
+    <select id="selectAll" resultType="FaqCateDto">
+        <include refid="selectFromFaqCate"/>
+    </select>
+    
+    <delete id="deleteAll">
+        delete from faq_cate
+    </delete>
+
+    <insert id="insert" parameterType="FaqCateDto">
+        insert into faq_cate (cate_code, name, use_chk, parent_code, reg_date, reg_id, up_date, up_id)
+        values (#{cate_code}, #{name}, #{use_chk}, #{parent_code}, now(), #{reg_id}, now(), #{reg_id})
+    </insert>
+
+    <update id="update" parameterType="FaqCateDto">
+        update faq_cate
+        set
+            name = #{name},
+            use_chk = #{use_chk},
+            parent_code = #{parent_code},
+            up_date = now(),
+            up_id = #{up_id}
+        where cate_code = #{cate_code}
+    </update>
+</mapper>

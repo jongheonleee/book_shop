@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.fastcampus.ch4.dao.admin.AdminMapper">
+    <select id="count" resultType="int">
+        select count(*) from admin
+    </select>
+
+    <sql id="selectFromAdmin">
+        select id, auth, reg_date, reg_id, up_date, up_id
+        from admin
+    </sql>
+
+    <select id="select" parameterType="string" resultType="AdminDto">
+        <include refid="selectFromAdmin"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectAll" resultType="AdminDto">
+        <include refid="selectFromAdmin"/>
+    </select>
+
+    <delete id="delete" parameterType="string">
+        delete from admin
+        whete id = #{id}
+    </delete>
+
+    <delete id="deleteAll">
+        delete from admin
+    </delete>
+
+    <insert id="insert" parameterType="AdminDto">
+        insert into admin(id, auth, reg_date, reg_id, up_date, up_id)
+        values #{id}, #{auth}, #{reg_date}, #{reg_id}, #{up_date}, #{up_id}
+    </insert>
+</mapper>

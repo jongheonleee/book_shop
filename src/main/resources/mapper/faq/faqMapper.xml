@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.fastcampus.ch4.dao.faq.FaqMapper">
+    <!-- 전체 글 개수 확인 -->
+    <select id="count" resultType="int">
+        select count(*)
+        from faq
+    </select>
+
+    <!-- 게시글 전체 삭제 -->
+    <delete id="deleteAll">
+        delete from faq
+    </delete>
+
+    <!-- 게시글 삭제 -->
+    <delete id="delete" parameterType="int">
+        delete
+        from faq
+        where faq_seq = #{faq_seq}
+    </delete>
+
+    <!-- 하나의 게시글 삭제 : 글을 등록한 사람만 삭제 가능 -->
+    <delete id="deleteByRegId" parameterType="map">
+        delete
+        from faq
+        where faq_seq = #{faq_seq} and reg_id = #{admin_id}
+    </delete>
+
+    <!-- faq 게시글 하나 등록 -->
+    <insert id="insert" parameterType="FaqDto">
+        insert into faq (faq_catg_code, title, cont, dsply_chk, reg_date, reg_id, up_date, up_id)
+        values (#{faq_catg_code}, #{title}, #{cont}, #{dsply_chk}, now(), #{reg_id}, now(), #{reg_id})
+    </insert>
+
+    <!-- 게시글 수정 -->
+    <update id="update" parameterType="FaqDto">
+        update faq
+        set faq_catg_code = #{faq_catg_code}, title = #{title}, cont = #{cont}, dsply_chk = #{dsply_chk}, up_date = now(), up_id = #{up_id}
+        where faq_seq = #{faq_seq}
+    </update>
+
+    <sql id="selectFromFaq">
+        select faq_seq, faq_catg_code, title, cont, dsply_chk, view_cnt, reg_date, reg_id, up_date, up_id
+        from faq
+    </sql>
+
+    <!-- 게시글 전체 선택 -->
+    <select id="selectAll" resultType="FaqDto">
+        <include refid="selectWithCatgName"/>
+        order by f.faq_seq ASC, f.reg_date DESC
+    </select>
+
+    <!-- 노출되는 게시글 전체 선택 -->
+    <select id="selectDisplay" resultType="FaqDto">
+        <include refid="selectWithCatgName"/>
+        where dsply_chk = 'Y'
+        order by f.faq_seq ASC, f.reg_date DESC
+    </select>
+
+    <!-- 하나의 게시글 선택 -->
+    <select id="select" parameterType="int" resultType="FaqDto">
+        <include refid="selectFromFaq"/>
+        where faq_seq = #{faq_seq}
+    </select>
+
+    <!--  카테고리 이름 붙여서 faq 게시글 가져오기  -->
+<!--    <sql id="selectWithCatgName">-->
+<!--        select *-->
+<!--        from (select f.faq_seq, f.faq_catg_code, f.title, f.cont, f.dsply_chk, f.view_cnt, f.reg_date, f.reg_id, f.up_date, f.up_id, c.name catg_name-->
+<!--            from faq f-->
+<!--            left join faq_cate c-->
+<!--            on f.faq_catg_code = c.cate_code) aa-->
+<!--    </sql>-->
+<!--    조인 없이 서브쿼리로! -->
+
+
+    <!--  카테고리 이름 붙여서 faq 게시글 가져오기  -->
+    <sql id="selectWithCatgName">
+        select f.faq_seq, f.faq_catg_code, f.title, f.cont, f.dsply_chk, f.view_cnt, f.reg_date, f.reg_id, f.up_date, f.up_id,
+               (select name
+                from faq_cate c
+                where f.faq_catg_code = c.cate_code) catg_name
+        from faq f
+    </sql>
+
+
+    <!-- 선택 옵션('제목+내용' 또는 '제목만')과 키워드로 게시글 검색 -->
+    <select id="search" parameterType="SearchCondition" resultType="FaqDto">
+        <include refid="selectWithCatgName"/>
+        where f.dsply_chk = 'Y'
+        <choose>
+            <when test='option=="A"'>
+                and (title like concat('%', #{keyword}, '%')
+                or cont like concat('%', #{keyword}, '%'))
+            </when>
+            <otherwise>
+                and title like concat('%', #{keyword}, '%')
+            </otherwise>
+        </choose>
+        order by f.faq_seq ASC, f.reg_date DESC
+    </select>
+
+    <!-- 선택한 카테고리에 따라 목록 읽기 -->
+    <select id="selectByCatg" parameterType="string" resultType="FaqDto">
+        <include refid="selectWithCatgName"/>
+        where f.dsply_chk = 'Y' and f.faq_catg_code like concat(#{faq_catg_code}, '%')
+        order by f.faq_seq ASC, f.reg_date DESC
+    </select>
+
+    <!-- 조회수 1 증가 -->
+    <update id="increaseViewCnt" parameterType="int">
+        update faq
+        set view_cnt = view_cnt + 1
+        where faq_seq = #{faq_seq}
+    </update>
+</mapper>

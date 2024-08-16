@@ -2,6 +2,7 @@ package com.fastcampus.ch4.dao.item;
 
 import com.fastcampus.ch4.dto.item.BookDto;
 import com.fastcampus.ch4.dto.item.BookImageDto;
+import com.fastcampus.ch4.dto.item.WritingContributorDto;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -79,19 +80,31 @@ public class BookDaoImpl implements BookDao {
 
     // 11. 집필 기여자 테이블 인서트
     @Override
-    public int insertToWriting_contributor(BookDto bookDto) throws Exception {
-        return session.insert(namespace + "insertToWriting_contributor", bookDto);
+    public int insertToWriting_contributor(WritingContributorDto writingContributorDto) throws Exception {
+        return session.insert(namespace + "insertToWriting_contributor", writingContributorDto);
     }
 
-    // 12. 집필 기여자 - 도서 관계 테이블 인서트
+    // 12. 집필 기여자-도서 관계 테이블 인서트
     @Override
-    public int insertToBookContributor(BookDto bookDto) throws Exception {
-        return session.insert(namespace + "insertToBook_contributor", bookDto);
+    public int insertToBookContributor(Map map) throws Exception {
+        return session.insert(namespace + "insertToBook_contributor", map);
     }
 
     // 13. 해당 isbn의 이미지 시퀀스 최대값 조회
     @Override
     public Integer selectMaxImgSeq(String isbn) throws Exception {
         return session.selectOne(namespace + "selectMaxImgSeq", isbn);
+    }
+
+    // 14. 다음 wr_seq값 조회
+    @Override
+    public Integer selectWrSeq() throws Exception {
+        return session.selectOne(namespace + "selectWrSeq");
+    }
+
+    // 15. 다음 trl_seq값 조회
+    @Override
+    public Integer selectTrlSeq() throws Exception {
+        return session.selectOne(namespace + "selectTrlSeq");
     }
 }

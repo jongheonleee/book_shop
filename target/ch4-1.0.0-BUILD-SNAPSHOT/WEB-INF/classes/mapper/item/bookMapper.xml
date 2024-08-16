@@ -43,7 +43,7 @@
     </insert>
 
     <!--도서 이미지 테이블 인서트 -->
-    <insert id="insertToBook_image" parameterType="BookDto">
+    <insert id="insertToBook_image" parameterType="BookImageDto">
         INSERT INTO book_image (isbn, img_seq, img_url, img_regi_day, reg_date, reg_id, up_date, up_id)
         VALUES (#{isbn}, #{img_seq}, #{repre_img}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "reg_id",DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "up_id")
     </insert>
@@ -108,7 +108,7 @@
     </insert>
 
 
-    <insert id="insertToBookContributor" parameterType="bookDto">
+    <insert id="insertToBookContributor" parameterType="map">
         INSERT INTO book_contributor (isbn, cb_num, reg_date, reg_id, up_date, up_id)
         VALUES (#{isbn}, #{cb_num}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "reg_id", DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "up_id")
     </insert>
@@ -125,7 +125,7 @@
         ORDER BY reg_date DESC
     </select>
 
-    <select id="selectMaxImgSeq" parameterType="String" resultType="List">
+    <select id="selectMaxImgSeq" parameterType="String" resultType="int">
         SELECT img_seq FROM book_image where isbn = #{isbn} ORDER BY img_seq DESC Limit 0,1;
     </select>
 

@@ -3,11 +3,13 @@ package com.fastcampus.ch4.service.item;
 import com.fastcampus.ch4.dao.item.BookDao;
 import com.fastcampus.ch4.dto.item.BookDto;
 import com.fastcampus.ch4.dto.item.BookImageDto;
+import com.fastcampus.ch4.dto.item.WritingContributorDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +54,38 @@ public class BookServiceImpl implements com.fastcampus.ch4.service.item.BookServ
 
         /* 집필 기여자 인서트 - 기여자번호(cb_num), 이름, 직업1, reg_id, up_id */
 
-        // 도서-집필 기여자 관계 테이블 인서트 -
+        WritingContributorDto wrWritingContributorDto = null;
+        WritingContributorDto trlWritingContributorDto = null;
+        // 도서-집필기여자 중간테이블에 인서트할 맵
+        // BookDto의 isbn과 writingContributor의 cb_num을 맵에 담아서 넘기기
+        Map map = new HashMap();
+        map.put("isbn", bookDto.getIsbn());
+        // 작가 이름이 넘어왔다면 다음 작가 시퀀스 번호 조회
+        // cbNum생성해서 테이블 인서트
+        // writingContributorDto 객체 생성(cb_num, wr_name)
+        // writingContributor테이블 인서트
+        if (bookDto.getWr_name() != null) {
+            Integer wrSeq = bookDao.selectWrSeq();
+            String wrCbNum = "wr" + wrSeq;
+            wrWritingContributorDto = new WritingContributorDto(wrCbNum, bookDto.getWr_name());
+            bookDao.insertToWriting_contributor(wrWritingContributorDto);
+            map.put("cb_num", wrWritingContributorDto.getCb_num());
+        }
+        // 번역자 이름이 넘어왔다면 다음 번역자 시퀀스 번호 조회
+        //  cbNum생성해서 테이블 인서트
+        // writingContributorDto 객체 생성(cb_num, trl_name)
+        // writingContributor테이블 인서트
+        if (bookDto.getTrl_name() != null) {
+            Integer trlSeq = bookDao.selectTrlSeq();
+            String trlCbNum = "trl"+trlSeq;
+            trlWritingContributorDto = new WritingContributorDto(trlCbNum, bookDto.getTrl_name());
+            bookDao.insertToWriting_contributor(trlWritingContributorDto);
+            map.put("cb_num", trlWritingContributorDto.getCb_num());
+        }
+
+        // 도서-집필 기여자 관계 테이블 인서트 (isbn, cb_num)
+        bookDao.insertToBookContributor(map);
+
         return bookDao.insert(bookDto);
     }
 

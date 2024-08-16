@@ -108,7 +108,7 @@
     </insert>
 
 
-    <insert id="insertToBookContributor" parameterType="bookDto">
+    <insert id="insertToBookContributor" parameterType="map">
         INSERT INTO book_contributor (isbn, cb_num, reg_date, reg_id, up_date, up_id)
         VALUES (#{isbn}, #{cb_num}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "reg_id", DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "up_id")
     </insert>

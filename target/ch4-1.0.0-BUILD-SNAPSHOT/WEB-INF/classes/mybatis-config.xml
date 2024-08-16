@@ -9,6 +9,7 @@
     <!-- item  -->
     <typeAlias alias="BookDto" type="com.fastcampus.ch4.dto.item.BookDto"/>
     <typeAlias alias="CategoryDto" type="com.fastcampus.ch4.dto.item.CategoryDto"/>
+    <typeAlias alias="BookImageDto" type="com.fastcampus.ch4.dto.item.BookImageDto"/>
     <!-- member  -->
 
     <!-- order  -->

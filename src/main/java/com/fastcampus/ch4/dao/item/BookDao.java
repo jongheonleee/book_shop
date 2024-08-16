@@ -2,6 +2,7 @@ package com.fastcampus.ch4.dao.item;
 
 import com.fastcampus.ch4.dto.item.BookDto;
 import com.fastcampus.ch4.dto.item.BookImageDto;
+import com.fastcampus.ch4.dto.item.WritingContributorDto;
 
 import java.util.List;
 import java.util.Map;
@@ -27,8 +28,10 @@ public interface BookDao {
 
 
     int insertToBook_image(BookImageDto bookImageDto) throws Exception;
-    int insertToWriting_contributor(BookDto bookDto) throws Exception;
-    int insertToBookContributor(BookDto bookDto) throws Exception;
+    int insertToWriting_contributor(WritingContributorDto writingContributorDto) throws Exception;
+    int insertToBookContributor(Map map) throws Exception;
 
     Integer selectMaxImgSeq(String isbn) throws Exception;
+    Integer selectWrSeq() throws Exception;
+    Integer selectTrlSeq() throws Exception;
 }

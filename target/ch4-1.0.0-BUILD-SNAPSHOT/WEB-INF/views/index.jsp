@@ -17,9 +17,6 @@
     <ul>
         <li id="logo">fastcampus</li>
         <li><a href="<c:url value='/'/>">Home</a></li>
-        <li><a href="<c:url value='/qa/list'/>">QA</a></li>
-<%--        <li><a href="<c:url value='${loginOutLink}'/>">${loginOut}</a></li>--%>
-<%--        <li><a href="<c:url value='/register/add'/>">Sign in</a></li>--%>
         <li><a href="<c:url value='/book/list'/>">Board</a></li>
         <li><a href="<c:url value='${loginOutLink}'/>">${loginOut}</a></li>
         <li><a href="<c:url value='/register/add'/>">Sign in</a></li>

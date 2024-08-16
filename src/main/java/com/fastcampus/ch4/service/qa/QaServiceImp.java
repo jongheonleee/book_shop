@@ -89,6 +89,7 @@ public class QaServiceImp implements QaService {
     public boolean write(String userId, QaDto dto) {
         // 카테고리 값 유효한지 확인 - 통합 코드 테이블에서 조회
         CodeDto found = codeDao.selectByCode(dto.getQa_cate_num());
+        System.out.println("found = " + found);
         if (found == null) return false;
 
         // 현재 작성한 문의글과 중복되는 제목이 있는지 확인

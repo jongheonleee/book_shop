@@ -11,9 +11,10 @@
   </select>
 
   <select id="selectAll" resultType="QaDto">
-    SELECT qa_num, user_id, qa_cate_num, title,
-           content, created_at, email, tele_num,
-           phon_num, img1, img2, img3
+    SELECT
+      qa_num, user_id, qa_cate_num, title,
+      content, created_at, email, tele_num,
+      phon_num, img1, img2, img3
     FROM qa
   </select>
 
@@ -22,8 +23,7 @@
       q.qa_num, q.user_id, q.qa_cate_num, q.title,
       q.content, q.created_at, q.email, q.tele_num, q.chk_repl,
       q.phon_num, q.img1,q.img2, q.img3,
-      (SELECT name FROM qa_cate
-      WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
+      (SELECT name FROM qa_cate WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
       s.name AS stat_name, s.qa_stat_code AS qa_stat_code
     FROM qa AS q
     JOIN (
@@ -70,8 +70,7 @@
       q.qa_num, q.user_id, q.qa_cate_num, q.title,
       q.content, q.created_at, q.email, q.tele_num, q.chk_repl,
       q.phon_num, q.img1,q.img2, q.img3,
-      (SELECT name FROM qa_cate
-       WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
+      (SELECT name FROM qa_cate WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
       s.name AS stat_name, s.qa_stat_code AS qa_stat_code
     FROM qa AS q
     JOIN (

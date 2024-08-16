@@ -30,31 +30,21 @@ public class QaServiceImpTest {
     @Autowired
     private QaService service;
 
-    @Autowired
-    private QaCategoryDaoImp categoryDao;
-
     @Before
     public void 초기화() {
         dao.deleteAll();
         assertTrue(service != null);
+
+        // (각 테스트 클래스에서 실행하기)
+        // 카테고리 데이터 미리 넣기
+        // 코드 데이터 미리 넣기
     }
 
-    @Test
+//    @Test
     public void 데이터_넣기() {
-        categoryDao.deleteAll();
-        QaCategoryDto categoryDto = new QaCategoryDto();
-        categoryDto.setQa_cate_num("qa_cate_num1");
-        categoryDto.setName("교환/환불 요청");
-        categoryDto.setComt("comt1");
-        categoryDto.setReg_date("2021-01-01");
-        categoryDto.setReg_id("reg_id1");
-        categoryDto.setUp_date("2021-01-01");
-        categoryDto.setUp_id("up_id1");
-        categoryDto.setChk_use("Y");
-
-        assertTrue(1 == categoryDao.insert(categoryDto));
-
-
+        // (각 테스트 클래스에서 실행하기)
+        // 카테고리 데이터 미리 넣기
+        // 코드 데이터 미리 넣기
         for (int i=0; i<20; i++) {
             QaDto dto = create(i);
             assertTrue(service.write("user1", dto));
@@ -253,6 +243,7 @@ public class QaServiceImpTest {
         SearchCondition sc = new SearchCondition(1, 10, "title", dto.getTitle(), 0);
         dto.setTitle(null);
         assertThrows(DataIntegrityViolationException.class, () -> service.write(userId, dto));
+
     }
 
     @Test
@@ -346,9 +337,10 @@ public class QaServiceImpTest {
     private QaDto create(int i) {
         QaDto dto = new QaDto();
         dto.setUser_id("user1");
-        dto.setQa_cate_num("qa_cate_num1");
-        dto.setCate_name("교환/환불 요청");
-        dto.setStat_name("답변대기");
+        dto.setQa_cate_num("qa-cate-01");
+        dto.setCate_name("배송/수령예정일안내");
+        dto.setQa_stat_code("qa-stat-01");
+        dto.setStat_name("처리 대기중");
         dto.setChk_repl("Y");
         dto.setTitle("문의글입니다." + i);
         dto.setContent("바람이 세차게 불어오는 저녁, 해변을 따라 걷던 엘레나는 발밑에서 부서지는 파도 소리를 들으며 잠시 멈춰 섰다. 하늘은 붉은 노을에 물들어 있었고, 태양은 서서히 수평선 아래로 사라지고 있었다. 그녀는 손을 주머니에 넣고, 바다를 응시하며 깊은 생각에 잠겼다. 몇 년 전, 이곳에서의 추억들이 그녀의 마음속에 선명하게 떠올랐다. 그때는 모든 것이 단순하고 아름다웠다. 하지만 지금, 시간은 모든 것을 변화시키고, 사람들 사이에 놓인 거리는 점점 더 멀어져만 갔다. 엘레나는 서늘한 바람에 얼굴을 내맡기며, 아직 끝나지 않은 이야기를 다시 써 내려갈 용기를 다짐했다. 그녀의 발걸음은 다시 앞으로 향했고, 바다는 여전히 그녀의 곁에서 잔잔하게 출렁이고 있었다." + i);

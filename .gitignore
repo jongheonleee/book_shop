@@ -180,6 +180,10 @@ replay_pid*
 .AppleDouble
 .LSOverride
 
+
+# root-context.xml 설정
+root-context.xml
+
 # Icon must end with two \r
 Icon
 

@@ -18,6 +18,11 @@
     <typeAlias alias="BookImageDto" type="com.fastcampus.ch4.dto.item.BookImageDto"/>
     <!-- member  -->
 
+    <typeAlias alias="TermtDto" type="com.fastcampus.ch4.dto.member.TermDto"/>
+    <typeAlias alias="TermAgreeDto" type="com.fastcampus.ch4.dto.member.TermAgreeDto"/>
+    <typeAlias alias="MemberDto" type="com.fastcampus.ch4.dto.member.MemberDto"/>
+    <typeAlias alias="LoginHistoryDto" type="com.fastcampus.ch4.dto.member.LoginHistoryDto"/>
+
     <!-- order  -->
     <typeAlias alias="OrderDto" type="com.fastcampus.ch4.dto.order.OrderDto"/>
     <typeAlias alias="OrderProductDto" type="com.fastcampus.ch4.dto.order.OrderProductDto"/>

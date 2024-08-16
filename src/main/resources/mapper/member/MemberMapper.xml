@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcampus.ch4.dao.member.MemberDao">
+
+    <!-- MemberDto에 대한 resultMap 정의 -->
+    <resultMap id="memberResultMap" type="com.fastcampus.ch4.dto.member.MemberDto">
+        <id property="id" column="id"/>
+        <result property="pswd" column="pswd"/>
+        <result property="email" column="email"/>
+        <result property="phnNumb" column="phn_numb"/>
+        <result property="joinDate" column="join_date"/>
+        <result property="failLognAtmt" column="fail_logn_atmt"/>
+        <result property="acntLock" column="acnt_lock"/>
+        <result property="isMailVrfi" column="is_mail_vrfi"/>
+        <result property="mailTokn" column="mail_tokn"/>
+        <result property="name" column="name"/>
+        <result property="brthDate" column="brth_date"/>
+        <result property="isAcntActv" column="is_acnt_actv"/>
+        <result property="adsReceMthd" column="ads_rece_mthd"/>
+        <result property="grad" column="grad"/>
+        <result property="isCanc" column="is_canc"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="regId" column="reg_id"/>
+        <result property="upDate" column="up_date"/>
+        <result property="upId" column="up_id"/>
+    </resultMap>
+
+    <!-- 회원가입 -->
+    <insert id="insertMember" parameterType="com.fastcampus.ch4.dto.member.MemberDto">
+        INSERT INTO member (
+            id, pswd, email, phn_numb, join_date, fail_logn_atmt, acnt_lock,
+            is_mail_vrfi, mail_tokn, name, brth_date, is_acnt_actv, ads_rece_mthd,
+            grad, is_canc, reg_date, reg_id, up_date, up_id
+        ) VALUES (
+                     #{id}, #{pswd}, #{email}, #{phnNumb}, #{joinDate}, #{failLognAtmt}, #{acntLock},
+                     #{isMailVrfi}, #{mailTokn}, #{name}, #{brthDate}, #{isAcntActv}, #{adsReceMthd},
+                     #{grad}, #{isCanc}, #{regDate}, #{regId}, #{upDate}, #{upId}
+                 );
+    </insert>
+
+    <!-- 회원 정보 조회 -->
+    <select id="selectMemberById" parameterType="String" resultMap="memberResultMap">
+        SELECT
+            id,
+            pswd,
+            email,
+            phn_numb,
+            join_date,
+            fail_logn_atmt,
+            acnt_lock,
+            is_mail_vrfi,
+            mail_tokn,
+            name,
+            brth_date,
+            is_acnt_actv,
+            ads_rece_mthd,
+            grad,
+            is_canc,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id
+        FROM member
+        WHERE id = #{id};
+    </select>
+
+    <!-- 모든 멤버를 조회하는 쿼리 -->
+    <select id="getAllMembers" resultMap="memberResultMap">
+        SELECT * FROM member
+    </select>
+
+    <!-- 회원 정보 수정 -->
+    <update id="updateMember" parameterType="com.fastcampus.ch4.dto.member.MemberDto">
+        UPDATE member
+        <set>
+            <if test="pswd != null">pswd = #{pswd},</if>
+            <if test="phnNumb != null">phn_numb = #{phnNumb},</if>
+            <if test="email != null">email = #{email},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <delete id="deleteMember" parameterType="String">
+        DELETE FROM member WHERE id = #{id};
+    </delete>
+
+    <!-- 모든 회원 삭제 -->
+    <delete id="deleteAll">
+        DELETE FROM member;
+    </delete>
+
+    <!-- 이메일로 아이디 찾기 -->
+    <select id="findUsernameByEmail" parameterType="String" resultType="String">
+        SELECT id FROM member WHERE email = #{email}
+    </select>
+
+    <!-- 이메일과 아이디를 기반으로 사용자 조회 -->
+    <select id="selectMemberByEmailAndId" parameterType="com.fastcampus.ch4.dto.member.MemberDto" resultMap="memberResultMap">
+        SELECT *
+        FROM member
+        WHERE email = #{email}
+          AND id = #{id}
+    </select>
+
+    <!-- 아이디 중복 검사 -->
+    <select id="isIdAvailable" parameterType="String" resultType="Integer">
+        SELECT COUNT(*) FROM member WHERE id = #{id}
+    </select>
+
+    <!-- 약관 동의 이력 저장 -->
+    <insert id="saveAgreementAgree" parameterType="com.fastcampus.ch4.dto.member.TermAgreeDto">
+        INSERT INTO term_agree (
+            id, term_id, term_agree, reg_date, reg_id, up_date, up_id
+        ) VALUES (
+                     #{id}, #{termId}, #{termAgree}, #{regDate}, #{regId}, #{upDate}, #{upId}
+                 );
+    </insert>
+
+    <insert id="insertTermAgree">
+        INSERT INTO term_agree (id, term_id, term_agree, reg_date, reg_id, up_date, up_id)
+        VALUES (#{id}, #{termId}, #{termAgree}, #{regDate}, #{regId}, #{upDate}, #{upId})
+    </insert>
+
+</mapper>

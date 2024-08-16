@@ -12,8 +12,10 @@ import com.fastcampus.ch4.model.order.BookType;
 import com.fastcampus.ch4.service.order.fake.FakeBookServiceImpl;
 import com.fastcampus.ch4.service.order.fake.TempBookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,7 @@ public class CartServiceImpl implements CartService {
 
     final static int BASIC_ITEM_QUANTITY = 1;
     final static int SUCCESS_CODE = 1;
+    final static int FAIL_CODE = 0;
 
     @Override
     public Integer add(Integer cart_seq, String isbn, String prod_type_code, String userId) {
@@ -179,5 +182,36 @@ public class CartServiceImpl implements CartService {
         }
 
         return cartProductList;
+    }
+
+    @Override
+    public int updateItemQuantity(Integer cartSeq, String isbn, String prod_type_code, Boolean isPlus, String userId) {
+        if (cartSeq == null || isbn == null || prod_type_code == null || isPlus == null) {
+            throw new IllegalArgumentException("필수 매개변수를 입력해주세요");
+        }
+
+        List<CartProductDto> itemList = cartProductDao.selectListByCartSeq(cartSeq);
+        if (itemList.isEmpty()) {
+            throw new IllegalArgumentException("없는 상품입니다.");
+        }
+        CartProductDto cartProudctDto = itemList.get(0);
+
+        int updateResult = 0;
+
+        try {
+            updateResult = cartProductDao.updateItemQuantity(cartSeq, isbn, prod_type_code, isPlus, userId);
+        } catch (UncategorizedSQLException uncategorizedSQLException) {
+            // Check if the error is caused by the check constraint violation
+            if (uncategorizedSQLException.getCause() instanceof SQLException) {
+                SQLException sqlException = (SQLException) uncategorizedSQLException.getCause();
+                if (sqlException.getErrorCode() == 3819) { // MySQL error code for CHECK constraint violation
+                    throw new IllegalArgumentException("수량은 1 이상이어야 합니다.");
+                }
+            }
+            // Re-throw the exception if it's not related to the CHECK constraint
+            throw uncategorizedSQLException;
+        }
+
+        return updateResult;
     }
 }

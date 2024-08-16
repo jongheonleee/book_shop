@@ -9,4 +9,5 @@ public interface CartService {
     Integer createOrGetCart(Integer cartSeq, String userId);
     int addCartProduct(Integer cartSeq, String isbn, String prod_type_code, String userId);
     List<CartProductDetailDto> getItemList(Integer cartSeq, String userId);
+    int updateItemQuantity(Integer cartSeq, String isbn, String prod_type_code, Boolean isPlus, String userId);
 }

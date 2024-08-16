@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /*
@@ -81,7 +82,7 @@ Response : 실행결과 (페이지 X)
 -- 삭제 성공 : redirect:/cart/list
 -- 삭제 실패 : 실패 메시지
 
-4. 장바구니 수량 변경 (PATCH : /cart/product?isplus="true")
+4. 장바구니 수량 변경 (PATCH : /cart/product/quantity?isplus="true")
 - 변경 api 로 요청을 받는다.
 -- 필요한 값 : cart_seq, isbn, prod_type_code
 
@@ -132,11 +133,37 @@ public class CartController {
         return "cart/add";
     }
 
-    @PatchMapping("/cart/product")
-    public ResponseEntity updateQuantity() {
+    @PatchMapping("/product/quantity")
+//    public ResponseEntity updateQuantity(@RequestBody CartProductDetailDto cartProductDetailDto, @RequestBody boolean isPlus, HttpServletRequest request, Model model) {
+    public ResponseEntity updateQuantity(CartProductDetailDto cartProductDetailDto, boolean isPlus,  HttpServletRequest request, Model model) {
+        /*
+        필요한 변수 : cartSeq, isbn, prodTypeCode, isPlus, userId
+
+        필요한 서비스 : updateItemQuantity
+
+        반환 : update 성공여부, 업데이트된 수치
+         */
+
+        //
+
+        // userId 추출하기
+        String userId;
+        // 회원 = session 에서 관리
+        HttpSession session = request.getSession();
+        userId = (String) session.getAttribute("userId");
+
+//        Integer cartSeq = cartProductDetailDto.getCart_seq();
+//        String isbn = cartProductDetailDto.getIsbn();
+//        String prodTypeCode = cartProductDetailDto.getProd_type_code();
+//        map.keySet().forEach(i -> System.out.println(i.toString()));
+
+//        request.getParameter()
+
+
+        // updateItemQuantity
+//        int updateResult = cartService.updateItemQuantity(cartSeq, isbn, prodTypeCode, isPlus, userId);
+
         return new ResponseEntity(HttpStatus.OK);
     }
-
-
 }
 

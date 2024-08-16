@@ -8,7 +8,7 @@
         VALUES (#{cart_seq}, #{isbn}, #{prod_type_code}, #{item_quan}, NOW(), #{reg_id}, NOW(), #{up_id}, NOW(), NOW())
     </insert>
 
-    <select id="selectOne" parameterType="map" resultType="CartProductDto">
+    <select id="selectByCondition" parameterType="map" resultType="CartProductDto">
         SELECT cart_seq,
                isbn,
                prod_type_code,
@@ -19,9 +19,20 @@
                up_id,
                created_at
         FROM book_shop.cart_prod
-        WHERE cart_seq = #{cart_seq}
-          AND isbn = #{isbn}
-          AND prod_type_code = #{prod_type_code}
+        <where>
+            <if test="cart_seq != null">
+                cart_seq = #{cart_seq}
+            </if>
+            <if test="isbn != null">
+                AND isbn = #{isbn}
+            </if>
+            <if test="prod_type_code != null">
+                AND prod_type_code = #{prod_type_code}
+            </if>
+            <if test="userId != null">
+                userId = #{userId}
+            </if>
+        </where>
     </select>
 
     <select id="selectListByCartSeq" parameterType="int" resultType="CartProductDto">
@@ -100,6 +111,40 @@
             </if>
             <if test="isPlus == false">
                 item_quan = item_quan - 1
+            </if>
+        </set>
+        WHERE
+        cart_seq = #{cart_seq}
+        AND isbn = #{isbn}
+        AND prod_type_code = #{prod_type_code}
+    </update>
+
+    <update id="plusItemQuantity" parameterType="map">
+        UPDATE
+        book_shop.cart_prod
+        <set>
+            up_date = NOW(),
+            updated_at = NOW(),
+            item_quan = item_quan + 1
+            <if test="up_id">
+                up_id = #{userId},
+            </if>
+        </set>
+        WHERE
+        cart_seq = #{cart_seq}
+        AND isbn = #{isbn}
+        AND prod_type_code = #{prod_type_code}
+    </update>
+
+    <update id="minusItemQuantity" parameterType="map">
+        UPDATE
+        book_shop.cart_prod
+        <set>
+            up_date = NOW(),
+            updated_at = NOW(),
+            item_quan = item_quan - 1
+            <if test="up_id">
+                up_id = #{userId},
             </if>
         </set>
         WHERE

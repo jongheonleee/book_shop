@@ -28,7 +28,17 @@ public class CartProductDaoImpl implements CartProductDao {
         map.put("cart_seq", cartSeq);
         map.put("isbn", isbn);
         map.put("prod_type_code", prod_type_code);
-        return sqlSession.selectOne(namespace + "selectOne", map);
+        return sqlSession.selectOne(namespace + "selectByCondition", map);
+    }
+
+    @Override
+    public List<CartProductDto> selectOneList(Integer cartSeq, String isbn, String prod_type_code, String userId) {
+        Map<String, Object> map = new HashMap();
+        map.put("cart_seq", cartSeq);
+        map.put("isbn", isbn);
+        map.put("prod_type_code", prod_type_code);
+        map.put("user_id", userId);
+        return sqlSession.selectList(namespace + "selectByCondition", map);
     }
 
     @Override
@@ -77,5 +87,25 @@ public class CartProductDaoImpl implements CartProductDao {
         map.put("isPlus", isPlus);
         map.put("userId", userId);
         return sqlSession.update(namespace + "updateItemQuantity", map);
+    }
+
+    @Override
+    public int plusItemQuantity(Integer cart_seq, String isbn, String prod_type_code, String userId) {
+        Map map = new HashMap();
+        map.put("cart_seq", cart_seq);
+        map.put("isbn", isbn);
+        map.put("prod_type_code", prod_type_code);
+        map.put("userId", userId);
+        return sqlSession.update(namespace + "plusItemQuantity", map);
+    }
+
+    @Override
+    public int minusItemQuantity(Integer cart_seq, String isbn, String prod_type_code, String userId) {
+        Map map = new HashMap();
+        map.put("cart_seq", cart_seq);
+        map.put("isbn", isbn);
+        map.put("prod_type_code", prod_type_code);
+        map.put("userId", userId);
+        return sqlSession.update(namespace + "minusItemQuantity", map);
     }
 }

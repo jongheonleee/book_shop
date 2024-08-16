@@ -1,16 +1,31 @@
-$(document).ready(function() {
+$(document).ready(function () {
     // 수량 증가 버튼 클릭 이벤트
-    $('.quantity-increase').on('click', function() {
+    $('.quantity-increase').on('click', function () {
         let quantityInput = $(this).siblings('.quantity-input');
         let quantity = parseInt(quantityInput.val());
-        quantityInput.val(quantity + 1);
 
-        updateTotalPrice($(this));
-        updateSummary();
+        let isPlus = $(this).data('isPlus');
+        let cartSeq = $(this).data('cartSeq');
+        let isbn = $(this).data('isbn');
+        let prodCodeType = $(this).data('prod_code_type');
+
+        $.ajax({
+            url: '/ch4/cart/product/quantity',
+            type: 'PATCH',
+            data: {isPlus: isPlus, cart_seq: cartSeq, isbn: isbn, prod_type_code: prodCodeType},
+            success: function (response) {
+                quantityInput.val(quantity + 1);
+                updateTotalPrice($(this));
+                updateSummary();
+            },
+            error: function (xhr, status, error) {
+                console.error('수량 증가 요청 실패:', error);
+            }
+        });
     });
 
     // 수량 감소 버튼 클릭 이벤트
-    $('.quantity-decrease').on('click', function() {
+    $('.quantity-decrease').on('click', function () {
         let quantityInput = $(this).siblings('.quantity-input');
         let quantity = parseInt(quantityInput.val());
         if (quantity > 1) {
@@ -41,7 +56,7 @@ $(document).ready(function() {
         let finalPaymentAmount = 0;
         let totalPoints = 0;
 
-        $('.cart-item').each(function() {
+        $('.cart-item').each(function () {
             let quantity = parseInt($(this).find('.quantity-input').val());
             let regularPrice = parseFloat($(this).find('.regular-price').text().replace('원', '').replace(',', ''));
             let discountPercentage = parseFloat($(this).find('.discount').text().replace('%', '')) / 100;

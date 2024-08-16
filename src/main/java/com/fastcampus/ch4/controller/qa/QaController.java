@@ -170,8 +170,8 @@ public class QaController {
     }
 
     // (7) 유저 문의글 삭제
-    @DeleteMapping("/qa/{qaNum}")
-    public String removeQa(HttpServletRequest request, @RequestParam int qaNum, QaDto dto, Model model) {
+    @GetMapping("/qa/delete")
+    public String removeQa(HttpServletRequest request, @RequestParam(name = "qa_num") int qaNum, QaDto dto, Model model) {
         // 로그인 여부 확인, 로그인 x -> 로그인 폼으로 이동
         if (!isLogin(request)) return "redirect:/loginForm";
 
@@ -186,9 +186,23 @@ public class QaController {
         return "/qa/list";
     }
 
+    // (8) 유저 문의글 수정 페이지
+    @GetMapping("/qa/modify")
+    public String getUpdate(HttpServletRequest request, @RequestParam(name = "qa_num") int qaNum, Model model, QaDto dto) {
+        // 로그인 여부 확인
+        if (!isLogin(request)) return "redirect:/loginForm";
+
+        // 기존 문의글 저장
+        QaDto qa = service.readDetail(qaNum);
+        model.addAttribute("qa", qa);
+
+        // 문의글 수정 페이지 반환
+        return "/qa/modify";
+    }
+
     // (8) 유저 문의글 수정
-    @PostMapping("/qa/{qaNum}")
-    public String updateQa(HttpServletRequest request, @RequestParam int qaNum, @RequestBody QaDto dto,SearchCondition sc, Model model) {
+    @PostMapping("/qa/modify")
+    public String updateQa(HttpServletRequest request, QaDto dto,SearchCondition sc, Model model) {
         // 로그인 여부 확인, 로그인 x -> 로그인 폼으로 이동
         if (!isLogin(request)) return "redirect:/loginForm";
 
@@ -196,7 +210,6 @@ public class QaController {
         HttpSession session = request.getSession();
         String userId = (String) session.getAttribute("userId");
         userId = "user1";
-        dto.setQa_num(qaNum);
 
         if (!service.modify(userId, dto, sc)) {
             model.addAttribute("msg", "문의글 수정에 실패했습니다");

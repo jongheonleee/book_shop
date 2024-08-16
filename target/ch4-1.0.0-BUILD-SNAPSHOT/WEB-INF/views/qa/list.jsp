@@ -202,6 +202,30 @@
         margin-left: 42.5%;
         padding: 10px;
       }
+
+      #edit-button, #delete-button {
+        padding: 5px 10px;
+        border: none;
+        cursor: pointer;
+        color: white;
+        border-radius: 3px;
+      }
+
+      #edit-button {
+        background-color: #28a745;
+      }
+
+      #delete-button {
+        background-color: #dc3545;
+      }
+
+      #edit-button:hover {
+        background-color: #218838;
+      }
+
+      #delete-button:hover {
+        background-color: #c82333;
+      }
     </style>
     <link rel="stylesheet" href="<c:url value='/css/menu.css'/>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
@@ -265,9 +289,11 @@
                 <th>상태</th>
                 <th>답변여부</th>
                 <th>날짜</th>
+                <th>수정</th>
+                <th>삭제</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="qa-board">
             <c:forEach var="qaDto" items="${selected}">
                 <tr>
                     <td>${qaDto.qa_num}</td>
@@ -276,6 +302,8 @@
                     <td>${qaDto.stat_name}</td>
                     <td>${qaDto.chk_repl}</td>
                     <td>${qaDto.created_at}</td>
+                    <td><button id="edit-button" value="${qaDto.qa_num}">수정</button></td>
+                    <td><button id="delete-button" value="${qaDto.qa_num}">삭제</button></td>
                 </tr>
             </c:forEach>
 
@@ -315,22 +343,6 @@
       // 선택한 옵션의 값을 조회
       const selectedOption = $('.dropdown').val();
 
-      // 추후에 비동기 처리 적용
-      // $.ajax({
-      //   url: 'http://localhost:8080/ch4/qa/search?option=' + SEARCH_KEYWORD_PERIOD + '&period=' + selectedOption,
-      //   type: 'GET',
-      //   data: {
-      //     option: SEARCH_KEYWORD_PERIOD,
-      //     period: selectedOption
-      //   },
-      //   success: function(response) {
-      //     // 요청이 성공했을 때 해당 부분만 응답 데이터를 넣어주기
-      //   },
-      //   error: function(xhr, status, error) {
-      //     // 요청이 실패했을 때 실행되는 콜백
-      //   }
-      // });
-
       // 서버에 get 파라미터로 요청
       // http://localhost:8080/ch4/qa/search?option=period&period=3
        location.href = 'http://localhost:8080/ch4/qa/search?option=' + SEARCH_KEYWORD_PERIOD + '&period=' + selectedOption;
@@ -341,27 +353,6 @@
       // 입력값 조회
       const titleKeyword = document.getElementById('search-title-input').value;
 
-
-      // 추후에 비동기 처리 적용
-      // $.ajax({
-      //   url: 'http://localhost:8080/ch4/qa/search?option=' + SEARCH_KEYWORD_TITLE + '&title=' + titleKeyword,
-      //   type: 'GET',
-      //   data: {
-      //     option: SEARCH_KEYWORD_TITLE,
-      //     title: titleKeyword
-      //   },
-      //   success: function(response) {
-      //     // 요청이 성공했을 때 실행되는 콜백
-      //     alert('Success:' +  response);
-      //     // 이곳에서 응답 데이터를 사용하여 다른 작업을 수행
-      //   },
-      //   error: function(xhr, status, error) {
-      //     // 요청이 실패했을 때 실행되는 콜백
-      //     alert('Error:' +  error);
-      //   }
-      // });
-
-
       // 서버에 get 파라미터로 요청
       location.href = 'http://localhost:8080/ch4/qa/search?option=' + SEARCH_KEYWORD_TITLE + '&titleKeyword=' + titleKeyword;
     });
@@ -370,6 +361,26 @@
     $('#write-button').click(function (e) {
       location.href = 'http://localhost:8080/ch4/qa/form';
     });
+
+    // 삭제하기 버튼 누름
+        // 이벤트 핸들 퍼리
+        // 해당 문의글의 번호 조회
+        // url -> http://localhost:8080/ch4/qa/delete?qa_num=1 형식으로 get 요청 보냄
+    $('#delete-button').click(function (e) {
+      const selectedQaSeq = e.target.value;
+      const url = 'http://localhost:8080/ch4/qa/delete?qa_num=' + selectedQaSeq;
+      location.href = url;
+    })
+
+    // 수정하기 버튼 누름
+        // 이벤트 핸들 처리
+        // 해당 문의글의 번호 조회
+        // url -> http://localhost:8080/ch4/qa/update?qa_num=1 형식으로 get 요청 보냄
+    $('#edit-button').click(function (e) {
+      const selectedQaSeq = e.target.value;
+      const url = 'http://localhost:8080/ch4/qa/modify?qa_num=' + selectedQaSeq;
+      location.href = url;
+    })
   });
 </script>
 

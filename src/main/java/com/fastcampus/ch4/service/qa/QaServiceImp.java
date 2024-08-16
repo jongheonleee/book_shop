@@ -128,18 +128,30 @@ public class QaServiceImp implements QaService {
     // (6) 글 수정
     @Override
     public boolean modify(String userId, QaDto dto, SearchCondition sc) {
+        System.out.println(dto);
+
         // 카테고리 값 유효한지 확인
         QaCategoryDto found = qaCategoryDao.select(dto.getQa_cate_num());
+        System.out.println(found);
         if (found == null) return false;
 
         // 현재 작성한 문의글과 중복되는 제목이 있는지 확인
         QaDto isDuplicated = qaDao.selectByTitle(userId, dto.getTitle());
+        System.out.println(isDuplicated);
 
         // 중복된 제목이 있으면 등록 실패
         if (isDuplicated != null) return false;
 
         // 중복되는 글이 있음 -> 작성하지 않음, 없으면 -> 작성
-        return qaDao.update(dto) == 1;
+        System.out.println("go update!");
+        int rowCnt = 0;
+        try {
+            rowCnt = qaDao.update(dto);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
+        return rowCnt == 1;
     }
 
     @Override

@@ -21,12 +21,15 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title,
       q.content, q.created_at, q.email, q.tele_num, q.chk_repl,
-      q.phon_num, q.img1,q.img2, q.img3, c.name AS cate_name,
-      s.qa_stat_code AS qa_stat_code, s.name AS stat_name
+      q.phon_num, q.img1,q.img2, q.img3,
+      (SELECT name FROM qa_cate
+      WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
+      s.name AS stat_name, s.qa_stat_code AS qa_stat_code
     FROM qa AS q
-    INNER JOIN qa_cate AS c
-    ON q.qa_cate_num = c.qa_cate_num
-    INNER JOIN qa_state AS s
+    JOIN (
+      SELECT qa_num, name, qa_stat_code
+      FROM qa_state
+    ) AS s
     ON q.qa_num = s.qa_num
     WHERE q.qa_num = #{qa_num}
     <!-- 추후에 답변글 등등 조인 -->
@@ -36,12 +39,14 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title,
       q.content, q.created_at, q.email, q.tele_num, q.chk_repl,
-      q.phon_num, q.img1,q.img2, q.img3, c.name AS cate_name,
-      s.qa_stat_code AS qa_stat_code, s.name AS stat_name
+      q.phon_num, q.img1,q.img2, q.img3,
+      (SELECT name FROM qa_cate WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
+      s.name AS stat_name, s.qa_stat_code AS qa_stat_code
     FROM qa AS q
-    INNER JOIN qa_cate AS c
-    ON q.qa_cate_num = c.qa_cate_num
-    INNER JOIN qa_state AS s
+    JOIN (
+      SELECT qa_num, name, qa_stat_code
+      FROM qa_state
+    ) AS s
     ON q.qa_num = s.qa_num
     WHERE q.user_id = #{user_id}
     ORDER BY q.created_at DESC;
@@ -64,12 +69,15 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title,
       q.content, q.created_at, q.email, q.tele_num, q.chk_repl,
-      q.phon_num, q.img1,q.img2, q.img3, c.name AS cate_name,
-      s.qa_stat_code AS qa_stat_code, s.name AS stat_name
+      q.phon_num, q.img1,q.img2, q.img3,
+      (SELECT name FROM qa_cate
+       WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
+      s.name AS stat_name, s.qa_stat_code AS qa_stat_code
     FROM qa AS q
-    INNER JOIN qa_cate AS c
-    ON q.qa_cate_num = c.qa_cate_num
-    INNER JOIN qa_state AS s
+    JOIN (
+      SELECT qa_num, name, qa_stat_code
+      FROM qa_state
+    ) AS s
     ON q.qa_num = s.qa_num
     WHERE q.user_id = #{user_id}
     ORDER BY q.created_at DESC
@@ -80,12 +88,15 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title,
       q.content, q.created_at, q.email, q.tele_num, q.chk_repl,
-      q.phon_num, q.img1,q.img2, q.img3, c.name AS cate_name,
-      s.qa_stat_code AS qa_stat_code, s.name AS stat_name
+      q.phon_num, q.img1,q.img2, q.img3,
+      (SELECT name FROM qa_cate
+      WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
+    s.name AS stat_name, s.qa_stat_code AS qa_stat_code
     FROM qa AS q
-    INNER JOIN qa_cate AS c
-    ON q.qa_cate_num = c.qa_cate_num
-    INNER JOIN qa_state AS s
+    JOIN (
+      SELECT qa_num, name, qa_stat_code
+      FROM qa_state
+    ) AS s
     ON q.qa_num = s.qa_num
     WHERE TRUE
     <choose>
@@ -112,15 +123,18 @@
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title,
       q.content, q.created_at, q.email, q.tele_num, q.chk_repl,
-      q.phon_num, q.img1,q.img2, q.img3, c.name AS cate_name,
-      s.qa_stat_code AS qa_stat_code, s.name AS stat_name
+      q.phon_num, q.img1,q.img2, q.img3,
+      (SELECT name FROM qa_cate
+       WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
+      s.name AS stat_name, s.qa_stat_code AS qa_stat_code
     FROM qa AS q
-    INNER JOIN qa_state AS s
+    JOIN (
+      SELECT qa_num, name, qa_stat_code
+      FROM qa_state
+    ) AS s
     ON q.qa_num = s.qa_num
-    INNER JOIN qa_cate AS c
-    ON q.qa_cate_num = c.qa_cate_num
-    WHERE s.qa_stat_code = #{qa_stat_code}
-    AND q.user_id = #{user_id}
+    WHERE q.user_id = #{user_id}
+    AND s.qa_stat_code = #{qa_stat_code}
     ORDER BY q.created_at DESC
     LIMIT #{offSet}, #{pageSize};
   </select>

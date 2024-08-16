@@ -671,7 +671,7 @@ public class QaDaoImpTest {
 
         // 데이터 생성 및 등록 * n
         for (int i=1; i<=10; i++) {
-            QaDto dto = create(1);
+            QaDto dto = create(i);
             assertTrue(1 == dao.insert(dto));
             QaDto selected = dao.selectAll().get(0);
             int qaNum = selected.getQa_num();
@@ -684,11 +684,9 @@ public class QaDaoImpTest {
 
         }
 
-        SearchCondition sc = new SearchCondition(1, 10, "title", "title", 0);
+        SearchCondition sc = new SearchCondition(1, 10, "title", "문의글입니다.", 0);
         List<QaDto> selected = dao.selectBySearchCondition("user1", sc);
         assertTrue(10 == selected.size());
-
-
     }
 
     // 기간 대상으로 검색

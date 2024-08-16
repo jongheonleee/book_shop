@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcampus.ch4.dao.OrderProductMapper">
+    <insert id="insertAndReturnSeq" parameterType="OrderProductDto" useGeneratedKeys="true" keyProperty="ord_prod_seq" >
+        INSERT INTO
+            book_shop.order_prod
+        (
+            ord_seq,
+            isbn,
+            prod_type_code,
+            ord_stat,
+            deli_stat,
+            pay_stat,
+            item_quan,
+            point_perc,
+            point_pric,
+            basic_pric,
+            bene_perc,
+            bene_pric,
+            sale_pric,
+            ord_pric,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id
+        )
+        VALUES
+            (
+                #{ord_seq},
+                #{isbn},
+                #{prod_type_code},
+                #{ord_stat},
+                #{deli_stat},
+                #{pay_stat},
+                #{item_quan},
+                #{point_perc},
+                #{point_pric},
+                #{basic_pric},
+                #{bene_perc},
+                #{bene_pric},
+                #{sale_pric},
+                #{ord_pric},
+                NOW(),
+                #{reg_id},
+                NOW(),
+                #{up_id}
+            )
+    </insert>
+
+    <select id="count" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            book_shop.order_prod
+    </select>
+
+    <select id="selectBySeq" parameterType="int" resultType="OrderProductDto">
+        SELECT
+            ord_prod_seq,
+            ord_seq,
+            isbn,
+            prod_type_code,
+            ord_stat,
+            deli_stat,
+            pay_stat,
+            item_quan,
+            point_perc,
+            point_pric,
+            basic_pric,
+            bene_perc,
+            bene_pric,
+            sale_pric,
+            ord_pric,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id
+        FROM
+            book_shop.order_prod
+        WHERE
+            ord_prod_seq = #{ord_prod_seq}
+    </select>
+
+
+    <select id="selectAll" resultType="OrderProductDto">
+        SELECT
+            ord_prod_seq,
+            ord_seq,
+            isbn,
+            prod_type_code,
+            ord_stat,
+            deli_stat,
+            pay_stat,
+            item_quan,
+            point_perc,
+            point_pric,
+            basic_pric,
+            bene_perc,
+            bene_pric,
+            sale_pric,
+            ord_pric,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id
+        FROM
+            book_shop.order_prod
+    </select>
+
+    <select id="selectListByCondition" parameterType="map" resultType="OrderProductDto">
+        SELECT
+            ord_prod_seq,
+            ordProd.ord_seq,
+            isbn,
+            prod_type_code,
+            ordProd.ord_stat,
+            ordProd.deli_stat,
+            ordProd.pay_stat,
+            ord.userId,
+            item_quan,
+            point_perc,
+            point_pric,
+            basic_pric,
+            bene_perc,
+            bene_pric,
+            sale_pric,
+            ord_pric,
+            ordProd.reg_date,
+            ordProd.reg_id,
+            ordProd.up_date,
+            ordProd.up_id
+        FROM
+            book_shop.order_prod ordProd
+                JOIN
+            book_shop.order ord
+            ON
+                ordProd.ord_seq = ord.ord_seq
+                <if test="userId != null">
+                    AND ord.userId = #{userId}
+                </if>
+                <if test="ord_seq != null">
+                    AND ordProd.ord_seq = #{ord_seq}
+                </if>
+    </select>
+
+    <update id="update" parameterType="OrderProductDto">
+        UPDATE
+            book_shop.order_prod
+        SET
+            ord_seq = #{ord_seq},
+            isbn = #{isbn},
+            prod_type_code = #{prod_type_code},
+            ord_stat = #{ord_stat},
+            deli_stat = #{deli_stat},
+            pay_stat = #{pay_stat},
+            item_quan = #{item_quan},
+            point_perc = #{point_perc},
+            point_pric = #{point_pric},
+            basic_pric = #{basic_pric},
+            bene_perc = #{bene_perc},
+            bene_pric = #{bene_pric},
+            sale_pric = #{sale_pric},
+            ord_pric = #{ord_pric},
+            reg_date = now(),
+            reg_id = #{reg_id},
+            up_date = now(),
+            up_id = #{up_id}
+        WHERE
+            ord_prod_seq = #{ord_prod_seq}
+    </update>
+
+    <delete id="deleteBySeq" parameterType="int">
+        DELETE
+        FROM
+            book_shop.order_prod
+        WHERE
+            ord_prod_seq = #{ord_prod_seq}
+    </delete>
+
+    <delete id="deleteAll">
+        DELETE
+        FROM
+            book_shop.order_prod
+    </delete>
+</mapper>

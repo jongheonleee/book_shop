@@ -18,7 +18,6 @@
         where cate_code = #{cate_code}
     </select>
 
-    <!--  ??? order by? 분류가 같은 것들 정렬순서 지정해주고 싶으면 컬럼으로 주는지?  -->
     <!--  상위 카테고리의 하위 카테고리 선택  -->
     <select id="selectChildByParent" parameterType="string" resultType="FaqCateDto">
         <include refid="selectFromFaqCate"/>

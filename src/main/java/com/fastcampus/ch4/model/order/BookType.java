@@ -1,7 +1,7 @@
 package com.fastcampus.ch4.model.order;
 
 public enum BookType {
-    PRINTED("printed"),
+    PRINTED("paper"),
     EBOOK("ebook");
 
     private final String code;

@@ -79,12 +79,12 @@ public class CartProductDaoImpl implements CartProductDao {
     }
 
     @Override
-    public int updateItemQuantity(Integer cartSeq, String isbn, String prod_type_code, Boolean isPlus, String userId) {
+    public int updateItemQuantity(Integer cartSeq, String isbn, String prod_type_code, Integer itemQuantity, String userId) {
         Map map = new HashMap();
         map.put("cart_seq", cartSeq);
         map.put("isbn", isbn);
         map.put("prod_type_code", prod_type_code);
-        map.put("isPlus", isPlus);
+        map.put("item_quan", itemQuantity);
         map.put("userId", userId);
         return sqlSession.update(namespace + "updateItemQuantity", map);
     }

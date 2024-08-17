@@ -52,12 +52,13 @@ public class CartServiceUpdateItemQuantityTest {
     private CartProductDao cartProductDao;
 
     private final String TEST_USER = "CAPR_UP_ITEM_QUAN";
-    private final String TEST_ISBN = "9791162245408";
+    private final String TEST_ISBN = "1000000000119";
     private final String PRINTED = BookType.PRINTED.getCode();
     private final int FAIL = 0;
     private final int SUCCESS = 1;
     private final boolean PLUS = true;
     private final boolean MINUS = false;
+    private final int ZERO = 0;
     private final int SINGLE = 1;
     private final int FIVE = 5;
 
@@ -95,7 +96,7 @@ public class CartServiceUpdateItemQuantityTest {
         // 3개의 매개변수가 무조건 들어와야 한다. => 3개가 없으면 IllegalArgumentException
         // cartSeq
         try {
-            int updateResult = cartService.updateItemQuantity(null, TEST_ISBN, PRINTED, PLUS, TEST_USER);
+            int updateResult = cartService.updateItemQuantity(null, TEST_ISBN, PRINTED, FIVE, TEST_USER);
             assertEquals(SUCCESS, updateResult);
             fail();
         } catch (IllegalArgumentException iae) {
@@ -104,7 +105,7 @@ public class CartServiceUpdateItemQuantityTest {
         // isbn
         try {
             // 3개의 매개변수가 무조건 들어와야 한다. => 3개가 없으면 IllegalArgumentException
-            int updateResult = cartService.updateItemQuantity(cartSeq, null, PRINTED, PLUS, TEST_USER);
+            int updateResult = cartService.updateItemQuantity(cartSeq, null, PRINTED, FIVE, TEST_USER);
             assertEquals(SUCCESS, updateResult);
             fail();
         } catch (IllegalArgumentException iae) {
@@ -113,7 +114,7 @@ public class CartServiceUpdateItemQuantityTest {
         // prod_type_code
         try {
             // 3개의 매개변수가 무조건 들어와야 한다. => 3개가 없으면 IllegalArgumentException
-            int updateResult = cartService.updateItemQuantity(cartSeq, TEST_ISBN, null, PLUS, TEST_USER);
+            int updateResult = cartService.updateItemQuantity(cartSeq, TEST_ISBN, null, FIVE, TEST_USER);
             assertEquals(SUCCESS, updateResult);
             fail();
         } catch (IllegalArgumentException iae) {
@@ -139,107 +140,134 @@ public class CartServiceUpdateItemQuantityTest {
         String FAIL_TEST_ISBN = "실패하는 ISBN";
         String FAIL_BOOK_TYPE = "NOTYPE";
 
-        int updateResult = cartService.updateItemQuantity(FAIL_CART_SEQ, FAIL_TEST_ISBN, FAIL_BOOK_TYPE, PLUS, TEST_USER);
+        int updateResult = cartService.updateItemQuantity(FAIL_CART_SEQ, FAIL_TEST_ISBN, FAIL_BOOK_TYPE, FIVE, TEST_USER);
         assertEquals(SUCCESS, updateResult);
         fail();
     }
+//
+////        - 받아온 매개변수를 통해서 item_quan 을 추가할지 감소시킬지 결정한다.
+////                -- 추가
+////                -- 감소
+////                --- 감소시킬 때 1이하의 숫자이면 무시한다.
+//    @Test
+//    public void isPlus에따라서변경하기() {
+//        // cartSeq 를 찾는다.
+//        Integer cartSeq = cartService.createOrGetCart(null, TEST_USER);
+//        assertNotNull(cartSeq);
+//
+//        // 비교하기 위한 초기상태 조회
+//        List<CartProductDto> initItemList = cartProductDao.selectListByCartSeq(cartSeq);
+//        CartProductDto initCartProductDto = initItemList.get(0);
+//        Integer initQuantity = initCartProductDto.getItem_quan();
+//
+//
+//        // item_quan 을 +1 해준다.
+//        int initUpdateResult = cartService.updateItemQuantity(cartSeq, TEST_ISBN, PRINTED, PLUS, TEST_USER);
+//        assertEquals(SUCCESS, initUpdateResult);
+//
+//        // 비교하기 위한 이후상태 조회
+//        List<CartProductDto> secondItemList = cartProductDao.selectListByCartSeq(cartSeq);
+//        assertFalse(secondItemList.isEmpty());
+//        CartProductDto secondCartProductDto = secondItemList.get(0);
+//        Integer secondQuantity = secondCartProductDto.getItem_quan();
+//
+//        // 비교
+//        assertEquals(initQuantity + 1, secondQuantity.intValue());
+//
+//        // 5회 증가
+//        for (int i = 0; i < FIVE; i++) {
+//            // item_quan 을 +1 해준다.
+//            int fiveUpdateResult = cartService.updateItemQuantity(cartSeq, TEST_ISBN, PRINTED, PLUS, TEST_USER);
+//            assertEquals(SUCCESS, fiveUpdateResult);
+//        }
+//
+//        // 비교를 위한 이후상태 조회
+//        List<CartProductDto> thirdItemList = cartProductDao.selectListByCartSeq(cartSeq);
+//        assertFalse(thirdItemList.isEmpty());
+//        CartProductDto thirdCartProductDto = thirdItemList.get(0);
+//        Integer thirdQuantity = thirdCartProductDto.getItem_quan();
+//
+//        assertEquals(secondQuantity + FIVE, thirdQuantity.intValue());
+//
+//
+//        // -1
+//        // item_quan 을 -1 해준다.
+//        int fourthResult = cartService.updateItemQuantity(cartSeq, TEST_ISBN, PRINTED, MINUS, TEST_USER);
+//        assertEquals(SUCCESS, fourthResult);
+//
+//        // 비교를 위한 이후상태 조회
+//        List<CartProductDto> fourthItemList = cartProductDao.selectListByCartSeq(cartSeq);
+//        assertFalse(fourthItemList.isEmpty());
+//        CartProductDto fourthCartProductDto = fourthItemList.get(0);
+//        Integer fourthQuantity = fourthCartProductDto.getItem_quan();
+//        assertEquals(thirdQuantity - 1, fourthQuantity.intValue());
+//    }
+//
+//    @Test(expected = IllegalArgumentException.class)
+//    public void 감소시킬때1이하이면예외처리 () {
+//        // cartSeq 를 찾는다.
+//        Integer cartSeq = cartService.createOrGetCart(null, TEST_USER);
+//        assertNotNull(cartSeq);
+//
+//        // 비교를 위한 cartProduct 조회
+//        List<CartProductDto> initItemList = cartProductDao.selectOneList(cartSeq, TEST_ISBN, PRINTED, TEST_USER);
+//        assertFalse(initItemList.isEmpty());
+//        CartProductDto initCartProductDto = initItemList.get(0);
+//        Integer initQuantity = initCartProductDto.getItem_quan();
+//
+//        // item_quan 을 확인하고 1로 만든다.
+//        if (initQuantity > 1) {
+//            int repeat = initQuantity - 1;
+//
+//            for (int i = 0; i < repeat; i++) {
+//                int minusResult = cartService.updateItemQuantity(cartSeq, TEST_ISBN, PRINTED, MINUS, TEST_USER);
+//                assertEquals(SUCCESS, minusResult);
+//            }
+//        }
+//        // 비교를 위한 cartProduct 조회
+//        List<CartProductDto> secondItemList = cartProductDao.selectOneList(cartSeq, TEST_ISBN, PRINTED, TEST_USER);
+//        assertFalse(secondItemList.isEmpty());
+//        CartProductDto secondCartProductDto = secondItemList.get(0);
+//        Integer secondQuantity = secondCartProductDto.getItem_quan();
+//        assertEquals(SINGLE, secondQuantity.intValue());
+//
+//        // MINUS 를 해준다.
+//        int minusResult = cartService.updateItemQuantity(cartSeq, TEST_ISBN, PRINTED, MINUS, TEST_USER);
+//        assertEquals(SUCCESS, minusResult);
+//
+//        // item_quan == 1 이면 통과
+//        // 비교를 위한 cartProduct 조회
+//        List<CartProductDto> thirdItemList = cartProductDao.selectOneList(cartSeq, TEST_ISBN, PRINTED, TEST_USER);
+//        assertFalse(thirdItemList.isEmpty());
+//        CartProductDto thirdCartProductDto = thirdItemList.get(0);
+//        Integer thirdQuantity = thirdCartProductDto.getItem_quan();
+//        assertEquals(SINGLE, thirdQuantity.intValue());
+//    }
 
-//        - 받아온 매개변수를 통해서 item_quan 을 추가할지 감소시킬지 결정한다.
-//                -- 추가
-//                -- 감소
-//                --- 감소시킬 때 1이하의 숫자이면 무시한다.
     @Test
-    public void isPlus에따라서변경하기() {
-        // cartSeq 를 찾는다.
+    public void 업데이트개수가1이하면무시하고1을반환한다 () {
         Integer cartSeq = cartService.createOrGetCart(null, TEST_USER);
         assertNotNull(cartSeq);
 
-        // 비교하기 위한 초기상태 조회
-        List<CartProductDto> initItemList = cartProductDao.selectListByCartSeq(cartSeq);
-        CartProductDto initCartProductDto = initItemList.get(0);
-        Integer initQuantity = initCartProductDto.getItem_quan();
-
-
-        // item_quan 을 +1 해준다.
-        int initUpdateResult = cartService.updateItemQuantity(cartSeq, TEST_ISBN, PRINTED, PLUS, TEST_USER);
-        assertEquals(SUCCESS, initUpdateResult);
-
-        // 비교하기 위한 이후상태 조회
-        List<CartProductDto> secondItemList = cartProductDao.selectListByCartSeq(cartSeq);
-        assertFalse(secondItemList.isEmpty());
-        CartProductDto secondCartProductDto = secondItemList.get(0);
-        Integer secondQuantity = secondCartProductDto.getItem_quan();
-
-        // 비교
-        assertEquals(initQuantity + 1, secondQuantity.intValue());
-
-        // 5회 증가
-        for (int i = 0; i < FIVE; i++) {
-            // item_quan 을 +1 해준다.
-            int fiveUpdateResult = cartService.updateItemQuantity(cartSeq, TEST_ISBN, PRINTED, PLUS, TEST_USER);
-            assertEquals(SUCCESS, fiveUpdateResult);
-        }
-
-        // 비교를 위한 이후상태 조회
-        List<CartProductDto> thirdItemList = cartProductDao.selectListByCartSeq(cartSeq);
-        assertFalse(thirdItemList.isEmpty());
-        CartProductDto thirdCartProductDto = thirdItemList.get(0);
-        Integer thirdQuantity = thirdCartProductDto.getItem_quan();
-
-        assertEquals(secondQuantity + FIVE, thirdQuantity.intValue());
-
-
-        // -1
-        // item_quan 을 -1 해준다.
-        int fourthResult = cartService.updateItemQuantity(cartSeq, TEST_ISBN, PRINTED, MINUS, TEST_USER);
-        assertEquals(SUCCESS, fourthResult);
-
-        // 비교를 위한 이후상태 조회
-        List<CartProductDto> fourthItemList = cartProductDao.selectListByCartSeq(cartSeq);
-        assertFalse(fourthItemList.isEmpty());
-        CartProductDto fourthCartProductDto = fourthItemList.get(0);
-        Integer fourthQuantity = fourthCartProductDto.getItem_quan();
-        assertEquals(thirdQuantity - 1, fourthQuantity.intValue());
+        int updateItemQuantity = cartService.updateItemQuantity(cartSeq, TEST_ISBN, PRINTED, ZERO, TEST_USER);
+        assertEquals(SINGLE, updateItemQuantity);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void 감소시킬때1이하이면예외처리 () {
-        // cartSeq 를 찾는다.
+    @Test
+    public void 개수업데이트 () {
         Integer cartSeq = cartService.createOrGetCart(null, TEST_USER);
         assertNotNull(cartSeq);
 
-        // 비교를 위한 cartProduct 조회
-        List<CartProductDto> initItemList = cartProductDao.selectOneList(cartSeq, TEST_ISBN, PRINTED, TEST_USER);
-        assertFalse(initItemList.isEmpty());
-        CartProductDto initCartProductDto = initItemList.get(0);
-        Integer initQuantity = initCartProductDto.getItem_quan();
-
-        // item_quan 을 확인하고 1로 만든다.
-        if (initQuantity > 1) {
-            int repeat = initQuantity - 1;
-
-            for (int i = 0; i < repeat; i++) {
-                int minusResult = cartService.updateItemQuantity(cartSeq, TEST_ISBN, PRINTED, MINUS, TEST_USER);
-                assertEquals(SUCCESS, minusResult);
-            }
+        // 개수 올리기
+        for (int updateCount = 1; updateCount < FIVE + 1; updateCount++) {
+            int updateItemQuantity = cartService.updateItemQuantity(cartSeq, TEST_ISBN, PRINTED, updateCount, TEST_USER);
+            assertEquals(updateCount, updateItemQuantity);
         }
-        // 비교를 위한 cartProduct 조회
-        List<CartProductDto> secondItemList = cartProductDao.selectOneList(cartSeq, TEST_ISBN, PRINTED, TEST_USER);
-        assertFalse(secondItemList.isEmpty());
-        CartProductDto secondCartProductDto = secondItemList.get(0);
-        Integer secondQuantity = secondCartProductDto.getItem_quan();
-        assertEquals(SINGLE, secondQuantity.intValue());
 
-        // MINUS 를 해준다.
-        int minusResult = cartService.updateItemQuantity(cartSeq, TEST_ISBN, PRINTED, MINUS, TEST_USER);
-        assertEquals(SUCCESS, minusResult);
+        // 검증하기
+        List<CartProductDto> selectedList =  cartProductDao.selectOneList(cartSeq, TEST_ISBN, PRINTED, TEST_USER);
+        CartProductDto selectedDto = selectedList.get(0);
 
-        // item_quan == 1 이면 통과
-        // 비교를 위한 cartProduct 조회
-        List<CartProductDto> thirdItemList = cartProductDao.selectOneList(cartSeq, TEST_ISBN, PRINTED, TEST_USER);
-        assertFalse(thirdItemList.isEmpty());
-        CartProductDto thirdCartProductDto = thirdItemList.get(0);
-        Integer thirdQuantity = thirdCartProductDto.getItem_quan();
-        assertEquals(SINGLE, thirdQuantity.intValue());
+        assertEquals(FIVE, selectedDto.getItem_quan().intValue());
     }
 }

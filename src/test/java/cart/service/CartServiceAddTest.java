@@ -50,7 +50,7 @@ public class CartServiceAddTest {
     private final String PRINTED_BOOK = BookType.PRINTED.getCode();
     private final String E_BOOK = BookType.EBOOK.getCode();
     private final int SUCCESS = 1;
-    private final String TEST_ISBN_1 = "9791162245408";
+    private final String TEST_ISBN_1 = "1000000000005";
     private final int SINGLE = 1;
     private final int MULTIPLE = 5;
 
@@ -71,7 +71,7 @@ public class CartServiceAddTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void 잘못된isbn () {
+    public void 잘못된isbn () throws Exception {
         final String FAIL_ISBN = "잘못된번호";
 
         // create cartDto
@@ -87,7 +87,7 @@ public class CartServiceAddTest {
     }
 
     @Test
-    public void 비회원add () {
+    public void 비회원add () throws Exception {
         // 비회원 생성
         // cartService.add()
         Integer addSeq = cartService.add(null, TEST_ISBN_1, PRINTED_BOOK, null);
@@ -105,7 +105,7 @@ public class CartServiceAddTest {
     }
 
     @Test
-    public void 비회원장바구니있음 () {
+    public void 비회원장바구니있음 () throws Exception {
         // 비회원 생성
         // cartService.add()
         Integer addSeq = cartService.add(null, TEST_ISBN_1, PRINTED_BOOK, null);
@@ -134,7 +134,7 @@ public class CartServiceAddTest {
     }
 
     @Test
-    public void 회원add () {
+    public void 회원add () throws Exception {
         // 회원 장바구니 생성
         // cartService.add()
         Integer addSeq = cartService.add(null, TEST_ISBN_1, PRINTED_BOOK, TEST_USER);
@@ -150,7 +150,7 @@ public class CartServiceAddTest {
     }
 
     @Test
-    public void 동일도서상품추가 () {
+    public void 동일도서상품추가 () throws Exception {
         // give
         // 장바구니 생성
         Integer addSeq = cartService.add(null, TEST_ISBN_1, PRINTED_BOOK, TEST_USER);

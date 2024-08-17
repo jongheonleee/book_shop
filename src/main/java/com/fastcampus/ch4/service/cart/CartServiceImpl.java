@@ -5,12 +5,11 @@ import com.fastcampus.ch4.dao.cart.CartProductDao;
 import com.fastcampus.ch4.dto.cart.CartDto;
 import com.fastcampus.ch4.dto.cart.CartProductDetailDto;
 import com.fastcampus.ch4.dto.cart.CartProductDto;
-import com.fastcampus.ch4.dto.order.temp.TempBookDto;
+import com.fastcampus.ch4.dto.item.BookDto;
 import com.fastcampus.ch4.model.cart.PriceHandler;
 import com.fastcampus.ch4.model.cart.UserType;
 import com.fastcampus.ch4.model.order.BookType;
-import com.fastcampus.ch4.service.order.fake.FakeBookServiceImpl;
-import com.fastcampus.ch4.service.order.fake.TempBookService;
+import com.fastcampus.ch4.service.item.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.stereotype.Service;
@@ -26,16 +25,15 @@ public class CartServiceImpl implements CartService {
     CartDao cartDao;
     @Autowired
     CartProductDao cartProductDao;
-
-    // bookService 연결 시 변경
-    private TempBookService bookService = new FakeBookServiceImpl();
+    @Autowired
+    BookService bookService;
 
     final static int BASIC_ITEM_QUANTITY = 1;
     final static int SUCCESS_CODE = 1;
     final static int FAIL_CODE = 0;
 
     @Override
-    public Integer add(Integer cart_seq, String isbn, String prod_type_code, String userId) {
+    public Integer add(Integer cart_seq, String isbn, String prod_type_code, String userId) throws Exception {
         try {
             Integer cartSeq = createOrGetCart(cart_seq, userId);
             int insertedRowCount = addCartProduct(cartSeq, isbn, prod_type_code, userId);
@@ -99,8 +97,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public int addCartProduct(Integer cartSeq, String isbn, String prod_type_code, String userId) {
-        TempBookDto selectedBookDto = bookService.getBookByIsbn(isbn);
+    public int addCartProduct(Integer cartSeq, String isbn, String prod_type_code, String userId) throws Exception {
+        BookDto selectedBookDto = bookService.read(isbn);
         // 매개변수에서 받아온 isbn 이 없을 때
         if (selectedBookDto == null) {
             throw new IllegalArgumentException("유효하지 않은 도서입니다.");
@@ -147,6 +145,7 @@ public class CartServiceImpl implements CartService {
         List<CartProductDetailDto> cartProductList = cartProductDao.selectListDetailByCartSeq(targetCartSeq);
         // 정보를 셋팅해줘야 한다.
         for (CartProductDetailDto cpDetailDto : cartProductList) {
+            System.out.println("cpDetailDto = " + cpDetailDto);
             Integer basicPrice = null;
             Double benefitPercent = null;
             Integer benefitPrice = null;
@@ -171,8 +170,12 @@ public class CartServiceImpl implements CartService {
                 benefitPrice = PriceHandler.eBookBenefitPrice(cpDetailDto);
                 pointPrice = PriceHandler.eBookBenefitPrice(cpDetailDto);
             }
+            // 기본값
+            benefitPrice = benefitPrice != null ? benefitPrice : 0;
             // 상품 판매가
             salePrice = basicPrice - benefitPrice;
+
+            benefitPercent = benefitPercent / 100;
 
             cpDetailDto.setBasicPrice(basicPrice);
             cpDetailDto.setBene_pric(benefitPrice);
@@ -184,9 +187,11 @@ public class CartServiceImpl implements CartService {
         return cartProductList;
     }
 
+
+    // update 된 itemQuantity 를 반환한다.
     @Override
-    public int updateItemQuantity(Integer cartSeq, String isbn, String prod_type_code, Boolean isPlus, String userId) {
-        if (cartSeq == null || isbn == null || prod_type_code == null || isPlus == null) {
+    public int updateItemQuantity(Integer cartSeq, String isbn, String prod_type_code, Integer itemQuantity, String userId) {
+        if (cartSeq == null || isbn == null || prod_type_code == null || itemQuantity == null) {
             throw new IllegalArgumentException("필수 매개변수를 입력해주세요");
         }
 
@@ -195,11 +200,21 @@ public class CartServiceImpl implements CartService {
             throw new IllegalArgumentException("없는 상품입니다.");
         }
         CartProductDto cartProudctDto = itemList.get(0);
+        int beforeQuantity = cartProudctDto.getItem_quan();
 
-        int updateResult = 0;
+        if (beforeQuantity <= 1 && itemQuantity <= 1) {
+            return 1;
+        }
 
         try {
-            updateResult = cartProductDao.updateItemQuantity(cartSeq, isbn, prod_type_code, isPlus, userId);
+            if (userId == null || userId.isEmpty()) {
+                userId = UserType.NON_MEMBERSHIP.getCode();
+            }
+            int updateResult = cartProductDao.updateItemQuantity(cartSeq, isbn, prod_type_code, itemQuantity, userId);
+
+            if (updateResult == SUCCESS_CODE) {
+                return itemQuantity;
+            }
         } catch (UncategorizedSQLException uncategorizedSQLException) {
             // Check if the error is caused by the check constraint violation
             if (uncategorizedSQLException.getCause() instanceof SQLException) {
@@ -212,6 +227,6 @@ public class CartServiceImpl implements CartService {
             throw uncategorizedSQLException;
         }
 
-        return updateResult;
+        return beforeQuantity;
     }
 }

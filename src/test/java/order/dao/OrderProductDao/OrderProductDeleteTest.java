@@ -51,7 +51,7 @@ public class OrderProductDeleteTest {
         assertNotNull(createdOrderDto);
 
         // 2. 상품 정보를 조회한다.
-        tempBookDto = bookService.getBookByIsbn(TEST_ISBN);
+        tempBookDto = bookService.read(TEST_ISBN);
         assertNotNull(tempBookDto);
 
         // 3. 주문 상품 생성

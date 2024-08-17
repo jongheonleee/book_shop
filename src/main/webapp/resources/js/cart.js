@@ -4,24 +4,29 @@ $(document).ready(function () {
         let quantityInput = $(this).siblings('.quantity-input');
         let quantity = parseInt(quantityInput.val());
 
-        let isPlus = $(this).data('isPlus');
         let cartSeq = $(this).data('cartSeq');
         let isbn = $(this).data('isbn');
         let prodCodeType = $(this).data('prod_code_type');
 
-        $.ajax({
-            url: '/ch4/cart/product/quantity',
-            type: 'PATCH',
-            data: {isPlus: isPlus, cart_seq: cartSeq, isbn: isbn, prod_type_code: prodCodeType},
-            success: function (response) {
-                quantityInput.val(quantity + 1);
-                updateTotalPrice($(this));
-                updateSummary();
-            },
-            error: function (xhr, status, error) {
-                console.error('수량 증가 요청 실패:', error);
-            }
-        });
+        quantityInput.val(quantity + 1);
+        updateTotalPrice($(this));
+        updateSummary();
+
+        // $.ajax({
+        //     url: '/ch4/cart/product/quantity',
+        //     type: 'POST',
+        //     // data: {updateItemQuantity: quantity, cart_seq: cartSeq, isbn: isbn, prod_type_code: prodCodeType},
+        //     data: JSON.stringify({updateItemQuantity: quantity, cart_seq: cartSeq, isbn: isbn, prod_type_code: prodCodeType}),
+        //     contentType: "application/json; charset=utf-8",
+        //     success: function (response) {
+        //         quantityInput.val(quantity + 1);
+        //         updateTotalPrice($(this));
+        //         updateSummary();
+        //     },
+        //     error: function (xhr, status, error) {
+        //         console.error('수량 증가 요청 실패:', error);
+        //     }
+        // });
     });
 
     // 수량 감소 버튼 클릭 이벤트

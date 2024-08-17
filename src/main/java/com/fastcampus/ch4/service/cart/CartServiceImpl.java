@@ -145,7 +145,6 @@ public class CartServiceImpl implements CartService {
         List<CartProductDetailDto> cartProductList = cartProductDao.selectListDetailByCartSeq(targetCartSeq);
         // 정보를 셋팅해줘야 한다.
         for (CartProductDetailDto cpDetailDto : cartProductList) {
-            System.out.println("cpDetailDto = " + cpDetailDto);
             Integer basicPrice = null;
             Double benefitPercent = null;
             Integer benefitPrice = null;
@@ -186,7 +185,6 @@ public class CartServiceImpl implements CartService {
 
         return cartProductList;
     }
-
 
     // update 된 itemQuantity 를 반환한다.
     @Override

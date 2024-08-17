@@ -227,4 +227,20 @@ public class CartServiceImpl implements CartService {
 
         return beforeQuantity;
     }
+
+    public int deleteCartProduct(Integer cartSeq, String isbn, String prod_type_code) {
+        if (cartSeq == null || (isbn == null || isbn.isEmpty()) || (prod_type_code == null || prod_type_code.isEmpty())) {
+            throw new IllegalArgumentException("필수 매개변수를 입력해주세요");
+        }
+
+        List<CartProductDto> itemList = cartProductDao.selectListByCartSeq(cartSeq);
+        if (itemList.isEmpty()) {
+            throw new IllegalArgumentException("없는 상품입니다.");
+        }
+
+        int deleteResult = cartProductDao.deleteOne(cartSeq, isbn, prod_type_code);
+        return deleteResult;
+
+
+    }
 }

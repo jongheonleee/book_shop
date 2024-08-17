@@ -199,5 +199,23 @@ public class CartController {
 
         return "redirect:/cart/list";
     }
+
+    @PostMapping("/product/delete")
+    public String deleteCartProduct(ItemInfoDto infoDto, HttpServletRequest request, Model model) {
+        // userId 추출하기
+        String userId;
+        // 회원 = session 에서 관리
+        HttpSession session = request.getSession();
+        userId = (String) session.getAttribute("userId");
+
+        Integer cartSeq = infoDto.getCartSeq();
+        String isbn = infoDto.getIsbn();
+        String prodTypeCode = infoDto.getProdTypeCode();
+
+        // delete
+        int deleteResult = cartService.deleteCartProduct(cartSeq, isbn, prodTypeCode);
+
+        return "redirect:/cart/list";
+    }
 }
 

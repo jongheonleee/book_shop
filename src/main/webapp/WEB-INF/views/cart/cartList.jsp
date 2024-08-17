@@ -47,7 +47,8 @@
                     <div class="item-details">
                         <p class="item-title">${item.title}</p>
                         <p class="item-sale-price">
-                            <span class="discount"><fmt:formatNumber type="number" maxFractionDigits="0" value="${item.bene_perc * 100}" />% </span>
+                            <span class="discount"><fmt:formatNumber type="number" maxFractionDigits="0"
+                                                                     value="${item.bene_perc * 100}"/>% </span>
 
                             <span class="sale-price">${item.salePrice}원 </span>
                             <span class="regular-price">${item.basicPrice}원 </span>
@@ -67,9 +68,12 @@
                                readonly>
                         <button type="submit" class="quantity-increase">+</button>
                     </form>
-                    <div class="item-remove">
+                    <form class="item-remove" action="<c:url value="/cart/product/delete"/>" method="POST">
+                        <input type="hidden" name="cartSeq" value="${item.cart_seq}">
+                        <input type="hidden" name="isbn" value="${item.isbn}">
+                        <input type="hidden" name="prodTypeCode" value="${item.prod_type_code}">
                         <button class="remove-button">X</button>
-                    </div>
+                    </form>
                 </div>
             </c:forEach>
         </c:otherwise>

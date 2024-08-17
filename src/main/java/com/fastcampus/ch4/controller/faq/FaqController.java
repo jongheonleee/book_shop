@@ -57,11 +57,12 @@ public class FaqController {
 
     @GetMapping("/list/{cateCode}")
     public String faqList(@PathVariable String cateCode, Model model, HttpServletRequest request) {
-        // session 객체 얻어서 관리자 여부 model에 담아 념겨주기
-//        HttpSession session = request.getSession(false);
-//        model.addAttribute("role", session == null ? "" : session.getAttribute("role"));
+        // session 객체 얻어서 관리자 여부 model에 담아 넘겨주기
+        HttpSession session = request.getSession(false);
+        model.addAttribute("role", session == null ? "" : session.getAttribute("role"));
 
-//        // role == admin인 경우 test 하려고 만듦
+        /*
+        // role == admin인 경우 test 하려고 만듦
         HttpSession session = request.getSession();
         String id = "110111";
         String role = "admin";
@@ -69,9 +70,9 @@ public class FaqController {
         session.setAttribute("role", role);
 
         model.addAttribute("role", session == null ? "" : session.getAttribute("role"));
+        */
 
         // 로그인이 안 되어있으면 로그인 페이지로 넘어가도록 해야겠다!! - 추가하기!
-
 
         // faq 전체 카테고리 리스트 model에 담아 넘겨주기
         model.addAttribute("faqCateTotalList", faqCateService.readAll());

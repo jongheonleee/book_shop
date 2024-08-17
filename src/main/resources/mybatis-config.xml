@@ -16,6 +16,7 @@
     <typeAlias alias="BookDto" type="com.fastcampus.ch4.dto.item.BookDto"/>
     <typeAlias alias="CategoryDto" type="com.fastcampus.ch4.dto.item.CategoryDto"/>
     <typeAlias alias="BookImageDto" type="com.fastcampus.ch4.dto.item.BookImageDto"/>
+    <typeAlias alias="BookSearchCondition" type="com.fastcampus.ch4.dto.item.BookSearchCondition"/>
     <!-- member  -->
 
     <typeAlias alias="TermtDto" type="com.fastcampus.ch4.dto.member.TermDto"/>

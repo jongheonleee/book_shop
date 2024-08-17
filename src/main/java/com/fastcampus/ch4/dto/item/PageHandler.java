@@ -1,31 +1,38 @@
 package com.fastcampus.ch4.dto.item;
 
 public class PageHandler {
+//    private int page; // 현재 페이지
+//    private int pageSize; // 한 페이지의 크기
+//    private String option; // 검색 옵션
+//    private String keyword; // 검색 키워드
+//    private String order_direction; //정렬방향
+//    private String order_criteria; //정렬기준
+    private BookSearchCondition bsc;
     private int totalCnt; // 총 게시물 개수
-    private int pageSize; // 한 페이지의 크기
     private int naviSize = 10; // 페이지 내비게이션의 크기
     private int totalPage; // 전체 페이지의 수
-    private int page; // 현재 페이지
     private int beginPage; // 내비게이션의 첫번째 페이지
     private int endPage; // 내비게이션의 마지막 페이지
     private boolean showPrev; // 이전 페이지로 이동하는 링크를 보여줄 것인지의 여부
     private boolean showNext; // 다음 페이지로 이동하는 링크를 보여줄 것인지의 여부
 
-    public PageHandler(int totalCnt, int page) {
-        this(totalCnt, page, 10);
-    }
-    public PageHandler(int totalCnt, int page, int pageSize) {
+    public PageHandler(int totalCnt, BookSearchCondition bsc) {
         this.totalCnt = totalCnt;
-        this.page = page;
-        this.pageSize = pageSize;
+        this.bsc = bsc;
+
+        doPaging(totalCnt, bsc);
+    }
+
+    public void doPaging(int totalCnt, BookSearchCondition bsc) {
 
 //        totalPage = totalCnt / pageSize + (totalCnt % pageSize == 0 ? 0 : 1);
-        totalPage = (int)Math.ceil((double)totalCnt / pageSize);
-        beginPage =  (page - 1) / naviSize * naviSize + 1;
+        totalPage = (int)Math.ceil((double)totalCnt / bsc.getPageSize());
+        beginPage =  (bsc.getPage() - 1) / naviSize * naviSize + 1;
         endPage = Math.min(beginPage + naviSize - 1, totalPage);
         showPrev = beginPage != 1;
         showNext = endPage != totalPage;
     }
+
 
     public int getTotalCnt() {
         return totalCnt;
@@ -33,14 +40,6 @@ public class PageHandler {
 
     public void setTotalCnt(int totalCnt) {
         this.totalCnt = totalCnt;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
     }
 
     public int getNaviSize() {
@@ -57,14 +56,6 @@ public class PageHandler {
 
     public void setTotalPage(int totalPage) {
         this.totalPage = totalPage;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
     }
 
     public int getBeginPage() {
@@ -99,9 +90,17 @@ public class PageHandler {
         this.showNext = showNext;
     }
 
+    public BookSearchCondition getBsc() {
+        return bsc;
+    }
+
+    public void setBsc(BookSearchCondition bsc) {
+        this.bsc = bsc;
+    }
+
     public void print() {
         System.out.println("totalPage=" + totalPage);
-        System.out.println("page = " + page);
+        System.out.println("page = " + bsc.getPage());
         System.out.print(showPrev ? "[PREV] " : "");
         for (int i = beginPage; i <= endPage; i++) {
             System.out.print(i + " ");
@@ -112,11 +111,10 @@ public class PageHandler {
     @Override
     public String toString() {
         return "PageHandler{" +
-                "totalCnt=" + totalCnt +
-                ", pageSize=" + pageSize +
+                "bsc=" + bsc +
+                ", totalCnt=" + totalCnt +
                 ", naviSize=" + naviSize +
                 ", totalPage=" + totalPage +
-                ", page=" + page +
                 ", beginPage=" + beginPage +
                 ", endPage=" + endPage +
                 ", showPrev=" + showPrev +

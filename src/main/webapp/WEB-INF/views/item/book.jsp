@@ -50,7 +50,7 @@
         <section class="product-overview">
             <div class="product-image">
                 <img id="imagePreview" src="${mode=='new' ? '' : bookDto.repre_img}" alt="책 표지" style="${mode=='new' ? 'display:none;' : ''}">
-                <input id="imageUrl" type="text" value="${mode=='new' ? '' : bookDto.repre_img}"
+                <input id="imageUrl" name="repre_img" type="text" value="${mode=='new' ? '' : bookDto.repre_img}"
                        style="${mode=='new' ? 'display:block;' : 'display:none;'}"
                        placeholder="이미지 URL을 입력하세요"
                        oninput="updateImagePreview()">

@@ -8,9 +8,7 @@ import com.fastcampus.ch4.domain.qa.PageHandler;
 import com.fastcampus.ch4.dto.global.CodeDto;
 import com.fastcampus.ch4.dto.qa.QaDto;
 import com.fastcampus.ch4.domain.qa.SearchCondition;
-import com.fastcampus.ch4.dto.qa.QaStateDto;
 import com.fastcampus.ch4.service.qa.QaService;
-import com.fastcampus.ch4.service.qa.QaServiceImp;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,13 +20,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -183,7 +179,7 @@ public class QaController {
         }
 
         // 삭제 성고하면 문의글 리스트로 이동
-        return "/qa/list";
+        return "redirect:/qa/list";
     }
 
     // (8) 유저 문의글 수정 페이지
@@ -217,7 +213,7 @@ public class QaController {
         }
 
         // 수정 성공하면 문의글 리스트로 이동
-        return "/qa/list";
+        return "redirect:/qa/list";
     }
 
     @GetMapping("/qa/list/{qa_stat_code}")

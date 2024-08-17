@@ -151,6 +151,7 @@ public class QaServiceImp implements QaService {
             System.out.println(e.getMessage());
             throw e;
         }
+        System.out.println("rowCnt = " + rowCnt);
         return rowCnt == 1;
     }
 

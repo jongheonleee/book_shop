@@ -40,7 +40,7 @@ public class QaServiceImpTest {
         // 코드 데이터 미리 넣기
     }
 
-//    @Test
+    @Test
     public void 데이터_넣기() {
         // (각 테스트 클래스에서 실행하기)
         // 카테고리 데이터 미리 넣기

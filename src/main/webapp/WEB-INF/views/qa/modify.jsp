@@ -129,6 +129,7 @@
 
 
         <!-- 제목 & 내용-->
+        <input name="qa_num" value="${qa.qa_num}" type="hidden">
         <input name="user_id" value="${qa.user_id}" type="hidden">
         <input id="category" name="qa_cate_num" type="hidden" placeholder="${qa.qa_cate_num}" value="${qa.qa_cate_num}" >
         <input name="title" type="text" placeholder="${qa.title}" value="${qa.title}"><br>

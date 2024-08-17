@@ -4,6 +4,7 @@ import com.fastcampus.ch4.domain.qa.SearchCondition;
 import com.fastcampus.ch4.dto.global.CodeDto;
 import com.fastcampus.ch4.dto.qa.QaDto;
 import com.fastcampus.ch4.dto.qa.QaStateDto;
+import com.fastcampus.ch4.dto.qa.ReplyDto;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,8 @@ public interface QaService {
 
     // (1) ⚙️ 특정 글 상세 조회(시퀀스라 테스트 하기 어려움)
     QaDto readDetail(int qaNum);
+
+    ReplyDto readReply(int qaNum);
 
     // (2) 글 목록 조회 - 페이징 처리, 페이징 처리 및 특정 상태
     List<QaDto> read(String userId);
@@ -37,6 +40,10 @@ public interface QaService {
 
     // (6) 글 수정
     boolean modify(String userId, QaDto dto, SearchCondition sc);
+
+    // 문의글에 답변 등록
+    @Transactional(rollbackFor = Exception.class)
+    boolean addReply(ReplyDto dto);
 
     List<QaStateDto> readAllState();
 

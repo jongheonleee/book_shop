@@ -3,11 +3,11 @@ package com.fastcampus.ch4.service.qa;
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.fastcampus.ch4.dao.qa.QaCategoryDaoImp;
 import com.fastcampus.ch4.dao.qa.QaDao;
-import com.fastcampus.ch4.dto.qa.QaCategoryDto;
+import com.fastcampus.ch4.dao.qa.ReplyDao;
 import com.fastcampus.ch4.dto.qa.QaDto;
 import com.fastcampus.ch4.domain.qa.SearchCondition;
+import com.fastcampus.ch4.dto.qa.ReplyDto;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,10 +28,14 @@ public class QaServiceImpTest {
     private QaDao dao;
 
     @Autowired
+    private ReplyDao replyDao;
+
+    @Autowired
     private QaService service;
 
     @Before
     public void 초기화() {
+        replyDao.deleteAll();
         dao.deleteAll();
         assertTrue(service != null);
 
@@ -49,6 +53,22 @@ public class QaServiceImpTest {
             QaDto dto = create(i);
             assertTrue(service.write("user1", dto));
         }
+
+        List<QaDto> selected = service.read("user1");
+        int i = 0;
+        for (QaDto dto : selected) {
+            if (i % 2 == 0) {
+                ReplyDto reply = createReply(dto.getQa_num());
+                assertTrue(service.addReply(reply));
+            }
+            i++;
+        }
+
+    }
+
+    @Test
+    public void 답변_데이터_넣기() {
+
     }
 
     /**
@@ -351,6 +371,19 @@ public class QaServiceImpTest {
         dto.setImg1("img1");
         dto.setImg2("img2");
         dto.setImg3("img3");
+        return dto;
+    }
+
+    private ReplyDto createReply(int qaNum) {
+        ReplyDto dto = new ReplyDto();
+        dto.setQa_num(qaNum);
+        dto.setWriter("admin1");
+        dto.setContent("답변입니다.");
+        dto.setCreted_at("2021-01-01");
+        dto.setComt("비고 사항입니다.");
+        dto.setReg_date("2021-01-01");
+        dto.setUp_date("2021-01-01");
+        dto.setUp_id("admin1");
         return dto;
     }
 }

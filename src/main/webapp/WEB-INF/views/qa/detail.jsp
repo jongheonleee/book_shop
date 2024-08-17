@@ -168,11 +168,11 @@
         <h1>안녕하세요! 해당 문의글에 대한 답변입니다.</h1>
 
         <div class="nav-item">
-            <span>운영자1</span>
-            <span>작성일자 : 2024.05.07</span>
+            <span>${reply.writer}</span>
+            <span>${reply.creted_at}</span>
         </div>
     </div>
-    <div>"성공은 영원하지 않으며, 실패도 치명적이지 않다. 중요한 것은 계속 나아가는 용기다."</div>
+    <div>${reply.content}</div>
 </div>
 
 <script>

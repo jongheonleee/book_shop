@@ -25,6 +25,7 @@
         <li><a href="<c:url value='/cscenter/faq/list/00'/>">FAQ</a></li>
         <li><a href="<c:url value='${loginOutLink}'/>">${loginOut}</a></li>
         <li><a href="<c:url value='/register/add'/>">Sign in</a></li>
+        <li><a href="<c:url value='/cart/list'/>"><i class="fas fa-cart-plus"></i></a></li>
         <li><a href=""><i class="fa fa-search"></i></a></li>
     </ul>
 </div>

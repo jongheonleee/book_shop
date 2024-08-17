@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page session="false" %>
 <html>
 <head>
@@ -46,7 +47,8 @@
                     <div class="item-details">
                         <p class="item-title">${item.title}</p>
                         <p class="item-sale-price">
-                            <span class="discount">${item.bene_perc * 100}% </span>
+                            <span class="discount"><fmt:formatNumber type="number" maxFractionDigits="0" value="${item.bene_perc * 100}" />% </span>
+
                             <span class="sale-price">${item.salePrice}원 </span>
                             <span class="regular-price">${item.basicPrice}원 </span>
                             <span class="reward-points">(${item.point_pric}P)</span>
@@ -85,7 +87,7 @@
         </c:when>
         <c:otherwise>
             <div class="summary-header">
-                <button class="btn-later">나중에 주문</button>
+                <button class="btn-later" onclick="location.href='<c:url value='/book/list'/>'">나중에 주문</button>
                 <button class="btn-order">주문하기</button>
             </div>
             <div class="summary-content">

@@ -9,6 +9,7 @@ import com.fastcampus.ch4.dto.order.temp.TempBookDto;
 import com.fastcampus.ch4.model.cart.PriceHandler;
 import com.fastcampus.ch4.model.order.BookType;
 import com.fastcampus.ch4.service.cart.CartService;
+import com.fastcampus.ch4.service.item.BookService;
 import com.fastcampus.ch4.service.order.fake.FakeBookServiceImpl;
 import com.fastcampus.ch4.service.order.fake.TempBookService;
 import org.junit.After;
@@ -147,7 +148,7 @@ public class CartServiceGetItemListTest {
         for (CartProductDetailDto item : itemList) {
             // targetBookDto 기준으로 가격정보를 하나씩 계산한다.
             String targetIsbn = item.getIsbn();
-            TempBookDto targetBookDto = bookService.getBookByIsbn(targetIsbn);
+            TempBookDto targetBookDto = bookService.read(targetIsbn);
 
             // 가격 정보 셋팅하기
             String targetProdCodeType = item.getProd_type_code();

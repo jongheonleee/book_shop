@@ -71,7 +71,7 @@ public class OrderProductInsertTest {
         assertNotNull(createdOrderDto);
 
         // 2. 상품 정보를 조회한다.
-        TempBookDto bookDto = bookService.getBookByIsbn(TEST_ISBN);
+        TempBookDto bookDto = bookService.read(TEST_ISBN);
         assertNotNull(bookDto);
 
         // do
@@ -132,7 +132,7 @@ public class OrderProductInsertTest {
         assertNotNull(createdOrderDto);
 
         // 2. 상품 정보 조회
-        TempBookDto bookDto = bookService.getBookByIsbn(TEST_ISBN);
+        TempBookDto bookDto = bookService.read(TEST_ISBN);
         assertNotNull(bookDto);
 
         // 3. 주문 상품 생성한다.
@@ -190,7 +190,7 @@ public class OrderProductInsertTest {
         assertNotNull(createdOrderDto);
 
         // 2. 상품 정보 조회
-        TempBookDto bookDto = bookService.getBookByIsbn(TEST_ISBN);
+        TempBookDto bookDto = bookService.read(TEST_ISBN);
         assertNotNull(bookDto);
 
         // 3. 주문 상품 생성 및 Insert

@@ -58,9 +58,17 @@ $(function() {
         const selectedProductType = $('input[name="product_type"]:checked').val();
         const isbnValue = $('input[name="isbn"]').val();
         // 주문파트와 연결할 때 URL만 바꾸면됨
-        const url = action === 'purchase' ? "<c:url value='/book/list'/>" : "<c:url value='/book/list'/>";
+        const baseUrl = action === 'purchase' ? "<c:url value='/book/list'/>" : "/ch4/cart/add";
+        // const fullUrl = `${baseUrl}?product_type=${selectedProductType}&isbn=${isbnValue}`;
+        const fullUrl = `${baseUrl}`;
 
-        location.href = `${url}?product_type=${selectedProductType}&isbn=${isbnValue}`;
+        const form = $('#form');
+        if (form.length) {
+            form.attr({
+                action : fullUrl,
+                method : "post"
+            }).submit();
+        }
     };
 
     // 구매하기 버튼

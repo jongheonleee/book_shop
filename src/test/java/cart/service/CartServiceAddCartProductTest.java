@@ -43,7 +43,7 @@ public class CartServiceAddCartProductTest {
     private final String PRINTED = BookType.PRINTED.getCode();
     private final String EBOOK = BookType.EBOOK.getCode();
 
-    private final String TEST_ISBN = "9791162245408";
+    private final String TEST_ISBN = "1000000000005";
     private final String TEST_ISBN_NON_EBOOK = "9788994492032";
 
     private final int SUCCESS = 1;
@@ -52,7 +52,7 @@ public class CartServiceAddCartProductTest {
     // 잘못된 isbn 으로 추가시도
     // isbn 과 userId 는 있다고 가정
     @Test(expected = IllegalArgumentException.class)
-    public void 장바구니서비스_잘못된isbn () {
+    public void 장바구니서비스_잘못된isbn () throws Exception {
         final String FAIL_ISBN = "FAIL_ISBN";
 
         CartDto cartDto = CartDto.create(TEST_USER);
@@ -70,7 +70,7 @@ public class CartServiceAddCartProductTest {
 
 
     @Test
-    public void 장바구니서비스_구매수량기본값1 () {
+    public void 장바구니서비스_구매수량기본값1 () throws Exception {
         final int BASIC_QUANTITY = 1;
 
         CartDto cartDto = CartDto.create(TEST_USER);
@@ -91,7 +91,7 @@ public class CartServiceAddCartProductTest {
     => return 값 = 추가한 것으로 취급한다.
      */
     @Test
-    public void 장바구니서비스_같은도서끼리는추가되지않음 () {
+    public void 장바구니서비스_같은도서끼리는추가되지않음 () throws Exception {
         final int REPEAT = 5;
 
         // 장바구니 생성

@@ -30,8 +30,8 @@
                 <div class="empty-cart-message">
                     <p class="message">장바구니에 담긴 상품이 없습니다.</p>
                     <p class="sub-message">로그인하고 다양한 혜택을 받아보세요!</p>
-                    <button class="login-button" onclick="location.href='<c:url value='/login'/>';">로그인하기</button>
-                    <button class="btn-later">돌아가기</button>
+                    <button class="login-button" onclick="location.href='<c:url value='/member/login'/>'">로그인하기</button>
+                    <button class="btn-later" onclick="location.href='<c:url value='/'/>'">돌아가기</button>
                 </div>
             </div>
         </c:when>

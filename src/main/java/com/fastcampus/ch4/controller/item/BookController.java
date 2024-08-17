@@ -2,6 +2,7 @@ package com.fastcampus.ch4.controller.item;
 
 import com.fastcampus.ch4.dto.item.BookDto;
 import com.fastcampus.ch4.dto.item.PageHandler;
+import com.fastcampus.ch4.dto.item.BookSearchCondition;
 import com.fastcampus.ch4.service.item.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,10 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.awt.print.Book;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/book")
@@ -114,36 +112,21 @@ public class BookController {
     }
 
     @GetMapping("list")
-    public String list(Integer page, Integer pageSize, String order_criteria, String order_direction, Model m, HttpServletRequest request) {
+    public String list(BookSearchCondition bsc, Model m, HttpServletRequest request) {
         // 로그인 유효성 검증
-
-        // page와 pageSize 검증
-        if(page == null) page = 1;
-        if(pageSize == null) pageSize = 10;
-        if(order_criteria == null) order_criteria = "book_reg_date"; // 기본 정렬 기준 설정
-        if(order_direction == null) order_direction = "DESC"; // 기본 정렬 방향 설정
 
         try {
             // 총 게시물 개수
-            int totalCnt = bookService.getCount();
-            PageHandler pageHandler = new PageHandler(totalCnt, page, pageSize);
-
-            // 맵에 page, offset 담기
-            Map map = new HashMap();
-            map.put("offset", (page-1) * pageSize);
-            map.put("pageSize", pageSize);
-            //TODO - 정렬기준주고 selectPage쿼리 고치기
-            map.put("order_criteria", order_criteria);
-            map.put("order_direction", order_direction);
+            int totalCnt = bookService.getSearchResultCnt(bsc);
+            PageHandler pageHandler = new PageHandler(totalCnt, bsc);
 
             // bookService 호출
-            List<BookDto> list = bookService.getPage(map);
+            List<BookDto> list = bookService.getSearchResultPage(bsc);
 
-            // 도서 리스트 뷰에 list, pageHandler, order_criteria, order_direction전달
+            // 도서 리스트 뷰에 list, pageHandler전달
             m.addAttribute("list", list);
             m.addAttribute("ph", pageHandler);
-            m.addAttribute("order_criteria", order_criteria);
-            m.addAttribute("order_direction", order_direction);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

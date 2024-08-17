@@ -32,7 +32,6 @@ public class BookServiceImplTest {
                     "cate_num" + i,              // cate_num
                     "pub_name" + i,              // pub_name
                     "book_title" + i,            // title
-                    "pub_num" + i,               // pub_num
                     "2024-08-07 15:35:58",       // pub_date
                     "Available",                 // sale_stat
                     i,                           // sale_vol
@@ -62,6 +61,8 @@ public class BookServiceImplTest {
                     i,                           // papr_disc
                     i,                           // e_disc
                     "whol_layr_name" + i,        // whol_layr_name
+                    "wr_cb_num" + i,             // wr_cb_num
+                    "trl_cb_num" + i,            // trl_cb_num
                     "wr_name" + i,               // wr_name
                     "ts_name" + i                // trl_name
             );
@@ -76,6 +77,7 @@ public class BookServiceImplTest {
         assertTrue(bookService.getCount() == 0);
         writeTestData(250);
         //카운트
+        assertTrue(bookService.getCount() == 250);
     }
 
     // 전체 카운팅
@@ -127,7 +129,46 @@ public class BookServiceImplTest {
         assertTrue(bookService.getCount() == 0);
 
         // 1개 추가
-        writeTestData(1);
+        BookDto bookDto = new BookDto(
+                "isbn",                  // isbn
+                "cate_num",              // cate_num
+                "pub_name",              // pub_name
+                "book_title",            // title
+                "2024-08-07 15:35:58",       // pub_date
+                "Available",                 // sale_stat
+                1,                           // sale_vol
+                1,                           // papr_pric
+                5.0,                         // e_pric
+                5.0,                         // papr_point
+                5.0,                         // e_point
+                1,                           // tot_page_num
+                1,                           // tot_book_num
+                "",                          // sale_com
+                "",                          // cont
+                4.5,                         // rating
+                "",                          // info
+                "",                          // intro_award
+                "",                          // rec
+                "",                          // pub_review
+                1,                           // pre_start_page
+                1,                           // pre_end_page
+                "",                          // ebook_url
+                new Date(),                  // book_reg_date
+                "test",                      // regi_id
+                new Date(),                  // reg_date
+                "test",                      // reg_id
+                new Date(),                  // up_date
+                "test",                      // up_id
+                "repre_img",             // repre_img_url
+                1,                           // papr_disc
+                1,                           // e_disc
+                "whol_layr_name",        // whol_layr_name
+                "wr_cb_num",             // wr_cb_num
+                "trl_cb_num",            // trl_cb_num
+                "wr_name",               // wr_name
+                "ts_name"                // trl_name
+        );
+        assertTrue(bookService.write(bookDto) == 1);
 
         // 잘못된 isbn주고 삭제
         assertTrue(bookService.remove(bookService.getAllBookList().get(0).getIsbn() + 111) == 0);
@@ -142,7 +183,46 @@ public class BookServiceImplTest {
         assertTrue(bookService.getCount() == 0);
 
         // 1개 추가
-        writeTestData(1);
+        BookDto bookDto = new BookDto(
+                "isbn",                  // isbn
+                "cate_num",              // cate_num
+                "pub_name",              // pub_name
+                "book_title",            // title
+                "2024-08-07 15:35:58",       // pub_date
+                "Available",                 // sale_stat
+                1,                           // sale_vol
+                1,                           // papr_pric
+                5.0,                         // e_pric
+                5.0,                         // papr_point
+                5.0,                         // e_point
+                1,                           // tot_page_num
+                1,                           // tot_book_num
+                "",                          // sale_com
+                "",                          // cont
+                4.5,                         // rating
+                "",                          // info
+                "",                          // intro_award
+                "",                          // rec
+                "",                          // pub_review
+                1,                           // pre_start_page
+                1,                           // pre_end_page
+                "",                          // ebook_url
+                new Date(),                  // book_reg_date
+                "test",                      // regi_id
+                new Date(),                  // reg_date
+                "test",                      // reg_id
+                new Date(),                  // up_date
+                "test",                      // up_id
+                "repre_img",             // repre_img_url
+                1,                           // papr_disc
+                1,                           // e_disc
+                "whol_layr_name",        // whol_layr_name
+                "wr_cb_num",             // wr_cb_num
+                "trl_cb_num",            // trl_cb_num
+                "wr_name",               // wr_name
+                "ts_name"                // trl_name
+        );
+        assertTrue(bookService.write(bookDto) == 1);
     }
 
     // 유니크에 중복값 널기
@@ -153,11 +233,50 @@ public class BookServiceImplTest {
         assertTrue(bookService.getCount() == 0);
 
         // 1개 추가
-        writeTestData(1);
+        BookDto bookDto = new BookDto(
+                "isbn",                  // isbn
+                "cate_num",              // cate_num
+                "pub_name",              // pub_name
+                "book_title",            // title
+                "2024-08-07 15:35:58",       // pub_date
+                "Available",                 // sale_stat
+                1,                           // sale_vol
+                1,                           // papr_pric
+                5.0,                         // e_pric
+                5.0,                         // papr_point
+                5.0,                         // e_point
+                1,                           // tot_page_num
+                1,                           // tot_book_num
+                "",                          // sale_com
+                "",                          // cont
+                4.5,                         // rating
+                "",                          // info
+                "",                          // intro_award
+                "",                          // rec
+                "",                          // pub_review
+                1,                           // pre_start_page
+                1,                           // pre_end_page
+                "",                          // ebook_url
+                new Date(),                  // book_reg_date
+                "test",                      // regi_id
+                new Date(),                  // reg_date
+                "test",                      // reg_id
+                new Date(),                  // up_date
+                "test",                      // up_id
+                "repre_img",             // repre_img_url
+                1,                           // papr_disc
+                1,                           // e_disc
+                "whol_layr_name",        // whol_layr_name
+                "wr_cb_num",             // wr_cb_num
+                "trl_cb_num",            // trl_cb_num
+                "wr_name",               // wr_name
+                "ts_name"                // trl_name
+        );
+        assertTrue(bookService.write(bookDto) == 1);
 
         // 중복값 불가 - DuplicateKeyException발생
-        BookDto bookDto = bookService.getAllBookList().get(0);
-        bookService.write(bookDto);
+        bookDto = bookService.getAllBookList().get(0);
+        assertTrue(bookService.write(bookDto) == 0);
     }
 
     // Not_Null에 Null넣기
@@ -167,13 +286,14 @@ public class BookServiceImplTest {
         bookService.resetList();
         assertTrue(bookService.getCount() == 0);
 
+        // nullTitle
+        String title = null;
         // 1개 추가 - DataIntegrityViolationException발생
         BookDto bookDto = new BookDto(
-                "isbn" + 1,                  // isbn
-                "cate_num" + 1,              // cate_num
-                "pub_name" + 1,              // pub_name
-                "book_title" + 1,            // title
-                "pub_num" + 1,               // pub_num
+                "isbn",                  // isbn
+                "cate_num",              // cate_num
+                "pub_name",              // pub_name
+                title,            // title
                 "2024-08-07 15:35:58",       // pub_date
                 "Available",                 // sale_stat
                 1,                           // sale_vol
@@ -199,15 +319,17 @@ public class BookServiceImplTest {
                 "test",                      // reg_id
                 new Date(),                  // up_date
                 "test",                      // up_id
-                "repre_img" + 1,             // repre_img_url
+                "repre_img",             // repre_img_url
                 1,                           // papr_disc
                 1,                           // e_disc
-                "whol_layr_name" + 1,        // whol_layr_name
-                "wr_name" + 1,               // wr_name
-                "ts_name" + 1                // trl_name
+                "whol_layr_name",        // whol_layr_name
+                "wr_cb_num",             // wr_cb_num
+                "trl_cb_num",            // trl_cb_num
+                "wr_name",               // wr_name
+                "ts_name"                // trl_name
         );
 
-        bookService.write(bookDto);
+        assertTrue(bookService.write(bookDto) == 0);
     }
 
     // 도메인 범위 넘어서는 값 넣기
@@ -217,13 +339,15 @@ public class BookServiceImplTest {
         bookService.resetList();
         assertTrue(bookService.getCount() == 0);
 
+        // 도메인 범위 넘어선 pub_name
+        String wrong_pub_name = "pub_name123141432523534875629865826598763749851232532535434534534234634";
+
         // 1개 추가 - DataIntegrityViolationException 발생
         BookDto bookDto = new BookDto(
-                "isbn" + 1,                  // isbn
-                "cate_num" + 1,              // cate_num
-                "pub_name" + 1,              // pub_name
-                "book_title" + 1,            // title
-                "pub_num" + 1,               // pub_num
+                "isbn",                  // isbn
+                "cate_num",              // cate_num
+                wrong_pub_name,              // pub_name
+                "book_title",            // title
                 "2024-08-07 15:35:58",       // pub_date
                 "Available",                 // sale_stat
                 1,                           // sale_vol
@@ -249,15 +373,17 @@ public class BookServiceImplTest {
                 "test",                      // reg_id
                 new Date(),                  // up_date
                 "test",                      // up_id
-                "repre_img" + 1,             // repre_img_url
+                "repre_img",             // repre_img_url
                 1,                           // papr_disc
                 1,                           // e_disc
-                "whol_layr_name" + 1,        // whol_layr_name
-                "wr_name" + 1,               // wr_name
-                "ts_name" + 1                // trl_name
+                "whol_layr_name",        // whol_layr_name
+                "wr_cb_num",             // wr_cb_num
+                "trl_cb_num",            // trl_cb_num
+                "wr_name",               // wr_name
+                "ts_name"                // trl_name
         );
 
-        bookService.write(bookDto);
+        assertTrue(bookService.write(bookDto) == 0);
     }
 
     // 전체 조회
@@ -272,7 +398,46 @@ public class BookServiceImplTest {
         assertTrue(bookService.getCount() == 0);
 
         // 한개 넣고 카운트
-        writeTestData(1);
+        BookDto bookDto = new BookDto(
+                "isbn",                  // isbn
+                "cate_num",              // cate_num
+                "pub_name",              // pub_name
+                "book_title",            // title
+                "2024-08-07 15:35:58",       // pub_date
+                "Available",                 // sale_stat
+                1,                           // sale_vol
+                1,                           // papr_pric
+                5.0,                         // e_pric
+                5.0,                         // papr_point
+                5.0,                         // e_point
+                1,                           // tot_page_num
+                1,                           // tot_book_num
+                "",                          // sale_com
+                "",                          // cont
+                4.5,                         // rating
+                "",                          // info
+                "",                          // intro_award
+                "",                          // rec
+                "",                          // pub_review
+                1,                           // pre_start_page
+                1,                           // pre_end_page
+                "",                          // ebook_url
+                new Date(),                  // book_reg_date
+                "test",                      // regi_id
+                new Date(),                  // reg_date
+                "test",                      // reg_id
+                new Date(),                  // up_date
+                "test",                      // up_id
+                "repre_img",             // repre_img_url
+                1,                           // papr_disc
+                1,                           // e_disc
+                "whol_layr_name",        // whol_layr_name
+                "wr_cb_num",             // wr_cb_num
+                "trl_cb_num",            // trl_cb_num
+                "wr_name",               // wr_name
+                "ts_name"                // trl_name
+        );
+        assertTrue(bookService.write(bookDto) == 1);
         bookList = bookService.getAllBookList();
         assertTrue(bookList.size() == 1);
 
@@ -292,7 +457,46 @@ public class BookServiceImplTest {
         assertTrue(bookService.getCount() == 0);
 
         // 1개 추가
-        writeTestData(1);
+        BookDto bookDto = new BookDto(
+                "isbn",                  // isbn
+                "cate_num",              // cate_num
+                "pub_name",              // pub_name
+                "book_title",            // title
+                "2024-08-07 15:35:58",       // pub_date
+                "Available",                 // sale_stat
+                1,                           // sale_vol
+                1,                           // papr_pric
+                5.0,                         // e_pric
+                5.0,                         // papr_point
+                5.0,                         // e_point
+                1,                           // tot_page_num
+                1,                           // tot_book_num
+                "",                          // sale_com
+                "",                          // cont
+                4.5,                         // rating
+                "",                          // info
+                "",                          // intro_award
+                "",                          // rec
+                "",                          // pub_review
+                1,                           // pre_start_page
+                1,                           // pre_end_page
+                "",                          // ebook_url
+                new Date(),                  // book_reg_date
+                "test",                      // regi_id
+                new Date(),                  // reg_date
+                "test",                      // reg_id
+                new Date(),                  // up_date
+                "test",                      // up_id
+                "repre_img",             // repre_img_url
+                1,                           // papr_disc
+                1,                           // e_disc
+                "whol_layr_name",        // whol_layr_name
+                "wr_cb_num",             // wr_cb_num
+                "trl_cb_num",            // trl_cb_num
+                "wr_name",               // wr_name
+                "ts_name"                // trl_name
+        );
+        assertTrue(bookService.write(bookDto) == 1);
 
         //isbn 가져오기
         String isbn = bookService.getAllBookList().get(0).getIsbn();
@@ -322,53 +526,11 @@ public class BookServiceImplTest {
         assertTrue(bookService.getCount() == 0);
 
         // 1개 추가
-        writeTestData(1);
-
-        //isbn 가져오기
-        String isbn = bookService.getAllBookList().get(0).getIsbn();
-
-        // bookDto 객체 속성값 바꾸고 업데이트
-        BookDto bookDto = bookService.getAllBookList().get(0);
-        bookDto.setIsbn(isbn);
-        bookDto.setTitle("내가 바꾼 타이틀");
-        assertTrue(bookService.modify(bookDto) == 1);
-
-        // 업데이트한 객체와 같은지 체크
-        BookDto bookDto2 = bookService.read(isbn);
-        assertTrue(bookDto2.equals(bookDto));
-    }
-
-    @Test(expected = DataIntegrityViolationException.class)
-    public void 수정_예외1() throws Exception {
-        // 전체 지우고 카운트
-        bookService.resetList();
-        assertTrue(bookService.getCount() == 0);
-
-        // 1개 삽입
-        writeTestData(1);
-
-        // NOT NULL에 NULL
-        String isbn = bookService.getAllBookList().get(0).getIsbn();
-        BookDto bookDto = bookService.read(isbn);
-        bookDto.setIsbn(isbn);
-        bookDto.setPub_num(null);
-        bookDto.setTitle("내가 바꾼 타이틀");
-        bookService.modify(bookDto);
-    }
-
-    @Test(expected = DataIntegrityViolationException.class)
-    public void 수정_예외2() throws Exception {
-        // 전체 지우고 카운트
-        bookService.resetList();
-        assertTrue(bookService.getCount() == 0);
-
-        // 1개 추가
         BookDto bookDto = new BookDto(
-                "isbn" + 1,                  // isbn
-                "cate_num" + 1,              // cate_num
-                "pub_name" + 1,              // pub_name
-                "book_title" + 1,            // title
-                "pub_num" + 1,               // pub_num
+                "isbn",                  // isbn
+                "cate_num",              // cate_num
+                "pub_name",              // pub_name
+                "book_title",            // title
                 "2024-08-07 15:35:58",       // pub_date
                 "Available",                 // sale_stat
                 1,                           // sale_vol
@@ -394,12 +556,133 @@ public class BookServiceImplTest {
                 "test",                      // reg_id
                 new Date(),                  // up_date
                 "test",                      // up_id
-                "repre_img" + 1,             // repre_img_url
+                "repre_img",             // repre_img_url
                 1,                           // papr_disc
                 1,                           // e_disc
-                "whol_layr_name" + 1,        // whol_layr_name
-                "wr_name" + 1,               // wr_name
-                "ts_name" + 1                // trl_name
+                "whol_layr_name",        // whol_layr_name
+                "wr_cb_num",             // wr_cb_num
+                "trl_cb_num",            // trl_cb_num
+                "wr_name",               // wr_name
+                "ts_name"                // trl_name
+        );
+        assertTrue(bookService.write(bookDto) == 1);
+
+        //isbn 가져오기
+        String isbn = bookService.getAllBookList().get(0).getIsbn();
+
+        // bookDto 객체 속성값 바꾸고 업데이트
+        bookDto = bookService.getAllBookList().get(0);
+        bookDto.setIsbn(isbn);
+        bookDto.setTitle("내가 바꾼 타이틀");
+        assertTrue(bookService.modify(bookDto) == 1);
+
+        // 업데이트한 객체와 같은지 체크
+        BookDto bookDto2 = bookService.read(isbn);
+        assertTrue(bookDto2.equals(bookDto));
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void 수정_예외1() throws Exception {
+        // 전체 지우고 카운트
+        bookService.resetList();
+        assertTrue(bookService.getCount() == 0);
+
+        // 1개 삽입
+        BookDto bookDto = new BookDto(
+                "isbn",                  // isbn
+                "cate_num",              // cate_num
+                "pub_name",              // pub_name
+                "book_title",            // title
+                "2024-08-07 15:35:58",       // pub_date
+                "Available",                 // sale_stat
+                1,                           // sale_vol
+                1,                           // papr_pric
+                5.0,                         // e_pric
+                5.0,                         // papr_point
+                5.0,                         // e_point
+                1,                           // tot_page_num
+                1,                           // tot_book_num
+                "",                          // sale_com
+                "",                          // cont
+                4.5,                         // rating
+                "",                          // info
+                "",                          // intro_award
+                "",                          // rec
+                "",                          // pub_review
+                1,                           // pre_start_page
+                1,                           // pre_end_page
+                "",                          // ebook_url
+                new Date(),                  // book_reg_date
+                "test",                      // regi_id
+                new Date(),                  // reg_date
+                "test",                      // reg_id
+                new Date(),                  // up_date
+                "test",                      // up_id
+                "repre_img",             // repre_img_url
+                1,                           // papr_disc
+                1,                           // e_disc
+                "whol_layr_name",        // whol_layr_name
+                "wr_cb_num",             // wr_cb_num
+                "trl_cb_num",            // trl_cb_num
+                "wr_name",               // wr_name
+                "ts_name"                // trl_name
+        );
+        assertTrue(bookService.write(bookDto) == 1);
+
+        // NOT NULL에 NULL
+        String isbn = bookService.getAllBookList().get(0).getIsbn();
+        bookDto = bookService.read(isbn);
+        bookDto.setIsbn(isbn);
+        bookDto.setPub_name(null);
+        bookDto.setTitle("내가 바꾼 타이틀");
+        bookService.modify(bookDto);
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void 수정_예외2() throws Exception {
+        // 전체 지우고 카운트
+        bookService.resetList();
+        assertTrue(bookService.getCount() == 0);
+
+        // 1개 추가
+        BookDto bookDto = new BookDto(
+                "isbn",                  // isbn
+                "cate_num",              // cate_num
+                "pub_name",              // pub_name
+                "book_title",            // title
+                "2024-08-07 15:35:58",       // pub_date
+                "Available",                 // sale_stat
+                1,                           // sale_vol
+                1,                           // papr_pric
+                5.0,                         // e_pric
+                5.0,                         // papr_point
+                5.0,                         // e_point
+                1,                           // tot_page_num
+                1,                           // tot_book_num
+                "",                          // sale_com
+                "",                          // cont
+                4.5,                         // rating
+                "",                          // info
+                "",                          // intro_award
+                "",                          // rec
+                "",                          // pub_review
+                1,                           // pre_start_page
+                1,                           // pre_end_page
+                "",                          // ebook_url
+                new Date(),                  // book_reg_date
+                "test",                      // regi_id
+                new Date(),                  // reg_date
+                "test",                      // reg_id
+                new Date(),                  // up_date
+                "test",                      // up_id
+                "repre_img",             // repre_img_url
+                1,                           // papr_disc
+                1,                           // e_disc
+                "whol_layr_name",        // whol_layr_name
+                "wr_cb_num",             // wr_cb_num
+                "trl_cb_num",            // trl_cb_num
+                "wr_name",               // wr_name
+                "ts_name"                // trl_name
         );
         assertTrue(bookService.write(bookDto) == 1);
 
@@ -417,11 +700,50 @@ public class BookServiceImplTest {
         assertTrue(bookService.getCount() == 0);
 
         // 1개 추가
-        writeTestData(1);
+        BookDto bookDto = new BookDto(
+                "isbn",                  // isbn
+                "cate_num",              // cate_num
+                "pub_name",              // pub_name
+                "book_title",            // title
+                "2024-08-07 15:35:58",       // pub_date
+                "Available",                 // sale_stat
+                1,                           // sale_vol
+                1,                           // papr_pric
+                5.0,                         // e_pric
+                5.0,                         // papr_point
+                5.0,                         // e_point
+                1,                           // tot_page_num
+                1,                           // tot_book_num
+                "",                          // sale_com
+                "",                          // cont
+                4.5,                         // rating
+                "",                          // info
+                "",                          // intro_award
+                "",                          // rec
+                "",                          // pub_review
+                1,                           // pre_start_page
+                1,                           // pre_end_page
+                "",                          // ebook_url
+                new Date(),                  // book_reg_date
+                "test",                      // regi_id
+                new Date(),                  // reg_date
+                "test",                      // reg_id
+                new Date(),                  // up_date
+                "test",                      // up_id
+                "repre_img",             // repre_img_url
+                1,                           // papr_disc
+                1,                           // e_disc
+                "whol_layr_name",        // whol_layr_name
+                "wr_cb_num",             // wr_cb_num
+                "trl_cb_num",            // trl_cb_num
+                "wr_name",               // wr_name
+                "ts_name"                // trl_name
+        );
+        assertTrue(bookService.write(bookDto) == 1);
 
         // 도메인 범위 벗어난 값 업데이트
         String isbn = bookService.getAllBookList().get(0).getIsbn();
-        BookDto bookDto = bookService.read(isbn);
+        bookDto = bookService.read(isbn);
         bookDto.setIsbn(isbn);
         bookDto.setTitle("qiehgwoeighowieghwohgwoghwoighe");
         assertTrue(bookService.modify(bookDto) == 0);

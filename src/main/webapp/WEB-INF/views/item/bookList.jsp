@@ -36,10 +36,22 @@
 </script>
 
 <div class="container">
-    <div class="form-header">
-        <!-- 검색창과 검색 버튼을 가운데 정렬 -->
-        <input type="text" placeholder="Search..." class="search-input">
-        <button type="button" onclick="searchBooks()" class="btn btn-search">검색</button>
+
+    <div class="search-container">
+        <form action="<c:url value='/book/list'/>" class = "search-form" method="get">
+            <select id="searchOption" class="search-option" name="option" data-selected="${param.option}">
+                <option value="T" ${param.option == 'T' ? 'selected' : ''}>제목</option>
+                <option value="W" ${param.option == 'W' ? 'selected' : ''}>저자</option>
+                <option value="P" ${param.option == 'P' ? 'selected' : ''}>출판사</option>
+            </select>
+
+            <input type="hidden" name="bookFilter" value="${param.bookFilter}">
+            <input type="hidden" name="order_criteria" value="${ph.bsc.order_criteria}">
+            <input type="hidden" name="order_direction" value="${ph.bsc.order_direction}">
+
+            <input type="text" name="keyword" class="search-input" type="text" value="${ph.bsc.keyword}" placeholder="검색어를 입력해주세요">
+            <input type="submit" class="btn btn-search" value="검색">
+        </form>
     </div>
 
     <!-- 필터 폼과 버튼들을 포함한 컨테이너 -->
@@ -73,11 +85,13 @@
             </div>
 
             <!-- 페이지 번호와 페이지 크기를 유지하기 위한 hidden input 추가 -->
-            <input type="hidden" name="page" value="${ph.page}">
-            <input type="hidden" name="pageSize" value="${ph.pageSize}">
+            <input type="hidden" name="page" value="${ph.bsc.page}">
+            <input type="hidden" name="pageSize" value="${ph.bsc.pageSize}">
+            <input type="hidden" name="option" value="${ph.bsc.option}">
+            <input type="hidden" name="keyword" value="${ph.bsc.keyword}">
 
             <!-- 정렬 버튼 추가 -->
-            <button type="button" onclick="applySorting()" class="btn btn-sort">정렬하기</button>
+            <button type="submit"  class="btn btn-sort">정렬하기</button>
             <!-- 글쓰기 버튼 추가 -->
             <button type="button" onclick="goToWritePage()" class="btn btn-write">상품등록</button>
         </form>
@@ -107,8 +121,8 @@
             <c:forEach var="bookDto" items="${list}">
                 <c:if test="${bookDto.papr_pric != null}">
                     <tr class="info papr">
-                        <td><a href="<c:url value='/book/read?isbn=${bookDto.isbn}&page=${ph.page}&pageSize=${ph.pageSize}&order_criteria=${order_criteria}&order_direction=${order_direction}'/>"><img src="${bookDto.repre_img}" alt="Book Cover" /></a></td>
-                        <td><a href="<c:url value='/book/read?isbn=${bookDto.isbn}&page=${ph.page}&pageSize=${ph.pageSize}&order_criteria=${order_criteria}&order_direction=${order_direction}'/>">${bookDto.title}</a></td>
+                        <td><a href="<c:url value='/book/read${ph.bsc.queryString}&isbn=${bookDto.isbn}'/>"><img src="${bookDto.repre_img}" alt="Book Cover" /></a></td>
+                        <td><a href="<c:url value='/book/read${ph.bsc.queryString}&isbn=${bookDto.isbn}'/>">${bookDto.title}</a></td>
                         <td>${bookDto.wr_name}</td>
                         <td>${bookDto.pub_name}</td>
                         <td class="discount" data-discount="${bookDto.papr_disc}"></td>
@@ -123,8 +137,8 @@
                 </c:if>
                 <c:if test="${bookDto.e_pric != null}">
                     <tr class="info ebook">
-                        <td><a href="<c:url value='/book/read?isbn=${bookDto.isbn}&page=${ph.page}&pageSize=${ph.pageSize}&order_criteria=${order_criteria}&order_direction=${order_direction}'/>"><img src="${bookDto.repre_img}" alt="Book Cover" /></a></td>
-                        <td><a href="<c:url value='/book/read?isbn=${bookDto.isbn}&page=${ph.page}&pageSize=${ph.pageSize}&order_criteria=${order_criteria}&order_direction=${order_direction}'/>">${bookDto.title}</a></td>
+                        <td><a href="<c:url value='/book/read${ph.bsc.queryString}&isbn=${bookDto.isbn}'/>"><img src="${bookDto.repre_img}" alt="Book Cover" /></a></td>
+                        <td><a href="<c:url value='/book/read${ph.bsc.queryString}&isbn=${bookDto.isbn}'/>">${bookDto.title}</a></td>
                         <td>${bookDto.wr_name}</td>
                         <td>${bookDto.pub_name}</td>
                         <td class="discount" data-discount="${bookDto.e_disc}"></td>
@@ -144,13 +158,13 @@
 
     <div class="pagination">
         <c:if test="${ph.showPrev}">
-            <a href="<c:url value='/book/list?order_criteria=${order_criteria}&order_direction=${order_direction}&page=${ph.beginPage-1}&pageSize=${ph.pageSize}'/>">&lt;</a>
+            <a href="<c:url value='/book/list${ph.bsc.getQueryString(ph.beginPage-1)}'/>">&lt;</a>
         </c:if>
         <c:forEach var="i" begin="${ph.beginPage}" end="${ph.endPage}">
-            <a href="<c:url value='/book/list?order_criteria=${order_criteria}&order_direction=${order_direction}&page=${i}&pageSize=${ph.pageSize}'/>">${i}</a>
+            <a href="<c:url value='/book/list${ph.bsc.getQueryString(i)}'/>">${i}</a>
         </c:forEach>
         <c:if test="${ph.showNext}">
-            <a href="<c:url value='/book/list?order_criteria=${order_criteria}&order_direction=${order_direction}&page=${ph.endPage+1}&pageSize=${ph.pageSize}'/>">&gt;</a>
+            <a href="<c:url value='/book/list${ph.bsc.getQueryString(ph.endPage+1)}'/>">&gt;</a>
         </c:if>
     </div>
 </div>

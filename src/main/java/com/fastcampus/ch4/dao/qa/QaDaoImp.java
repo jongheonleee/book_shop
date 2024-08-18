@@ -1,6 +1,5 @@
 package com.fastcampus.ch4.dao.qa;
 
-import com.fastcampus.ch4.dto.qa.QaCategoryDto;
 import com.fastcampus.ch4.dto.qa.QaDto;
 import com.fastcampus.ch4.domain.qa.SearchCondition;
 import com.fastcampus.ch4.dto.qa.QaStateDto;
@@ -12,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class QaDaoImp implements QaDao {
+public class  QaDaoImp implements QaDao {
 
     @Autowired
     private SqlSession session;
@@ -37,6 +36,7 @@ public class QaDaoImp implements QaDao {
         return session.selectOne(namespace + "count", user_id);
     }
 
+    @Override
     public int countBySearchCondition(String user_id, SearchCondition sc) {
         Map map = new HashMap();
 
@@ -54,6 +54,7 @@ public class QaDaoImp implements QaDao {
         return session.selectOne(namespace + "select", qa_num);
     }
 
+    @Override
     public List<QaDto> selectAll() {
         return session.selectList(namespace + "selectAll");
     }
@@ -84,8 +85,8 @@ public class QaDaoImp implements QaDao {
 
 
     @Override
-    public QaDto selectForUpdate(QaDto dto) {
-        return session.selectOne(namespace + "selectForUpdate", dto);
+    public QaDto selectForUpdate(int qa_num) {
+        return session.selectOne(namespace + "selectForUpdate", qa_num);
     }
 
 
@@ -134,38 +135,48 @@ public class QaDaoImp implements QaDao {
      * - (8) 특정 문의글의 한 가지 상태 삭제
      **/
 
+    @Override
     public int insertState(QaStateDto dto) {
         return session.insert(namespace + "insertForQaState", dto);
     }
 
+
+    @Override
     public List<QaStateDto> selectStateByQaNum(int qaNum) {
         return session.selectList(namespace + "selectForQaStateByQaNum", qaNum);
     }
 
+    @Override
     public List<QaStateDto> selectAllState() {
         return session.selectList(namespace + "selectAllState");
     }
 
+    @Override
     public QaStateDto selectStateForLast(int qaNum) {
         return session.selectOne(namespace + "selectStateForLast", qaNum);
     }
 
+    @Override
     public int updateState(QaStateDto dto) {
         return session.update(namespace + "updateForQaState", dto);
     }
 
-    public int deleteState(int qa_stat_seq) {
-        return session.delete(namespace + "deleteForQaState", qa_stat_seq);
+    @Override
+    public int deleteState(int qa_num) {
+        return session.delete(namespace + "deleteForQaState", qa_num);
     }
 
+    @Override
     public int deleteStateByQaNum(int qaNum) {
         return session.delete(namespace + "deleteForQaStateByQaNum", qaNum);
     }
 
+    @Override
     public int selectMaxQaSeq() {
         return session.selectOne(namespace + "selectMaxQaSeq");
     }
 
+    @Override
     public QaDto selectByTitle(String userId, String title) {
         HashMap map = new HashMap();
         map.put("user_id", userId);
@@ -173,6 +184,7 @@ public class QaDaoImp implements QaDao {
         return session.selectOne(namespace + "selectByTitle", map);
     }
 
+    @Override
     public int countByState(String userId, String qa_stat_code) {
         HashMap map = new HashMap();
         map.put("user_id", userId);
@@ -181,6 +193,7 @@ public class QaDaoImp implements QaDao {
         return session.selectOne(namespace + "countByState", map);
     }
 
+    @Override
     public List<QaDto> selectByState(String userId, String qa_stat_code, SearchCondition sc) {
         HashMap map = new HashMap();
         map.put("user_id", userId);
@@ -189,6 +202,11 @@ public class QaDaoImp implements QaDao {
         map.put("pageSize", sc.getPageSize());
 
         return session.selectList(namespace + "selectByState", map);
+    }
+
+    @Override
+    public QaStateDto selectForUpdateState(int qa_num) {
+        return session.selectOne(namespace + "selectForUpdateState", qa_num);
     }
 
 }

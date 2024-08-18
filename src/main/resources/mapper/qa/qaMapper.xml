@@ -24,15 +24,10 @@
       q.content, q.created_at, q.email, q.tele_num, q.chk_repl,
       q.phon_num, q.img1,q.img2, q.img3,
       (SELECT name FROM qa_cate WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
-      s.name AS stat_name, s.qa_stat_code AS qa_stat_code
+      (SELECT name FROM qa_state WHERE qa_num = q.qa_num ORDER BY appl_end DESC LIMIT 1) AS stat_name,
+      (SELECT qa_stat_code FROM qa_state WHERE qa_num = q.qa_num ORDER BY appl_end DESC LIMIT 1) AS qa_stat_code
     FROM qa AS q
-    JOIN (
-      SELECT qa_num, name, qa_stat_code
-      FROM qa_state
-    ) AS s
-    ON q.qa_num = s.qa_num
     WHERE q.qa_num = #{qa_num}
-    <!-- 추후에 답변글 등등 조인 -->
   </select>
 
   <select id="selectByUserId" parameterType="string" resultType="QaDto">
@@ -40,19 +35,25 @@
       q.qa_num, q.user_id, q.qa_cate_num, q.title,
       q.content, q.created_at, q.email, q.tele_num, q.chk_repl,
       q.phon_num, q.img1,q.img2, q.img3,
-      (SELECT name FROM qa_cate WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
-      s.name AS stat_name, s.qa_stat_code AS qa_stat_code
+      ( SELECT name
+        FROM qa_cate
+        WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
+      ( SELECT name
+        FROM qa_state
+        WHERE qa_num = q.qa_num
+        ORDER BY appl_end DESC
+        LIMIT 1) AS stat_name,
+      ( SELECT qa_stat_code
+        FROM qa_state
+        WHERE qa_num = q.qa_num
+        ORDER BY appl_end
+        DESC LIMIT 1) AS qa_stat_code
     FROM qa AS q
-    JOIN (
-      SELECT qa_num, name, qa_stat_code
-      FROM qa_state
-    ) AS s
-    ON q.qa_num = s.qa_num
     WHERE q.user_id = #{user_id}
     ORDER BY q.created_at DESC;
   </select>
 
-  <select id="selectForUpdate" parameterType="QaDto" resultType="QaDto">
+  <select id="selectForUpdate" parameterType="int" resultType="QaDto">
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title, q.content,
       q.created_at, q.email, q.tele_num, q.phon_num, q.img1,
@@ -61,7 +62,6 @@
     INNER JOIN qa_cate AS c
     ON q.qa_cate_num = c.qa_cate_num
     WHERE q.qa_num = #{qa_num}
-    ORDR BY q.created_at DESC
     FOR UPDATE
   </select>
 
@@ -70,14 +70,20 @@
       q.qa_num, q.user_id, q.qa_cate_num, q.title,
       q.content, q.created_at, q.email, q.tele_num, q.chk_repl,
       q.phon_num, q.img1,q.img2, q.img3,
-      (SELECT name FROM qa_cate WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
-      s.name AS stat_name, s.qa_stat_code AS qa_stat_code
+      ( SELECT name
+        FROM qa_cate
+        WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
+      ( SELECT name
+        FROM qa_state
+        WHERE qa_num = q.qa_num
+        ORDER BY appl_end
+        DESC LIMIT 1) AS stat_name,
+      ( SELECT qa_stat_code
+        FROM qa_state
+        WHERE qa_num = q.qa_num
+        ORDER BY appl_end
+        DESC LIMIT 1) AS qa_stat_code
     FROM qa AS q
-    JOIN (
-      SELECT qa_num, name, qa_stat_code
-      FROM qa_state
-    ) AS s
-    ON q.qa_num = s.qa_num
     WHERE q.user_id = #{user_id}
     ORDER BY q.created_at DESC
     LIMIT #{offSet}, #{pageSize};
@@ -88,15 +94,20 @@
       q.qa_num, q.user_id, q.qa_cate_num, q.title,
       q.content, q.created_at, q.email, q.tele_num, q.chk_repl,
       q.phon_num, q.img1,q.img2, q.img3,
-      (SELECT name FROM qa_cate
-      WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
-    s.name AS stat_name, s.qa_stat_code AS qa_stat_code
+      ( SELECT name
+        FROM qa_cate
+        WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
+      ( SELECT name
+        FROM qa_state
+        WHERE qa_num = q.qa_num
+        ORDER BY appl_end
+        DESC LIMIT 1) AS stat_name,
+      ( SELECT qa_stat_code
+        FROM qa_state
+        WHERE qa_num = q.qa_num
+        ORDER BY appl_end
+        DESC LIMIT 1) AS qa_stat_code
     FROM qa AS q
-    JOIN (
-      SELECT qa_num, name, qa_stat_code
-      FROM qa_state
-    ) AS s
-    ON q.qa_num = s.qa_num
     WHERE TRUE
     <choose>
       <when test='option=="title"'>
@@ -118,19 +129,27 @@
     <!-- 추후에 상태, 카테고리 조인 -->
   </select>
 
+  <!-- 추후에 쿼리문 무조건 개선시켜야함... 현재 서브 쿼리 너무 이상하게 쓰고 있음 -->
   <select id="selectByState" parameterType="map" resultType="QaDto">
     SELECT
       q.qa_num, q.user_id, q.qa_cate_num, q.title,
       q.content, q.created_at, q.email, q.tele_num, q.chk_repl,
       q.phon_num, q.img1,q.img2, q.img3,
-      (SELECT name FROM qa_cate
-       WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
-      s.name AS stat_name, s.qa_stat_code AS qa_stat_code
+      ( SELECT name
+        FROM qa_cate
+        WHERE qa_cate_num = q.qa_cate_num) AS cate_name,
+      ( SELECT name
+        FROM qa_state
+        WHERE qa_num = q.qa_num
+        ORDER BY appl_end
+        DESC LIMIT 1) AS stat_name,
+      ( SELECT qa_stat_code
+        FROM qa_state
+        WHERE qa_num = q.qa_num
+        ORDER BY appl_end
+        DESC LIMIT 1) AS qa_stat_code
     FROM qa AS q
-    JOIN (
-      SELECT qa_num, name, qa_stat_code
-      FROM qa_state
-    ) AS s
+    JOIN qa_state AS s
     ON q.qa_num = s.qa_num
     WHERE q.user_id = #{user_id}
     AND s.qa_stat_code = #{qa_stat_code}
@@ -162,7 +181,7 @@
     UPDATE qa
     SET title = #{title}, content = #{content}, email = #{email},
         tele_num = #{tele_num}, phon_num = #{phon_num}, img1 = #{img1},
-        img2 = #{img2}, img3 = #{img3}
+        img2 = #{img2}, img3 = #{img3}, chk_repl = #{chk_repl}
     WHERE user_id = #{user_id}
     AND qa_num = #{qa_num};
   </update>
@@ -186,8 +205,8 @@
                           reg_id, up_date, up_id, qa_num,
                           appl_begin, appl_end)
     VALUES (#{qa_stat_code}, #{name}, now(), #{reg_id},
-            '9999-12-31 23:59:59', #{up_id}, #{qa_num},
-            now(), '9999-12-31 23:59:59');
+            now(), #{up_id}, #{qa_num},
+            #{appl_begin}, #{appl_end});
   </insert>
 
   <select id="selectAllState" resultType="QaStateDto">
@@ -226,12 +245,12 @@
     AND qa_stat_seq = #{qa_stat_seq};
   </select>
 
-  <update id="updateForQaState">
+  <update id="updateForQaState" parameterType="QaStateDto">
     UPDATE qa_state
     SET qa_stat_code = #{qa_stat_code},
         name = #{name},
         appl_begin = #{appl_begin},
-        appl_end = now(),
+        appl_end = #{appl_end},
         up_date = now(),
         up_id = #{up_id}
     WHERE qa_num = #{qa_num}
@@ -247,7 +266,7 @@
   <delete id="deleteForQaState">
     DELETE
     FROM qa_state
-    WHERE qa_stat_seq = #{qa_stat_seq};
+    WHERE qa_num = #{qa_num};
   </delete>
 
   <delete id="deleteForQaStateByQaNum">
@@ -286,6 +305,17 @@
         AND q.created_at BETWEEN DATE_SUB(NOW(), INTERVAL #{period} MONTH) AND now()
       </otherwise>
     </choose>
+  </select>
+
+  <select id="selectForUpdateState" parameterType="int" resultType="QaStateDto">
+    SELECT
+        qa_stat_seq, qa_stat_code, name, reg_date,
+        reg_id, up_date, up_id, qa_num, appl_begin, appl_end
+    FROM qa_state
+    WHERE qa_num = #{qa_num}
+    ORDER BY appl_end DESC
+    LIMIT 1
+    FOR UPDATE;
   </select>
 
 </mapper>

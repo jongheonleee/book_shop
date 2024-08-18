@@ -73,4 +73,18 @@ public class QaCategoryDto {
     public void setChk_use(String chk_use) {
         this.chk_use = chk_use;
     }
+
+    @Override
+    public String toString() {
+        return "QaCategoryDto{" +
+                "qa_cate_num='" + qa_cate_num + '\'' +
+                ", name='" + name + '\'' +
+                ", comt='" + comt + '\'' +
+                ", reg_date='" + reg_date + '\'' +
+                ", reg_id='" + reg_id + '\'' +
+                ", up_date='" + up_date + '\'' +
+                ", up_id='" + up_id + '\'' +
+                ", chk_use='" + chk_use + '\'' +
+                '}';
+    }
 }

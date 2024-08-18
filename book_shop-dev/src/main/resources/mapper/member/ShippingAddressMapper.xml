@@ -19,8 +19,12 @@
 
     <!-- 새 주소 추가 -->
     <insert id="insertAddress" parameterType="com.fastcampus.ch4.dto.member.ShippingAddressDto">
-        INSERT INTO shipping_address (id, addr, regi_addr1, regi_addr2, rcnt_addr1, rcnt_addr2, reg_date, reg_id, up_date, up_id)
-        VALUES (#{userId}, #{address}, #{regiAddress1}, #{regiAddress2}, #{rcntAddress1}, #{rcntAddress2}, #{regDate}, #{regId}, #{upDate}, #{upId})
+        INSERT INTO shipping_address
+        (id, addr, regi_addr1, regi_addr2, rcnt_addr1,
+        rcnt_addr2, reg_date, reg_id, up_date, up_id)
+        VALUES
+        (#{userId}, #{address}, #{regiAddress1}, #{regiAddress2}, #{rcntAddress1},
+         #{rcntAddress2}, SYSDATE(), #{userId}, SYSDATE(), #{userId})
     </insert>
 
     <!-- 주소 업데이트 -->

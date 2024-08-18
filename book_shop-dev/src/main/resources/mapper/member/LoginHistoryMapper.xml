@@ -14,7 +14,7 @@
         <result property="id" column="id"/>
     </resultMap>
 
-    <!-- 로그인 기록 저장 -->
+     <!-- 로그인 기록 저장 -->
     <insert id="insertLoginHistory" parameterType="LoginHistoryDto">
         INSERT INTO logn_history (logn_time, ip_addr, reg_date, reg_id, up_date, up_id, id)
         VALUES (#{lognTime}, #{ipAddr}, #{regDate}, #{regId}, #{upDate}, #{upId}, #{id})

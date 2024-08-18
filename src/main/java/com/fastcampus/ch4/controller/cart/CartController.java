@@ -107,7 +107,7 @@ public class CartController {
         String userId;
         // 회원 = session 에서 관리
         HttpSession session = request.getSession();
-        userId = (String) session.getAttribute("userId");
+        userId = (String) session.getAttribute("id");
 
         // 비회원 Cookie
         if (userId == null) {
@@ -150,7 +150,7 @@ public class CartController {
         String userId;
         // 회원 = session 에서 관리
         HttpSession session = request.getSession();
-        userId = (String) session.getAttribute("userId");
+        userId = (String) session.getAttribute("id");
 
         // 비회원 Cookie
         if (userId == null) {
@@ -195,7 +195,7 @@ public class CartController {
         String userId;
         // 회원 = session 에서 관리
         HttpSession session = request.getSession();
-        userId = (String) session.getAttribute("userId");
+        userId = (String) session.getAttribute("id");
 
         Integer updateItemQuantity = infoDto.getItemQuantity();
         Integer cartSeq = infoDto.getCartSeq();
@@ -214,7 +214,7 @@ public class CartController {
         String userId;
         // 회원 = session 에서 관리
         HttpSession session = request.getSession();
-        userId = (String) session.getAttribute("userId");
+        userId = (String) session.getAttribute("id");
 
         Integer cartSeq = infoDto.getCartSeq();
         String isbn = infoDto.getIsbn();

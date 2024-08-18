@@ -98,7 +98,6 @@
                 <div class="summary-section total-product-amount">
                     <span class="label">총 상품금액</span>
                     <span class="amount">${salePrice}원</span>
-                    <p class="detail">${salePrice}원에서 ${salePrice}원 즉시할인</p>
                 </div>
                 <div class="summary-symbol">-</div>
                 <div class="summary-section total-discount-amount">

@@ -10,7 +10,7 @@
     <!-- faq  -->
     <typeAlias alias="FaqDto" type="com.fastcampus.ch4.dto.faq.FaqDto"/>
     <typeAlias alias="FaqCateDto" type="com.fastcampus.ch4.dto.faq.FaqCateDto"/>
-    <typeAlias alias="FaqSearchCondition" type="com.fastcampus.ch4.domain.SearchCondition"/>
+    <typeAlias alias="FaqSearchCondition" type="com.fastcampus.ch4.domain.faq.SearchCondition"/>
 
     <!-- item  -->
     <typeAlias alias="BookDto" type="com.fastcampus.ch4.dto.item.BookDto"/>

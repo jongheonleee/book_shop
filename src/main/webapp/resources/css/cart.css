@@ -1,0 +1,360 @@
+/* 기본 설정 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style-type: none;
+    height: 48px;
+    width: 100%;
+    background-color: #30426E;
+    display: flex;
+}
+
+ul > li {
+    color: lightgray;
+    height: 100%;
+    width: 90px;
+    display: flex;
+    align-items: center;
+}
+
+ul > li > a {
+    color: lightgray;
+    margin: auto;
+    padding: 10px;
+    font-size: 20px;
+    align-items: center;
+}
+
+ul > li > a:hover {
+    color: white;
+    border-bottom: 3px solid rgb(209, 209, 209);
+}
+
+#logo {
+    color: white;
+    font-size: 18px;
+    padding-left: 40px;
+    margin-right: auto;
+    display: flex;
+}
+
+/* 장바구니 기본 컨테이너 스타일 */
+.cart-container,
+.cart-summary {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.cart-container h2 {
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* 장바구니 항목 스타일 */
+.cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.item-image img {
+    width: 100px;
+    height: auto;
+    border-radius: 5px;
+}
+
+.item-details {
+    flex: 2;
+    margin-left: 20px;
+}
+
+.item-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.item-price {
+    font-size: 16px;
+    color: #888;
+    text-decoration: line-through;
+}
+
+.item-sale-price {
+    font-size: 16px;
+    color: #d9534f;
+}
+
+.discount {
+    font-size: 16px;
+    color: #28a745;
+    font-weight: bold;
+}
+
+.sale-price {
+    font-size: 18px;
+    color: #000;
+    font-weight: bold;
+}
+
+.regular-price {
+    font-size: 16px;
+    color: #888;
+    text-decoration: line-through;
+}
+
+.reward-points {
+    font-size: 16px;
+    color: #007bff;
+}
+
+/* 상품 판매가 스타일 */
+.item-total-price {
+    font-size: 18px;
+    color: #000;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.item-total-price .label {
+    font-size: 16px;
+    color: #888;
+    font-weight: normal;
+}
+
+/* 수량 조절 버튼 */
+.item-quantity {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.item-quantity button {
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}
+
+.item-quantity button:focus {
+    outline: none;
+}
+
+.item-quantity input {
+    width: 50px;
+    height: 30px;
+    text-align: center;
+    border: none;
+    margin: 0;
+}
+
+/* 제거 버튼 */
+.item-remove {
+    flex: 0.5;
+    text-align: right;
+}
+
+.remove-button {
+    background-color: #d9534f;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.remove-button:hover {
+    background-color: #c9302c;
+}
+
+/* 요약 정보 스타일 */
+.summary-header {
+    display: flex;
+    justify-content: flex-end; /* 버튼들을 우측으로 정렬 */
+    margin-bottom: 20px;
+}
+
+.summary-header button {
+    margin-left: 10px; /* 버튼 사이 간격을 유지 */
+    padding: 15px 25px; /* 버튼 크기 증가 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px; /* 폰트 크기 증가 */
+}
+
+.btn-order {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-later {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-wishlist {
+    background-color: #ffc107;
+    color: black;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-order:hover, .btn-later:hover, .btn-wishlist:hover, .btn-delete:hover {
+    opacity: 0.9; /* 마우스를 올렸을 때 약간 어둡게 */
+}
+
+.summary-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.summary-section {
+    flex: 1;
+    text-align: center;
+    padding: 20px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 컨텐츠를 수직으로 가운데 정렬 */
+    height: 120px; /* 원하는 높이로 조정 */
+}
+
+.summary-section:last-child {
+    margin-right: 0;
+}
+
+.summary-symbol {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+    margin: 0 10px;
+}
+
+.label {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.amount {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.detail {
+    font-size: 14px;
+    color: #888;
+    margin-top: 10px;
+    word-wrap: break-word;
+}
+
+.summary-footer {
+    background-color: #e9ecef;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.summary-footer p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #888;
+}
+
+.summary-footer p.point {
+    color: #5bc0de;
+    font-weight: bold;
+}
+
+/* 장바구니 비었을 때 스타일 */
+.empty-cart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.empty-cart-message .icon img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 20px;
+}
+
+.empty-cart-message .message {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.empty-cart-message .sub-message {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+.empty-cart-message .login-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.empty-cart-message .btn-later {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.empty-cart-message .login-button:hover {
+    background-color: #0056b3;
+}

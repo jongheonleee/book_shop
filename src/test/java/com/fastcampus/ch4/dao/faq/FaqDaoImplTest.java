@@ -1,11 +1,10 @@
 package com.fastcampus.ch4.dao.faq;
 
-import com.fastcampus.ch4.domain.SearchCondition;
+import com.fastcampus.ch4.domain.faq.SearchCondition;
 import com.fastcampus.ch4.dto.faq.FaqDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

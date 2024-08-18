@@ -1,6 +1,6 @@
 package com.fastcampus.ch4.dao.faq;
 
-import com.fastcampus.ch4.domain.SearchCondition;
+import com.fastcampus.ch4.domain.faq.SearchCondition;
 import com.fastcampus.ch4.dto.faq.FaqDto;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;

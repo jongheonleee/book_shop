@@ -127,7 +127,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<CartProductDetailDto> getItemList(Integer cartSeq, String userId) {
+    public List<CartProductDetailDto> getItemList(Integer cartSeq, String userId){
         // 매개변수 둘 중 하나는 있어야 한다.
         if (cartSeq == null && (userId == null || userId.isEmpty())) {
             return null;

@@ -118,7 +118,7 @@
         <input type="email" id="email" name="email">
 
         <label for="phone">전화번호</label>
-        <input type="tel" id="phone" name="phone">
+        <input type="tel" id="phone" name="phnNumb">
 
         <div class="section-title">주소지 수정</div>
 
@@ -137,43 +137,69 @@
     document.getElementById('mypage-form').addEventListener('submit', function(e) {
         e.preventDefault(); // 기본 제출 방지
 
-        // 현재 비밀번호와 서버에서 저장된 비밀번호가 일치하는지 확인
-        const currentPassword = document.getElementById('current-password').value;
-        const storedPassword = "userStoredPassword"; // 실제 서버에서 가져오는 비밀번호
+        // // 현재 비밀번호와 서버에서 저장된 비밀번호가 일치하는지 확인
+        // const currentPassword = document.getElementById('current-password').value;
+        // const storedPassword = "userStoredPassword"; // 실제 서버에서 가져오는 비밀번호
+        //
+        // if (currentPassword !== storedPassword) {
+        //     alert('현재 비밀번호가 일치하지 않습니다.');
+        //     return;
+        // }
+        //
+        // // 새 비밀번호 확인
+        // const newPassword = document.getElementById('new-password').value;
+        // const confirmNewPassword = document.getElementById('confirm-new-password').value;
+        //
+        // if (newPassword !== '' || confirmNewPassword !== '') {
+        //     if (newPassword !== confirmNewPassword) {
+        //         alert('새 비밀번호가 일치하지 않습니다.');
+        //         return;
+        //     }
+        // }
 
-        if (currentPassword !== storedPassword) {
-            alert('현재 비밀번호가 일치하지 않습니다.');
-            return;
-        }
+<%--        // 이메일과 전화번호가 하나라도 입력되면 그 값만 전송 가능--%>
+<%--        const email = document.getElementById('email').value;--%>
+<%--        const phone = document.getElementById('phone').value;--%>
+<%--        const address = document.getElementById('address').value;--%>
 
-        // 새 비밀번호 확인
-        const newPassword = document.getElementById('new-password').value;
-        const confirmNewPassword = document.getElementById('confirm-new-password').value;
+<%--        const data = {--%>
+<%--            currentPassword: currentPassword || null,--%>
+<%--            newPassword: newPassword || null,--%>
+<%--            email: email || null,--%>
+<%--            phone: phone || null,--%>
+<%--            address: address || null--%>
+<%--        };--%>
 
-        if (newPassword !== '' || confirmNewPassword !== '') {
-            if (newPassword !== confirmNewPassword) {
-                alert('새 비밀번호가 일치하지 않습니다.');
-                return;
-            }
-        }
+<%--        console.log('수정된 정보:', data);--%>
 
-        // 이메일과 전화번호가 하나라도 입력되면 그 값만 전송 가능
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('phone').value;
-        const address = document.getElementById('address').value;
+<%--        // 실제 서버로 제출할 경우 여기에 AJAX 요청 등을 사용--%>
+<%--        alert('수정이 완료되었습니다.');--%>
+<%--    });--%>
+<%--</script>--%>
 
+        const form = new FormData(this);
         const data = {
-            currentPassword: currentPassword || null,
-            newPassword: newPassword || null,
-            email: email || null,
-            phone: phone || null,
-            address: address || null
+            'current-password': form.get('current-password') || null,
+            'new-password': form.get('new-password') || null,
+            'confirm-new-password': form.get('confirm-new-password') || null,
+            'email': form.get('email') || null,
+            'phone': form.get('phone') || null,
+            'address': form.get('address') || null
         };
 
-        console.log('수정된 정보:', data);
-
-        // 실제 서버로 제출할 경우 여기에 AJAX 요청 등을 사용
-        alert('수정이 완료되었습니다.');
+        // AJAX 요청을 사용하여 서버에 데이터 전송
+        fetch('<c:url value="/updateProfile" />', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(data)
+        }).then(response => response.text())
+            .then(result => {
+                alert('수정이 완료되었습니다.');
+            }).catch(error => {
+            console.error('Error:', error);
+        });
     });
 </script>
 

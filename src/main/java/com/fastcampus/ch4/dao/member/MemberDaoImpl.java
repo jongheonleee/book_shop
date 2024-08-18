@@ -85,7 +85,7 @@ public class MemberDaoImpl implements MemberDao {
   }
 
   @Override
-  public String findUsernameByEmail(String email) {
+  public MemberDto findUsernameByEmail(String email) {
     return sqlSession.selectOne(NAMESPACE + ".findUsernameByEmail", email);
   }
 
@@ -113,7 +113,13 @@ public class MemberDaoImpl implements MemberDao {
   public void insertTermAgree(TermAgreeDto termAgree){
      sqlSession.insert(NAMESPACE +".insertTermAgree", termAgree);
   }
-//  @Override
+
+  @Override
+  public MemberDto selectMemberByToken(String token) {
+    return sqlSession.selectOne("com.fastcampus.ch4.dao.member.MemberDao.selectMemberByToken", token);
+  }
+
+  //  @Override
 //  public void insertMemberChangeHistory(MemberChangeHistoryDto dto) {
 //    try {
 //      sqlSession.insert(NAMESPACE + ".insertMemberChangeHistory", dto);

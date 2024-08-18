@@ -23,6 +23,11 @@ public class TermAgreeDto {
     this.termAgree = termAgree;
   }
 
+  public TermAgreeDto(String id, int termId, String termAgree, String regId) {
+    this(id, termId, termAgree);
+    this.regId = regId;
+    // regDate, upDate, upId는 null로 설정됨
+  }
   // 선택적인 정보는 setter를 통해 설정
   public TermAgreeDto(String id, int termId, String termAgree, LocalDateTime regDate, String regId, LocalDateTime upDate, String upId) {
     this.id = id;

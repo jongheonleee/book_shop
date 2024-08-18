@@ -6,58 +6,54 @@
     <!-- ResultMap 정의 -->
     <resultMap id="TermAgreeResultMap" type="com.fastcampus.ch4.dto.member.TermAgreeDto">
         <id property="id" column="id"/>
-        <result property="termId" column="term_id"/>
-        <result property="termAgree" column="is_agrd"/> <!-- 수정된 부분 -->
+        <id property="termId" column="term_id"/>
+        <result property="termAgree" column="is_agrd"/>
         <result property="regDate" column="reg_date"/>
         <result property="regId" column="reg_id"/>
         <result property="upDate" column="up_date"/>
         <result property="upId" column="up_id"/>
     </resultMap>
 
-    <!-- 데이터 삽입 쿼리 -->
-    <insert id="insertTermAgree" parameterType="com.fastcampus.ch4.dto.member.TermAgreeDto">
-        INSERT INTO term_agree (id, term_id, is_agrd, reg_date, reg_id, up_date, up_id)
-        VALUES (#{id}, #{termId}, #{termAgree}, #{regDate}, #{regId}, #{upDate}, #{upId})
-    </insert>
 
     <!-- 데이터 업데이트 쿼리 -->
-    <update id="updateTermAgree" parameterType="com.fastcampus.ch4.dto.member.TermAgreeDto">
+    <update id="updateTermAgreement" parameterType="com.fastcampus.ch4.dto.member.TermAgreeDto">
         UPDATE term_agree
-        SET term_id = #{termId},
-        is_agrd = #{termAgree}, <!-- 수정된 부분 -->
-        reg_date = #{regDate},
-        reg_id = #{regId},
-        up_date = #{upDate},
-        up_id = #{upId}
-        WHERE id = #{id}
+        SET is_agrd = #{termAgree},
+            reg_date = #{regDate},
+            reg_id = #{regId},
+            up_date = #{upDate},
+            up_id = #{upId}
+        WHERE id = #{id} AND term_id = #{termId}
     </update>
 
-    <!-- 약관 동의 데이터 삭제 쿼리 (ID 기준) -->
-    <delete id="deleteTermAgree" parameterType="String">
+    <!-- 데이터 삭제 쿼리 -->
+    <delete id="deleteTermAgreement" parameterType="map">
         DELETE FROM term_agree
-        WHERE id = #{id}
+        WHERE id = #{id} AND term_id = #{termId}
     </delete>
 
-    <!-- 모든 약관 동의 데이터 삭제 쿼리 -->
-    <delete id="deleteAllTermAgrees">
+    <!-- 데이터 전체 삭제 쿼리  -->
+    <delete id="deleteAllTermAgreements">
         DELETE FROM term_agree
     </delete>
-
-    <!-- 특정 ID로 약관 동의 데이터 조회 쿼리 -->
-    <select id="selectTermAgreeById" parameterType="String" resultMap="TermAgreeResultMap">
-        SELECT * FROM term_agree
-        WHERE id = #{id}
-    </select>
-
-    <!-- 모든 약관 동의 데이터 조회 쿼리 -->
-    <select id="selectAllTermAgrees" resultMap="TermAgreeResultMap">
-        SELECT * FROM term_agree
-    </select>
-
-    <!-- 특정 회원의 약관 동의 이력 조회 쿼리 -->
-    <select id="getTermAgree" parameterType="com.fastcampus.ch4.dto.member.TermAgreeDto" resultMap="TermAgreeResultMap">
+    <!-- 데이터 조회 쿼리 -->
+    <select id="getTermAgree" parameterType="map" resultMap="TermAgreeResultMap">
         SELECT * FROM term_agree
         WHERE id = #{id} AND term_id = #{termId}
     </select>
+
+    <select id="getTermAgreements" parameterType="String" resultType="com.fastcampus.ch4.dto.member.TermAgreeDto">
+        SELECT * FROM term_agree WHERE id = #{id}
+    </select>
+
+    <!-- 약관 동의 정보 추가 (리스트 형태) -->
+    <insert id="insertTermAgreement" parameterType="java.util.List">
+        INSERT INTO term_agree (id, term_id, is_agrd, reg_date, reg_id, up_date, up_id)
+        VALUES
+        <foreach collection="list" item="termAgreeDto" separator=",">
+            (#{termAgreeDto.id}, #{termAgreeDto.termId}, #{termAgreeDto.termAgree},
+            #{termAgreeDto.regDate}, #{termAgreeDto.regId}, #{termAgreeDto.upDate}, #{termAgreeDto.upId})
+        </foreach>
+    </insert>
 
 </mapper>

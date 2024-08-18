@@ -2,11 +2,13 @@ package com.fastcampus.ch4.dao.item;
 
 import com.fastcampus.ch4.dto.item.BookDto;
 import com.fastcampus.ch4.dto.item.BookImageDto;
+import com.fastcampus.ch4.dto.item.BookSearchCondition;
 import com.fastcampus.ch4.dto.item.WritingContributorDto;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.rmi.server.ExportException;
 import java.util.*;
 
 @Repository
@@ -27,7 +29,7 @@ public class BookDaoImpl implements BookDao {
 
     // 2. 전체 삭제.
     @Override
-    public int deleteAll() { // 전체 삭제. 삭제된 로우수 반환
+    public int deleteAll() throws Exception{ // 전체 삭제. 삭제된 로우수 반환
         return session.delete(namespace + "deleteAll");
     }
 
@@ -62,8 +64,8 @@ public class BookDaoImpl implements BookDao {
 
     // 8. isbn으로 해당 도서의 판매량 증가.
     @Override
-    public int increaseSaleVol(String isbn) {
-        return session.update(namespace + "increaseSaleVol", isbn);
+    public int increaseSaleVol(Map map) {
+        return session.update(namespace + "increaseSaleVol", map);
     }
 
     // 9. 선택된 페이지 가져오기
@@ -74,20 +76,20 @@ public class BookDaoImpl implements BookDao {
 
     // 10. 도서 이미지 테이블 인서트
     @Override
-    public int insertToBook_image(BookImageDto bookImageDto) throws Exception {
-        return session.insert(namespace + "insertToBook_image", bookImageDto);
+    public int insertToBookImage(BookImageDto bookImageDto) throws Exception {
+        return session.insert(namespace + "insertToBookImage", bookImageDto);
     }
 
     // 11. 집필 기여자 테이블 인서트
     @Override
-    public int insertToWriting_contributor(WritingContributorDto writingContributorDto) throws Exception {
-        return session.insert(namespace + "insertToWriting_contributor", writingContributorDto);
+    public int insertToWritingContributor(WritingContributorDto writingContributorDto) throws Exception {
+        return session.insert(namespace + "insertToWritingContributor", writingContributorDto);
     }
 
     // 12. 집필 기여자-도서 관계 테이블 인서트
     @Override
     public int insertToBookContributor(Map map) throws Exception {
-        return session.insert(namespace + "insertToBook_contributor", map);
+        return session.insert(namespace + "insertToBookContributor", map);
     }
 
     // 13. 해당 isbn의 이미지 시퀀스 최대값 조회
@@ -106,5 +108,29 @@ public class BookDaoImpl implements BookDao {
     @Override
     public Integer selectTrlSeq() throws Exception {
         return session.selectOne(namespace + "selectTrlSeq");
+    }
+
+    // 16. 검색된 전체 도서 개수
+    @Override
+    public int searchResultCnt(BookSearchCondition bsc) throws Exception {
+        return session.selectOne(namespace + "searchResultCnt", bsc);
+    }
+
+    //17. 검색된 페이지
+    @Override
+    public List<BookDto> searchSelectPage(BookSearchCondition bsc) throws Exception {
+        return session.selectList(namespace + "searchSelectPage", bsc);
+    }
+
+    // 18. 집필 기여자 테이블 전체 삭제
+    @Override
+    public int deleteAllFromWritingContributor() throws Exception { // 전체 삭제. 삭제된 로우수 반환
+        return session.delete(namespace + "deleteAllFromWritingContributor");
+    }
+
+    // 18. 도서 기여자 테이블 전체 삭제
+    @Override
+    public int deleteAllFromBookContributor() throws Exception { // 전체 삭제. 삭제된 로우수 반환
+        return session.delete(namespace + "deleteAllFromBookContributor");
     }
 }

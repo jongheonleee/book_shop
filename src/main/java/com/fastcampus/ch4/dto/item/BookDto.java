@@ -11,7 +11,6 @@ public class BookDto {
     private String cate_num; //카테고리 번호
     private String pub_name; //출판사명
     private String title; //책 제목
-    private String pub_num; //발행자 번호
     private String pub_date; //발행(출시)일
     private String sale_stat; //판매상태
     private int sale_vol; //판매량
@@ -39,7 +38,7 @@ public class BookDto {
     private String up_id;//최종수정자식별번호
 
     // 도서_이미지 테이블 - 가로,세로 크기 등등 추가 정보가 필요하면 반환타입 BookImageDto 활용
-    private String repre_img; //대표 이미지URL
+    private String repre_img; //대표이미지URL
     // private List<String> rest_img_urls; //나머지 이미지URL
 
     // 도서_할인_이력 테이블
@@ -51,6 +50,8 @@ public class BookDto {
     private String whol_layr_name; //전체카테고리명
 
     // 집필_기여자 테이블
+    private String wr_cb_num; // 저자번호
+    private String trl_cb_num; // 번역가번호
     private String wr_name; // 저자 이름
     private String trl_name; // 번역가 이름
 //    private List<WritingContributorDto> authors; // 저자리스트
@@ -62,12 +63,11 @@ public class BookDto {
         this.isbn = isbn;
     }
 
-    public BookDto(String isbn, String cate_num, String pub_name, String title, String pub_num, String pub_date, String sale_stat, int sale_vol, int papr_pric, double e_pric, double papr_point, double e_point, int tot_page_num, int tot_book_num, String sale_com, String cont, double rating, String info, String intro_award, String rec, String pub_review, int pre_start_page, int pre_end_page, String ebook_url, Date book_reg_date, String regi_id, Date reg_date, String reg_id, Date up_date, String up_id, String repre_img, double papr_disc, double e_disc, String whol_layr_name, String wr_name, String trl_name) {
+    public BookDto(String isbn, String cate_num, String pub_name, String title, String pub_date, String sale_stat, int sale_vol, int papr_pric, double e_pric, double papr_point, double e_point, int tot_page_num, int tot_book_num, String sale_com, String cont, double rating, String info, String intro_award, String rec, String pub_review, int pre_start_page, int pre_end_page, String ebook_url, Date book_reg_date, String regi_id, Date reg_date, String reg_id, Date up_date, String up_id, String repre_img, double papr_disc, double e_disc, String whol_layr_name, String wr_cb_num, String trl_cb_num, String wr_name, String trl_name) {
         this.isbn = isbn;
         this.cate_num = cate_num;
         this.pub_name = pub_name;
         this.title = title;
-        this.pub_num = pub_num;
         this.pub_date = pub_date;
         this.sale_stat = sale_stat;
         this.sale_vol = sale_vol;
@@ -97,6 +97,8 @@ public class BookDto {
         this.papr_disc = papr_disc;
         this.e_disc = e_disc;
         this.whol_layr_name = whol_layr_name;
+        this.wr_cb_num = wr_cb_num;
+        this.trl_cb_num = trl_cb_num;
         this.wr_name = wr_name;
         this.trl_name = trl_name;
     }
@@ -107,11 +109,6 @@ public class BookDto {
         if (object == null || getClass() != object.getClass()) return false;
         BookDto bookDto = (BookDto) object;
         return Objects.equals(isbn, bookDto.isbn);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(isbn);
     }
 
     public String getIsbn() {
@@ -144,14 +141,6 @@ public class BookDto {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getPub_num() {
-        return pub_num;
-    }
-
-    public void setPub_num(String pub_num) {
-        this.pub_num = pub_num;
     }
 
     public String getPub_date() {
@@ -362,14 +351,6 @@ public class BookDto {
         this.repre_img = repre_img;
     }
 
-//    public List<String> getRest_img_urls() {
-//        return rest_img_urls;
-//    }
-//
-//    public void setRest_img_urls(List<String> rest_img_urls) {
-//        this.rest_img_urls = rest_img_urls;
-//    }
-
     public double getPapr_disc() {
         return papr_disc;
     }
@@ -394,6 +375,22 @@ public class BookDto {
         this.whol_layr_name = whol_layr_name;
     }
 
+    public String getWr_cb_num() {
+        return wr_cb_num;
+    }
+
+    public void setWr_cb_num(String wr_cb_num) {
+        this.wr_cb_num = wr_cb_num;
+    }
+
+    public String getTrl_cb_num() {
+        return trl_cb_num;
+    }
+
+    public void setTrl_cb_num(String trl_cb_num) {
+        this.trl_cb_num = trl_cb_num;
+    }
+
     public String getWr_name() {
         return wr_name;
     }
@@ -409,22 +406,6 @@ public class BookDto {
     public void setTrl_name(String trl_name) {
         this.trl_name = trl_name;
     }
-    //    public List<WritingContributorDto> getAuthors() {
-//        return authors;
-//    }
-//
-//    public void setAuthors(List<WritingContributorDto> authors) {
-//        this.authors = authors;
-//    }
-//
-//    public List<WritingContributorDto> getTranslators() {
-//        return translators;
-//    }
-//
-//    public void setTranslators(List<WritingContributorDto> translators) {
-//        this.translators = translators;
-//    }
-
 
     @Override
     public String toString() {
@@ -433,7 +414,6 @@ public class BookDto {
                 ", cate_num='" + cate_num + '\'' +
                 ", pub_name='" + pub_name + '\'' +
                 ", title='" + title + '\'' +
-                ", pub_num='" + pub_num + '\'' +
                 ", pub_date='" + pub_date + '\'' +
                 ", sale_stat='" + sale_stat + '\'' +
                 ", sale_vol=" + sale_vol +
@@ -459,10 +439,12 @@ public class BookDto {
                 ", reg_id='" + reg_id + '\'' +
                 ", up_date=" + up_date +
                 ", up_id='" + up_id + '\'' +
-                ", repre_img ='" + repre_img + '\'' +
+                ", repre_img='" + repre_img + '\'' +
                 ", papr_disc=" + papr_disc +
                 ", e_disc=" + e_disc +
                 ", whol_layr_name='" + whol_layr_name + '\'' +
+                ", wr_cb_num='" + wr_cb_num + '\'' +
+                ", trl_cb_num='" + trl_cb_num + '\'' +
                 ", wr_name='" + wr_name + '\'' +
                 ", trl_name='" + trl_name + '\'' +
                 '}';

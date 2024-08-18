@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
 // 페이지 로드 시 초기 필터 및 데이터 설정 함수
 function initializeFilter() {
     filterSelection(); // 필터링 수행
+    updateSearchOption(); // 검색 옵션 업데이트
     updateOrderCriteriaOptions(); // 정렬 기준 옵션 업데이트
     setDiscounts(); // 할인율 설정
     setPrices(); // 정가 설정
@@ -32,6 +33,22 @@ function filterSelection() {
         // 필터와 일치하는 책 정보는 표시하고, 나머지는 숨김
         el.style.display = el.classList.contains(filter) ? 'table-row' : 'none';
     });
+}
+
+function updateSearchOption() {
+    const searchOptionSelect = document.getElementById("searchOption"); // 검색 기준 셀렉트 박스
+    const selectedSearchOption = searchOptionSelect.getAttribute('data-selected'); // 현재 선택된 옵션 값 가져오기
+
+    const searchOptions = [
+            { value: 'T', text: '제목' },
+            { value: 'W', text: '저자' },
+            { value: 'P', text: '출판사' }
+        ];
+
+    // 기존 옵션 제거 후 새 옵션 추가
+    searchOptionSelect.innerHTML = searchOptions.map(option =>
+        `<option value="${option.value}" ${option.value === selectedSearchOption ? 'selected' : ''}>${option.text}</option>`
+    ).join('');
 }
 
 // 정렬 기준 옵션을 업데이트하는 함수
@@ -88,9 +105,9 @@ function updateOrderCriteriaOptions() {
 }
 
 // "정렬하기" 버튼 클릭 시, 폼 제출 함수
-function applySorting() {
-    document.getElementById('filterForm').submit(); // 폼 제출
-}
+// function applySorting() {
+//     document.getElementById('filterForm').submit(); // 폼 제출
+// }
 
 // 숫자를 정수로 포맷팅하는 함수
 const formatNumberToInteger = value => Math.floor(value);
@@ -146,11 +163,4 @@ function setSaleVolumes() {
             element.innerText = formatNumberWithCommas(volume);
         }
     });
-}
-
-// 검색 기능 (실제 검색 로직 추가 필요)
-function searchBooks() {
-    const query = document.querySelector('.search-input').value;
-    // 여기에 검색 관련 로직 추가
-    alert('검색 기능이 구현되어야 합니다: ' + query);
 }

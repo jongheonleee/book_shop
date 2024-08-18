@@ -49,7 +49,7 @@ public class OrderProductUpdateTest {
         final String E_BOOK = BookType.EBOOK.getCode();
         final int ITEM_QUANTITY_SINGLE = 1;
 
-        tempBookDto = bookService.getBookByIsbn(TEST_ISBN);
+        tempBookDto = bookService.read(TEST_ISBN);
         assertNotNull(tempBookDto);
 
         OrderDto orderDto = orderDtoFactory.create(TEST_USER);

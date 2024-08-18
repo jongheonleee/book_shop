@@ -14,7 +14,7 @@ public interface CartProductDao {
     public List<CartProductDetailDto> selectListDetailByCartSeq (Integer cartSeq);
     public int deleteOne(Integer cartSeq, String isbn, String prod_type_code);
     public int deleteByCartSeq(Integer cartSeq);
-    public int updateItemQuantity(Integer cartSeq, String isbn, String prod_type_code, Boolean isPlus, String userId);
+    public int updateItemQuantity(Integer cartSeq, String isbn, String prod_type_code, Integer itemQuantity, String userId);
     public int plusItemQuantity(Integer cart_seq, String isbn, String prod_type_code, String userId);
     public int minusItemQuantity(Integer cart_seq, String isbn, String prod_type_code, String userId);
 }

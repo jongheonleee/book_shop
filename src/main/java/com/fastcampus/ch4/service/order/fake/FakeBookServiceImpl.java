@@ -17,7 +17,7 @@ public class FakeBookServiceImpl implements TempBookService {
     });
 
     @Override
-    public TempBookDto getBookByIsbn(String isbn) {
+    public TempBookDto read(String isbn) {
         for (TempBookDto bookDto : BookDtoList) {
             if (bookDto.getIsbn().equals(isbn)) {
                 return bookDto;

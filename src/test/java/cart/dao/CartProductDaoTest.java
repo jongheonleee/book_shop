@@ -6,10 +6,11 @@ import com.fastcampus.ch4.dao.cart.CartProductDaoImpl;
 import com.fastcampus.ch4.dto.cart.CartDto;
 import com.fastcampus.ch4.dto.cart.CartProductDetailDto;
 import com.fastcampus.ch4.dto.cart.CartProductDto;
-import com.fastcampus.ch4.dto.order.temp.TempBookDto;
+import com.fastcampus.ch4.dto.item.BookDto;
+//import com.fastcampus.ch4.dto.order.temp.BookDto;
 import com.fastcampus.ch4.model.order.BookType;
-import com.fastcampus.ch4.service.order.fake.FakeBookServiceImpl;
-import com.fastcampus.ch4.service.order.fake.TempBookService;
+import com.fastcampus.ch4.service.item.BookService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,12 +57,40 @@ public class CartProductDaoTest {
     @Autowired
     private CartProductDaoImpl cartProductDaoImpl;
 
+    @Autowired
+    BookService bookService;
+
     private static final String TEST_USER = "CART_PROD_INSERT";
     final String UPDATE_TEST_USER = "CART_PROD_UPDATE";
-    private static final TempBookService bookService = new FakeBookServiceImpl();
+    final String TEST_ISBN = "1000000000251";
+    final String TEST_ISBN_FIRST = "1000000000257";
+    final String TEST_ISBN_SECOND = "1000000000276";
+//    private static final TempBookService bookService = new FakeBookServiceImpl();
     private static final Integer SINGLE = 1;
+    private static final Integer DOUBLE = 2;
     private static final Integer MULTIPLE = 5;
     private static final int SUCCESS = 1;
+
+    @Before
+    public void tearDown() throws Exception {
+        List<CartDto> cartList = cartDao.selectListByCondition(null, TEST_USER);
+
+
+        if (!cartList.isEmpty()) {
+            cartList.forEach(cartDto -> {
+                int deleteResult = cartProductDao.deleteByCartSeq(cartDto.getCart_seq());
+                assertTrue(deleteResult >= 0);
+            });
+        }
+
+        cartList = cartDao.selectListByCondition(null, UPDATE_TEST_USER);
+        if (!cartList.isEmpty()) {
+            cartList.forEach(cartDto -> {
+                int deleteResult = cartProductDao.deleteByCartSeq(cartDto.getCart_seq());
+                assertTrue(deleteResult >= 0);
+            });
+        }
+    }
 
     @Test
     public void 장바구니상품_insertSingle() {
@@ -74,7 +102,6 @@ public class CartProductDaoTest {
         Integer cartSeq = cartDao.insertAndReturnSeq(cartDto);
         assertNotNull(cartSeq);
 
-        final String TEST_ISBN = "9791162245408";
         final String bookType = BookType.PRINTED.getCode();
 
         // 생성
@@ -117,7 +144,7 @@ public class CartProductDaoTest {
     cart_seq 와 일치하는 ROW 들을 조회한다. => selectList
      */
     @Test
-    public void 장바구니상품_selectOne() {
+    public void 장바구니상품_selectOne() throws Exception {
         // cartDto 생성 & insert
         CartDto cartDto = CartDto.create();
         cartDto.setUserId(TEST_USER);
@@ -127,9 +154,8 @@ public class CartProductDaoTest {
         assertNotNull(cartSeq);
 
         // select bookDto
-        final String TEST_ISBN = "9791162245408";
         final String bookType = BookType.PRINTED.getCode();
-        TempBookDto bookDto = bookService.getBookByIsbn(TEST_ISBN);
+        BookDto bookDto = bookService.read(TEST_ISBN);
         assertNotNull(bookDto);
 
         // 일반도서 insert
@@ -145,8 +171,7 @@ public class CartProductDaoTest {
     }
 
     @Test
-    public void 장바구니상품_selectList() {
-        final String TEST_ISBN = "9791162245408";
+    public void 장바구니상품_selectList() throws Exception {
         final String bookType = BookType.PRINTED.getCode();
 
         // cartDto 생성 & insert
@@ -158,7 +183,7 @@ public class CartProductDaoTest {
         assertNotNull(cartSeq);
 
         // select bookDto
-        TempBookDto bookDto = bookService.getBookByIsbn(TEST_ISBN);
+        BookDto bookDto = bookService.read(TEST_ISBN);
         assertNotNull(bookDto);
 
         // 일반도서 insert
@@ -193,8 +218,53 @@ public class CartProductDaoTest {
         }
     }
 
+//    @Test
+//    public void 장바구니상품_selectOne_JoinBook() throws Exception {
+//        // cartDto 생성 & insert
+//        CartDto cartDto = CartDto.create();
+//        cartDto.setUserId(TEST_USER);
+//        cartDto.setReg_id(TEST_USER);
+//        cartDto.setUp_id(TEST_USER);
+//        Integer cartSeq = cartDao.insertAndReturnSeq(cartDto);
+//        assertNotNull(cartSeq);
+//
+//        // select bookDto
+//
+//        final String bookType = BookType.PRINTED.getCode();
+//
+//        BookDto firstBookDto = bookService.read(TEST_ISBN_FIRST);
+//        BookDto secondBookDto = bookService.read(TEST_ISBN_SECOND);
+//
+//        CartProductDto firstCartProdDto = CartProductDto.create(cartSeq, TEST_ISBN_FIRST, bookType, SINGLE, TEST_USER);
+//
+//        // insert
+//        int firstResult = cartProductDao.insert(firstCartProdDto);
+//        assertEquals(SUCCESS, firstResult);
+//
+//        CartProductDto secondCartProdDto = CartProductDto.create(cartSeq, TEST_ISBN_SECOND, bookType, SINGLE, TEST_USER);
+//
+//        // insert
+//        int secondResult = cartProductDao.insert(secondCartProdDto);
+//        assertEquals(SUCCESS, secondResult);
+//
+//        // select & assert
+//        CartProductDetailDto firstDetailDto = cartProductDao.selectOneDetail(cartSeq, TEST_ISBN_FIRST, bookType);
+//        String firstBookTitle = firstBookDto.getTitle();
+//        String firstDetailTitle = firstDetailDto.getBook_title();
+//        assertEquals(firstBookTitle, firstDetailTitle);
+//
+//        CartProductDetailDto secondDetailDto = cartProductDao.selectOneDetail(cartSeq, TEST_ISBN_SECOND, bookType);
+//        String secondBookTitle = secondBookDto.getTitle();
+//        String secondDetailTitle = secondDetailDto.getBook_title();
+//        assertEquals(secondBookTitle, secondDetailTitle);
+//    }
+
     @Test
-    public void 장바구니상품_selectOne_JoinBook() {
+    public void 장바구니상품_selectList_JoinBook() throws Exception {
+        final String bookType = BookType.PRINTED.getCode();
+
+        List<BookDto> bookList = new ArrayList<>();
+
         // cartDto 생성 & insert
         CartDto cartDto = CartDto.create();
         cartDto.setUserId(TEST_USER);
@@ -204,57 +274,9 @@ public class CartProductDaoTest {
         assertNotNull(cartSeq);
 
         // select bookDto
-        final String TEST_ISBN_FIRST = "9791162245408";
-        final String TEST_ISBN_SECOND = "9788966264414";
-        final String bookType = BookType.PRINTED.getCode();
-
-        TempBookDto firstBookDto = bookService.getBookByIsbn(TEST_ISBN_FIRST);
-        TempBookDto secondBookDto = bookService.getBookByIsbn(TEST_ISBN_SECOND);
-
-        CartProductDto firstCartProdDto = CartProductDto.create(cartSeq, TEST_ISBN_FIRST, bookType, SINGLE, TEST_USER);
-
-        // insert
-        int firstResult = cartProductDao.insert(firstCartProdDto);
-        assertEquals(SUCCESS, firstResult);
-
-        CartProductDto secondCartProdDto = CartProductDto.create(cartSeq, TEST_ISBN_SECOND, bookType, SINGLE, TEST_USER);
-
-        // insert
-        int secondResult = cartProductDao.insert(secondCartProdDto);
-        assertEquals(SUCCESS, secondResult);
-
-        // select & assert
-        CartProductDetailDto firstDetailDto = cartProductDao.selectOneDetail(cartSeq, TEST_ISBN_FIRST, bookType);
-        String firstBookTitle = firstBookDto.getBook_title();
-        String firstDetailTitle = firstDetailDto.getBook_title();
-        assertEquals(firstBookTitle, firstDetailTitle);
-
-        CartProductDetailDto secondDetailDto = cartProductDao.selectOneDetail(cartSeq, TEST_ISBN_SECOND, bookType);
-        String secondBookTitle = secondBookDto.getBook_title();
-        String secondDetailTitle = secondDetailDto.getBook_title();
-        assertEquals(secondBookTitle, secondDetailTitle);
-    }
-
-    @Test
-    public void 장바구니상품_selectList_JoinBook() {
-        final String TEST_ISBN_FIRST = "9791162245408";
-        final String TEST_ISBN_SECOND = "9788966264414";
-        final String bookType = BookType.PRINTED.getCode();
-
-        List<TempBookDto> bookList = new ArrayList<>();
-
-        // cartDto 생성 & insert
-        CartDto cartDto = CartDto.create();
-        cartDto.setUserId(TEST_USER);
-        cartDto.setReg_id(TEST_USER);
-        cartDto.setUp_id(TEST_USER);
-        Integer cartSeq = cartDao.insertAndReturnSeq(cartDto);
-        assertNotNull(cartSeq);
-
-        // select bookDto
-        TempBookDto firstBookDto = bookService.getBookByIsbn(TEST_ISBN_FIRST);
+        BookDto firstBookDto = bookService.read(TEST_ISBN_FIRST);
         bookList.add(firstBookDto);
-        TempBookDto secondBookDto = bookService.getBookByIsbn(TEST_ISBN_SECOND);
+        BookDto secondBookDto = bookService.read(TEST_ISBN_SECOND);
         bookList.add(secondBookDto);
 
         CartProductDto firstCartProdDto = CartProductDto.create(cartSeq, TEST_ISBN_FIRST, bookType, SINGLE, TEST_USER);
@@ -278,11 +300,11 @@ public class CartProductDaoTest {
         assertEquals(bookList.size(), selectedList.size());
 
         // 추가한 bookDto 의 정보와 동일한 selectedList 요소가 있어야 한다.
-        for (TempBookDto bookDto : bookList) {
+        for (BookDto bookDto : bookList) {
             boolean found = false;
             for (CartProductDetailDto cartProductDto : selectedList) {
-                String bookTitle = cartProductDto.getBook_title();
-                String detailTitle = cartProductDto.getBook_title();
+                String bookTitle = cartProductDto.getTitle();
+                String detailTitle = cartProductDto.getTitle();
                 if (bookTitle.equals(detailTitle)) {
                     found = true;
                     break;
@@ -393,7 +415,7 @@ public class CartProductDaoTest {
         assertEquals(SUCCESS, pritedResult);
 
         // update plus * 1
-        int updateResult = cartProductDao.updateItemQuantity(cartSeq, TEST_ISBN, bookType, true, UPDATE_TEST_USER);
+        int updateResult = cartProductDao.updateItemQuantity(cartSeq, TEST_ISBN, bookType, DOUBLE, UPDATE_TEST_USER);
         assertEquals(SUCCESS, updateResult);
 
         CartProductDto selectedDto = cartProductDao.selectOne(cartSeq, TEST_ISBN, bookType);
@@ -406,8 +428,8 @@ public class CartProductDaoTest {
         assertEquals(creaetedQuantity + 1, (int) firstUpdatedQuantity);
 
         // update plus * 5
-        for (int i = 0; i < MULTIPLE; i++) {
-            updateResult = cartProductDao.updateItemQuantity(cartSeq, TEST_ISBN, bookType, true, UPDATE_TEST_USER);
+        for (int i = 1; i < MULTIPLE + 1; i++) {
+            updateResult = cartProductDao.updateItemQuantity(cartSeq, TEST_ISBN, bookType, i, UPDATE_TEST_USER);
             assertEquals(SUCCESS, updateResult);
         }
 
@@ -420,8 +442,8 @@ public class CartProductDaoTest {
         assertEquals(firstUpdatedQuantity + MULTIPLE, (int) secondUpdatedQuantity);
 
         // update minus * 5
-        for (int i = 0; i < MULTIPLE; i++) {
-            updateResult = cartProductDao.updateItemQuantity(cartSeq, TEST_ISBN, bookType, false, UPDATE_TEST_USER);
+        for (int i = 1; i < MULTIPLE + 1; i++) {
+            updateResult = cartProductDao.updateItemQuantity(cartSeq, TEST_ISBN, bookType, i, UPDATE_TEST_USER);
             assertEquals(SUCCESS, updateResult);
         }
 

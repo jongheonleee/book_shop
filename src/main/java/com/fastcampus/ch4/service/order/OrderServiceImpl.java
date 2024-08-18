@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
             }
 
             // 찾을 수 없는 도서 예외처리
-            TempBookDto bookDto = bookService.getBookByIsbn(isbn);
+            TempBookDto bookDto = bookService.read(isbn);
             if (bookDto == null) {
                 throw new IllegalArgumentException("도서를 찾을 수 없습니다.");
             }

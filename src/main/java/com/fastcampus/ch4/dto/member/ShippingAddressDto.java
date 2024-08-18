@@ -3,7 +3,8 @@ package com.fastcampus.ch4.dto.member;
 import java.time.LocalDateTime;
 
 public class ShippingAddressDto {
-   // 주소의 고유 식별자
+
+  // 주소의 고유 식별자
   private String userId;
   private String address;// 사용자 ID
   private String regiAddress1; // 등록 주소지 1
@@ -14,6 +15,13 @@ public class ShippingAddressDto {
   private String regId; // 등록자 ID
   private LocalDateTime upDate; // 수정 날짜
   private String upId;// 수정자 ID
+
+  public ShippingAddressDto(){}
+
+  public ShippingAddressDto(String userId, String address) {
+    this.userId = userId;
+    this.address = address;
+  }
 
   public String getUserId() {
     return userId;

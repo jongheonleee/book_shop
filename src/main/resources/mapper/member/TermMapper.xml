@@ -15,14 +15,44 @@
         <result property="upId" column="up_id"/>
     </resultMap>
 
-    <!-- 새로운 약관 삽입 (term_id 제외) -->
-    <insert id="insertTerm" parameterType="com.fastcampus.ch4.dto.member.TermDto" useGeneratedKeys="true" keyProperty="termId">
-        INSERT INTO term (
-            term_name, term_cont, rqrd, reg_date, reg_id, up_date, up_id
-        ) VALUES (
-                     #{termName}, #{termContent}, #{required}, #{regDate}, #{regId}, #{upDate}, #{upId}
-                 )
+    <!-- 약관 추가 (리스트 형태) -->
+    <insert id="insertTermAgreements" parameterType="java.util.List">
+        INSERT INTO term (term_id, term_name, term_cont, rqrd, reg_date, reg_id, up_date, up_id)
+        VALUES
+        <foreach collection="list" item="termDto" separator=",">
+            (#{termDto.termId}, #{termDto.termName}, #{termDto.termContent}, #{termDto.required},
+            #{termDto.regDate}, #{termDto.regId}, #{termDto.upDate}, #{termDto.upId})
+        </foreach>
     </insert>
+
+    <!-- 약관 이름으로 조회 -->
+    <select id="getTermByName" parameterType="String" resultMap="TermResultMap">
+        SELECT
+            term_id,
+            term_name,
+            term_cont,
+            rqrd,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id
+        FROM term
+        WHERE term_name = #{termName}
+    </select>
+
+    <!-- 모든 약관 조회 -->
+    <select id="getAllTerms" resultMap="TermResultMap">
+        SELECT
+            term_id,
+            term_name,
+            term_cont,
+            rqrd,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id
+        FROM term
+    </select>
 
     <!-- ID로 약관 조회 -->
     <select id="getTermById" parameterType="int" resultMap="TermResultMap">
@@ -39,12 +69,22 @@
         WHERE term_id = #{termId}
     </select>
 
-    <!-- 모든 약관 조회 -->
-    <select id="getAllTerms" resultMap="TermResultMap">
-        SELECT * FROM term
+    <!-- 모든 약관 ID 조회 -->
+    <select id="getAllTermIds" resultType="int">
+        SELECT term_id FROM term
     </select>
 
-    <!-- 기존 약관 업데이트 -->
+    <!-- ID로 약관 삭제 -->
+    <delete id="deleteTermById" parameterType="int">
+        DELETE FROM term WHERE term_id = #{termId}
+    </delete>
+
+    <!-- 모든 약관 삭제 -->
+    <delete id="deleteAllTerms">
+        DELETE FROM term
+    </delete>
+
+    <!-- 약관 업데이트 -->
     <update id="updateTerm" parameterType="com.fastcampus.ch4.dto.member.TermDto">
         UPDATE term
         SET
@@ -58,30 +98,5 @@
         WHERE term_id = #{termId}
     </update>
 
-    <!-- ID로 약관 삭제 -->
-    <delete id="deleteTerm" parameterType="int">
-        DELETE FROM term
-        WHERE term_id = #{termId}
-    </delete>
-
-    <!-- 모든 약관 삭제 -->
-    <delete id="deleteAllTerms">
-        DELETE FROM term
-    </delete>
-
-    <!-- 모든 약관의 ID를 조회 -->
-    <select id="getAllTermIds" resultType="int">
-        SELECT term_id
-        FROM term
-    </select>
-
-    <!-- 약관 동의 정보 저장 -->
-    <insert id="insertTermAgreements" parameterType="java.util.List">
-        INSERT INTO term_agree (id, term_id, term_agree, reg_date, reg_id, up_date, up_id)
-        VALUES
-        <foreach collection="list" item="item" separator=",">
-            (#{item.id}, #{item.termId}, #{item.termAgree}, #{item.regDate}, #{item.regId}, #{item.upDate}, #{item.upId})
-        </foreach>
-    </insert>
 
 </mapper>

@@ -4,12 +4,12 @@ import com.fastcampus.ch4.dto.member.TermAgreeDto;
 import com.fastcampus.ch4.dto.member.TermDto;
 
 import java.util.List;
-import java.util.Map;
 
-public interface   TermService {
+public interface TermService {
     List<TermDto> getAllTerms();
     TermDto getTermById(int termId);
+    void validateTermAgreements(List<TermAgreeDto> termAgreeDtos);
+    void saveTermAgreements(List<TermAgreeDto> termAgreeDtos);
     List<Integer> getAllTermIds();
-//    void saveTermAgreements(String memberId, List<TermAgreeDto> termAgreeDtos);
     List<TermAgreeDto> getTermAgreements(String memberId);
 }

@@ -158,7 +158,7 @@
 
         <!-- 주소 입력 -->
         <label for="address">주소지</label>
-        <input type="text" id="address" name="regiAddress1" required placeholder="주소를 입력해주세요.">
+        <input type="text" id="address" name="address" required placeholder="주소를 입력해주세요.">
         <div class="validation-info">주소를 입력해 주세요.</div>
 
         <!-- 필수 약관 -->

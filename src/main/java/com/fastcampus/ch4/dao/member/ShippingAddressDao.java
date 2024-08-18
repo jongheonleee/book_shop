@@ -12,8 +12,6 @@ public interface ShippingAddressDao {
 
   void deleteAddress(String userId);
 
-
-
   ShippingAddressDto selectAddressById(String userId);
 
   List<ShippingAddressDto> selectAllShippingAddresses();

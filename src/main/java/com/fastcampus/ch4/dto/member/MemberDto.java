@@ -26,6 +26,11 @@ public class MemberDto {
 
   public MemberDto() {}
 
+  public MemberDto(String id, String pswd  ) {
+    this.id = id;
+    this.pswd = pswd;
+  }
+
   // Getters and Setters
   public String getId() {
     return id;

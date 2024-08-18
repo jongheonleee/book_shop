@@ -92,6 +92,14 @@ public class CartController {
     @Autowired
     CartService cartService;
 
+    @ExceptionHandler(Exception.class)
+    public String handleException(Model model) {
+        String message = "예기치 못한 동작이 발생했습니다. 다시 시도해주세요.";
+        model.addAttribute("message", message);
+        return "exception/exceptionPage";
+    }
+
+
     @GetMapping("/list")
     public String cartList(HttpServletRequest request, Model model) {
         // 회원 / 비회원 에 해당하는 값 추출하기

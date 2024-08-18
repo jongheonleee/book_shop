@@ -120,8 +120,6 @@
 
         th,
         td {
-            width: 300px;
-            text-align: center;
             padding: 10px 12px;
             border-bottom: 1px solid #ddd;
         }
@@ -135,7 +133,11 @@
         }
 
         .title {
-            width: 50%;
+            width: 75%; /* 제목의 너비를 전체의 75%로 설정 */
+        }
+
+        .category {
+            width: 25%; /* 카테고리의 너비를 전체의 25%로 설정 */
         }
 
         td.title {
@@ -250,6 +252,7 @@
             background-color: #f0f0f0;
             color: #000;
         }
+
     </style>
 </head>
 <body>

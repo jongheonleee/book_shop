@@ -282,7 +282,7 @@
             if(!confirm("정말로 삭제하시겠습니까?")) return;
 
             let form = $("#form");
-            form.attr("action", "<c:url value='/cscenter/faq/remove${searchCondition.queryString}'/>");
+            form.attr("action", "<c:url value='/cscenter/faq/remove/${faqDto.faq_seq}'/>");
             form.attr("method", "post");
             form.submit();
         });

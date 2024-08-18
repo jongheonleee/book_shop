@@ -3,7 +3,7 @@ package com.fastcampus.ch4.service.faq;
 import com.fastcampus.ch4.dao.admin.AdminDao;
 import com.fastcampus.ch4.dao.faq.FaqCateDao;
 import com.fastcampus.ch4.dao.faq.FaqDao;
-import com.fastcampus.ch4.domain.SearchCondition;
+import com.fastcampus.ch4.domain.faq.SearchCondition;
 import com.fastcampus.ch4.dto.admin.AdminDto;
 import com.fastcampus.ch4.dto.faq.FaqCateDto;
 import com.fastcampus.ch4.dto.faq.FaqDto;
@@ -12,7 +12,6 @@ import com.fastcampus.ch4.exception.SaveFailedException;
 import com.fastcampus.ch4.exception.UnauthorizedAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -15,12 +15,12 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
         // JSP 변수 값을 전역 변수로 설정
-        var page = '${page}';
-        var pageSize = '${pageSize}';
-        var order_criteria = '${order_criteria}';
-        var order_direction = '${order_direction}';
+        var page = '<c:out value="${page}"/>';
+        var pageSize = '<c:out value="${pageSize}"/>';
+        var order_criteria = '<c:out value="${order_criteria}"/>';
+        var order_direction = '<c:out value="${order_direction}"/>';
 
-        let msg = "${msg}";
+        let msg = '<c:out value="${msg}"/>';
         if(msg == "WRT_ERR") alert("게시물 등록에 실패했습니다. 다시 시도해 주세요.");
     </script>
 </head>
@@ -49,22 +49,32 @@
         <!-- 상단 정보 -->
         <section class="product-overview">
             <div class="product-image">
-                <img id="imagePreview" src="${mode=='new' ? '' : bookDto.repre_img}" alt="책 표지" style="${mode=='new' ? 'display:none;' : ''}">
-                <input id="imageUrl" name="repre_img" type="text" value="${mode=='new' ? '' : bookDto.repre_img}"
+                <img id="imagePreview" src="<c:out value="${mode=='new' ? '' : bookDto.repre_img}"/>" alt="책 표지" style="${mode=='new' ? 'display:none;' : ''}">
+                <input id="imageUrl" name="repre_img" type="text" value="<c:out value="${mode=='new' ? '' : bookDto.repre_img}"/>"
                        style="${mode=='new' ? 'display:block;' : 'display:none;'}"
                        placeholder="이미지 URL을 입력하세요"
                        oninput="updateImagePreview()">
             </div>
             <div class="product-details">
-                <p><strong>책 제목: </strong><input type="text" name="title" value="${bookDto.title}" ${mode=="new" ? '' : 'readonly="readonly"'}></p>
-                <p><strong>카테고리:</strong> <input type="text" name="whol_layr_name" value="${bookDto.whol_layr_name}" ${mode=="new" ? '' : 'readonly="readonly"'}></p>
-                <p><strong>저자:</strong> <input type="text" name="wr_name" value="${bookDto.wr_name}" ${mode=="new" ? '' : 'readonly="readonly"'}> / <strong>번역가:</strong> <input type="text" name="trl_name" value="${bookDto.trl_name}" ${mode=="new" ? '' : 'readonly="readonly"'}></p>
-                <p><strong>출판사:</strong> <input type="text" name="pub_name" value="${bookDto.pub_name}" ${mode=="new" ? '' : 'readonly="readonly"'}>
-                <p><strong>종이책 정가:</strong> <input type="text" name="papr_pric" value="${bookDto.papr_pric}" ${mode=="new" ? '' : 'readonly="readonly"'}> / <strong>ebook 정가:</strong> <input type="text" name="e_pric" value="${bookDto.e_pric}" ${mode=="new" ? '' : 'readonly="readonly"'}></p>
-                <p><strong>종이책 할인율:</strong> <input type="text" name="papr_disc" value="${bookDto.papr_disc}" ${mode=="new" ? '' : 'readonly="readonly"'}> / <strong>ebook 할인율:</strong> <input type="text" name="e_disc" value="${bookDto.e_disc}" ${mode=="new" ? '' : 'readonly="readonly"'}></p>
+                <p><strong>책 제목: </strong><input type="text" name="title" value="<c:out value="${bookDto.title}"/>"
+                                                 <c:if test="${mode != 'new'}">readonly="readonly"</c:if>></p>
+                <p><strong>카테고리:</strong> <input type="text" name="whol_layr_name" value="<c:out value="${bookDto.whol_layr_name}"/>"
+                                                 <c:if test="${mode != 'new'}">readonly="readonly"</c:if>></p>
+                <p><strong>저자:</strong> <input type="text" name="wr_name" value="<c:out value="${bookDto.wr_name}"/>"
+                                               <c:if test="${mode != 'new'}">readonly="readonly"</c:if>> / <strong>번역가:</strong> <input type="text" name="trl_name" value="<c:out value="${bookDto.trl_name}"/>"
+                                                                                                                                        <c:if test="${mode != 'new'}">readonly="readonly"</c:if>></p>
+                <p><strong>출판사:</strong> <input type="text" name="pub_name" value="<c:out value="${bookDto.pub_name}"/>"
+                                                <c:if test="${mode != 'new'}">readonly="readonly"</c:if>></p>
+                <p><strong>종이책 정가:</strong> <input type="text" name="papr_pric" value="<c:out value="${bookDto.papr_pric}"/>"
+                                                   <c:if test="${mode != 'new'}">readonly="readonly"</c:if>> / <strong>ebook 정가:</strong> <input type="text" name="e_pric" value="<c:out value="${bookDto.e_pric}"/>"
+                                                                                                                                                 <c:if test="${mode != 'new'}">readonly="readonly"</c:if>></p>
+                <p><strong>종이책 할인율:</strong> <input type="text" name="papr_disc" value="<c:out value="${bookDto.papr_disc}"/>"
+                                                    <c:if test="${mode != 'new'}">readonly="readonly"</c:if>> / <strong>ebook 할인율:</strong> <input type="text" name="e_disc" value="<c:out value="${bookDto.e_disc}"/>"
+                                                                                                                                                   <c:if test="${mode != 'new'}">readonly="readonly"</c:if>></p>
                 <p><strong>종이책 할인가:</strong> <span id="papr_final_price">0원</span></p>
                 <p><strong>ebook 할인가:</strong> <span id="e_final_price">0원</span></p>
-                <p><strong>평점:</strong> <input type="text" name="rating" value="${bookDto.rating}" ${mode=="new" ? '' : 'readonly="readonly"'}></p>
+                <p><strong>평점:</strong> <input type="text" name="rating" value="<c:out value="${bookDto.rating}"/>"
+                                               <c:if test="${mode != 'new'}">readonly="readonly"</c:if>></p>
                 <p>
                     <strong>구매할 상품 유형:</strong>
                     <label>
@@ -85,25 +95,29 @@
         <!-- 추가 정보 -->
         <section class="book-details">
             <h3>수상 내역/미디어 추천</h3>
-            <p><textarea name="intro_awrad" ${mode=="new" ? '' : 'readonly="readonly"'}>${bookDto.intro_award}</textarea></p>
+            <p><textarea name="intro_awrad" <c:if test="${mode != 'new'}">readonly="readonly"</c:if>><c:out value="${bookDto.intro_award}"/></textarea></p>
 
             <h3>도서 정보</h3>
-            <p><textarea name="info" ${mode=="new" ? '' : 'readonly="readonly"'}>${bookDto.info}</textarea></p>
+            <p><textarea name="info" <c:if test="${mode != 'new'}">readonly="readonly"</c:if>><c:out value="${bookDto.info}"/></textarea></p>
 
             <h3>목차</h3>
-            <p><textarea name="cont" ${mode=="new" ? '' : 'readonly="readonly"'}>${bookDto.cont}</textarea></p>
+            <p><textarea name="cont" <c:if test="${mode != 'new'}">readonly="readonly"</c:if>><c:out value="${bookDto.cont}"/></textarea></p>
 
             <h3>추천사</h3>
-            <p><textarea name="rec" ${mode=="new" ? '' : 'readonly="readonly"'}>${bookDto.rec}</textarea></p>
+            <p><textarea name="rec" <c:if test="${mode != 'new'}">readonly="readonly"</c:if>><c:out value="${bookDto.rec}"/></textarea></p>
 
             <h3>출판사 서평</h3>
-            <p><textarea name="pub_review" ${mode=="new" ? '' : 'readonly="readonly"'}>${bookDto.pub_review}</textarea></p>
+            <p><textarea name="pub_review" <c:if test="${mode != 'new'}">readonly="readonly"</c:if>><c:out value="${bookDto.pub_review}"/></textarea></p>
 
             <h3>ISBN, 발행/(출시)일자, 쪽수, 권수</h3>
-            <p>ISBN: <input type="text" name="isbn" value="${bookDto.isbn}" ${mode=="new" ? '' : 'readonly="readonly"'}></p>
-            <p>발행일자: <input type="text" name="pub_date" value="${bookDto.pub_date}" ${mode=="new" ? '' : 'readonly="readonly"'}></p>
-            <p>쪽수: <input type="text" name="tot_page_num" value="${bookDto.tot_page_num}" ${mode=="new" ? '' : 'readonly="readonly"'}></p>
-            <p>권수: <input type="text" name="tot_book_num" value="${bookDto.tot_book_num}" ${mode=="new" ? '' : 'readonly="readonly"'}></p>
+            <p>ISBN: <input type="text" name="isbn" value="<c:out value="${bookDto.isbn}"/>"
+                            <c:if test="${mode != 'new'}">readonly="readonly"</c:if>></p>
+            <p>발행일자: <input type="text" name="pub_date" value="<c:out value="${bookDto.pub_date}"/>"
+                            <c:if test="${mode != 'new'}">readonly="readonly"</c:if>></p>
+            <p>쪽수: <input type="text" name="tot_page_num" value="<c:out value="${bookDto.tot_page_num}"/>"
+                          <c:if test="${mode != 'new'}">readonly="readonly"</c:if>></p>
+            <p>권수: <input type="text" name="tot_book_num" value="<c:out value="${bookDto.tot_book_num}"/>"
+                          <c:if test="${mode != 'new'}">readonly="readonly"</c:if>></p>
         </section>
     </form>
 </main>

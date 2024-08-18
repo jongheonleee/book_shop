@@ -1,6 +1,7 @@
 package com.fastcampus.ch4.service.item;
 
 import com.fastcampus.ch4.dto.item.BookDto;
+import com.fastcampus.ch4.dto.item.BookSearchCondition;
 
 import java.util.List;
 import java.util.Map;
@@ -34,5 +35,11 @@ public interface BookService {
     List<BookDto> getAllBookList() throws Exception;
 
     // 10. 판매량 증가
-    int increaseSaleVol(String isbn) throws Exception;
+    int increaseSaleVol(Map map) throws Exception;
+
+    // 11. 검색된 페이지 가져오기
+    List<BookDto> getSearchResultPage(BookSearchCondition bsc) throws Exception;
+
+    // 12. 검색된 총 도서 개수 카운트
+    int getSearchResultCnt(BookSearchCondition bsc) throws Exception;
 }

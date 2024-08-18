@@ -22,6 +22,12 @@ public class WritingContributorDto {
         this.name = name;
     }
 
+    public WritingContributorDto(String cb_num, String name, char wr_chk) {
+        this.cb_num = cb_num;
+        this.name = name;
+        this.wr_chk = wr_chk;
+    }
+
     public WritingContributorDto(String cb_num, String name, String job1, String job2, String cont_desc, char wr_chk, Date reg_date, String reg_id, Date up_date, String up_id) {
         this.cb_num = cb_num;
         this.name = name;

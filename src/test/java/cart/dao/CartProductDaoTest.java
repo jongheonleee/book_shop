@@ -293,7 +293,6 @@ public class CartProductDaoTest {
 
         // select & assert
         List<CartProductDetailDto> selectedList = cartProductDao.selectListDetailByCartSeq(cartSeq);
-        selectedList.forEach(s -> System.out.println(s.toString()));
         assertTrue(!selectedList.isEmpty());
 
 

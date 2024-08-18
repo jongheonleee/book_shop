@@ -78,8 +78,6 @@ public class CartServiceUpdateItemQuantityTest {
         int deleteCartProductResult = cartProductDao.deleteByCartSeq(cartSeq);
         assertTrue(deleteCartProductResult > 0);
         int deleteCartResult = cartProductDao.deleteByCartSeq(cartSeq);
-//        System.out.println(cartSeq);
-//        assertTrue(deleteCartResult > 0);
     }
 
 

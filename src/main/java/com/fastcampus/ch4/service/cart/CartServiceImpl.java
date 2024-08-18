@@ -138,7 +138,8 @@ public class CartServiceImpl implements CartService {
         // userId 만 있는 경우
         if (cartSeq == null) {
             List<CartDto> cartList = cartDao.selectListByCondition(null, userId);
-            targetCartSeq = cartList.get(0).getCart_seq();
+            int lastIndex = cartList.size() - 1;
+            targetCartSeq = cartList.get(lastIndex).getCart_seq();
         }
 
         // 장바구니 상품 정보 불러오기

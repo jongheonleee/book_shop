@@ -39,7 +39,8 @@ JavaScript   : 236 <br> </code></pre>
 #### 팀원 구성
 |Backend<br>이종헌|Backend<br>박준홍|Backend<br>임정미|Backend<br>진상호|Backend<br>최해창|
 |:---:|:---:|:---:|:---:|:---:|
-|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/8996854a-d438-4dca-958b-36d841bbac04" width="150" height="150" alt="종헌"> |<img src="https://github.com/user-attachments/assets/614cb54b-773a-4fbd-b069-b71e61dc5dc7" width="150" height="150"  alt="준홍">|<img src="https://github.com/user-attachments/assets/816c534c-2076-483b-8d27-15255e0bcb63" width="150" height="150" alt="정미">|<img src="https://github.com/user-attachments/assets/b9812efe-a5c7-4bfe-ad40-95586b9f2b1c" width="150" height="150"  alt="상호">|<img src="https://github.com/user-attachments/assets/2c952555-aee8-4145-b2b3-18e3bd4a1fb3" width="150" height="150"  alt="해창">|
+|<img src="https://github.com/user-attachments/assets/ad565235-acef-469a-b5a7-c4bb478acf5c" width="150" height="150" alt="종헌"> |<img src="https://github.com/user-attachments/assets/614cb54b-773a-4fbd-b069-b71e61dc5dc7" width="150" height="150"  alt="준홍">|<img src="https://github.com/user-attachments/assets/816c534c-2076-483b-8d27-15255e0bcb63" width="150" height="150" alt="정미">|<img src="https://github.com/user-attachments/assets/b9812efe-a5c7-4bfe-ad40-95586b9f2b1c" width="150" height="150"  alt="상호">|<img src="https://github.com/user-attachments/assets/2c952555-aee8-4145-b2b3-18e3bd4a1fb3" width="150" height="150"  alt="해창">|
+
 
 <br>
 
@@ -49,7 +50,12 @@ JavaScript   : 236 <br> </code></pre>
 ### :wrench: Enviroment
 |IntelliJ|VS Code|Git|Github|Maven|
 |:---:|:---:|:---:|:---:|:---:|
-|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/6eeea4ae-8147-48e0-b575-d8b877018518" width="100" alter="Intelli_J">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/c1a36e3c-2b0b-432d-a295-425dae970d88" width="100" alter="Visual_Studio_Code">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/518df61b-b11c-40e9-a777-3f20e3e6cc71" width="150" alter="Git">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/e2edb3e4-f99c-4f14-98e5-24c1b951353d" width="100" alter="Git_Hub">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/fa9e2440-de88-4bdc-914c-8117f4b4e71e" width="100" alter="Maven">|
+|<img src="https://github.com/user-attachments/assets/f4cbc018-112c-4bb8-a146-66556e081e12" width="100" alter="Intelli_J">|<img src="https://github.com/user-attachments/assets/f7947272-d2ae-4b4e-b8f2-684a23982c79" width="100" alter="Visual_Studio_Code">|<img src="https://github.com/user-attachments/assets/3b1f4e4f-b0e4-4970-a063-e22de57194ef" width="150" alter="Git">|<img src="https://github.com/user-attachments/assets/26dd9279-0a4b-49b9-bd49-31285c1acf88" width="100" alter="Git_Hub">|<img src="https://github.com/user-attachments/assets/21eedd17-6fa4-498f-8ff4-cca248390a0d" width="100" alter="Maven">|
+
+
+
+
+
 
 <br>
 
@@ -58,29 +64,38 @@ JavaScript   : 236 <br> </code></pre>
 #### Backend
 |Java|Spring Framework|JDBC|MyBatis|JUnit|
 |:---:|:---:|:---:|:---:|:---:|
-|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/60bf40c0-9618-4921-ada7-dbf99f8420f9" width="200" alter="Java">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/d6b56031-cad0-4603-ae2f-6019e0678d28" width="250" alter="Spring_Framework">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/229bddcd-92eb-4525-b9d5-430e258a0693" width="250" alt="JDBC">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/0a173691-17d7-41ab-beaa-219bcec56c0e" width="200" alter="MyBatis">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/de7d26b1-0a02-46aa-8885-d5b338868166" width="200" alt="JUnit">|
+|<img src="https://github.com/user-attachments/assets/28be0295-7dd7-4c23-9187-88551da46935" width="200" alter="Java">|<img src="https://github.com/user-attachments/assets/a113813c-9333-4139-af38-df89140e888f" width="250" alter="Spring_Framework">|<img src="https://github.com/user-attachments/assets/d9182743-b53c-4bb2-974b-f5c17361ed58" width="250" alt="JDBC">|<img src="https://github.com/user-attachments/assets/4561d1ac-e99c-4d4c-b697-a450b24945b3" width="200" alter="MyBatis">|<img src="https://github.com/user-attachments/assets/5d6d4e3e-82da-4f66-9b47-f2c47618c49a" width="200" alt="JUnit">|
+
+
+
 
 #### Frontend
 |HTML/CSS/JS|jQuery|Json|JSP|Ajax|BootStrap|
 |:---:|:---:|:---:|:---:|:---:|:---:|
-|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/f582f661-4ad1-47e0-8f50-a2e1a5f701d3" width="150" alter="HTML_CSS_JS">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/f1ba0255-736b-4ec8-81d6-d6602033ee47" width="100" alter="jQuery">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/30685eac-63ff-4d38-8e40-83c6339cc6c6" width="100" alter="Jason">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/c81205bb-a537-4495-86cd-af7b3c16af22" width="100" alter="JSP">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/dbea28d9-cbae-44fe-ad7c-b1bc7d7358ad" width="100" alter="Ajax">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/deb2a352-2e1d-464f-968e-727ed02ea66b" width="100" alter="Bootstrap">
+|<img src="https://github.com/user-attachments/assets/3e185104-ade9-41a4-9682-1506ed3560ae" width="150" alter="HTML_CSS_JS">|<img src="https://github.com/user-attachments/assets/f9fc187d-fca5-4833-9eb1-348ab5455fcb" width="100" alter="jQuery">|<img src="https://github.com/user-attachments/assets/20396459-7188-48dc-9149-9e97c941a16a" width="100" alter="Jason">|<img src="https://github.com/user-attachments/assets/3e59e699-f3ce-4cf2-a3d2-a69614271a85" width="100" alter="JSP">|<img src="https://github.com/user-attachments/assets/bb2c6810-4423-434c-95bb-fbb1dac61383" width="100" alter="Ajax">|<img src="https://github.com/user-attachments/assets/8653492b-ed39-4f10-b587-31771a98bf3c" width="100" alter="Bootstrap">
+
+
 
 #### Database
 |MySQL|
 |:---:|
-|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/d3c36f68-7cbd-47f3-9540-b3deab04bde3" width="150" alter="MySQL">|
+|<img src="https://github.com/user-attachments/assets/8531d5f4-465c-4aba-a1b2-135ef6db5964" width="150" alter="MySQL">|
+
+
 
 #### Web Server
 |Apache Tomcat|
 |:---:|
-|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/620bad47-c2af-4864-9b0e-dc9382b3a6d9" width="150" alter="ApacheTomcat">|
+|<img src="https://github.com/user-attachments/assets/c13bf1d6-d557-4e61-95d6-7dbf292083cc" width="150" alter="ApacheTomcat">|
 
 <br>
 
 ### :eyes: Communication
 |Zoom|Notion|Google Sheets|Google Slides|
 |:---:|:---:|:---:|:---:|
-|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/c4fffda0-6529-481d-a732-235286f2f88d" width="100" alter="Zoom">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/99292659-a24d-4ee9-975e-81ecc50b154e" width="100" alter="Notion">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/694234ab-183f-46f8-9658-9d90cdd2c12f" width="200" alter="GoogleSlides">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/710ea932-e479-48df-80c3-b0c975ed7757" width="150" alter="GoogleSheet">|
+|<img src="https://github.com/user-attachments/assets/088cc1c3-23a8-495b-a25d-93bfadb18d82" width="100" alter="Zoom">|<img src="https://github.com/user-attachments/assets/8501f009-aedf-437e-bf08-fdc80b39a831" width="100" alter="Notion">|<img src="https://github.com/user-attachments/assets/7ad698b5-7b6e-47e3-80d3-85f02b06e729" width="200" alter="GoogleSlides">|<img src="https://github.com/user-attachments/assets/9b240f89-96cd-4df5-abf5-3f3184b11102" width="150" alter="GoogleSheet">|
+
+
 
 <br>
 

@@ -1,10 +1,6 @@
-# :tshirt: 의류 쇼핑몰 BYEZ
+# 📚: 도서 쇼핑몰 "소가연"
 <br>
-<div align="center">
-  <img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/cc0d0fd0-de13-415a-b7ee-c34d23cfdc3b" alt="byez_logo" width="200"/>
-</div>
 
-<br>
 
 ## 프로젝트 소개
 "소가연" 

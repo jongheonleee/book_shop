@@ -1,13 +1,18 @@
-# 📚: 도서 쇼핑몰 "소가연"
-<br>
-
+# 📚: 소가연
 
 ## 프로젝트 소개
-"소가연" 
-책을 사서 공부하다 보면, 좋은 책을 구하는게 어렵다. 그 이유는 독자가 해당 분야에 대해 쉽게 공부할 수 있도록 진입장벽을 낮추고 많은 양의 책을 판매하려는 구조를 갖추고 있기 때문인 것 같다
-우리는 이를 타파한다. 많은 양의 책을 팔기보다는 소중한 지식를 후대에게 연결해주는 가치를 선사하는 쇼핑몰이다.
+<strong>"소가연"</strong>이란? <strong>"소중한 가치를 연결해준다"</strong>를 함축해서 사용한 용어입니다. 
+책을 사서 공부하다 보면, 좋은 책을 구하는게 어렵습니다. 그 이유는 현재 도서 시장 구조가 독자가 해당 분야에 대해 쉽게 공부할 수 있도록 진입장벽을 낮추고 많은 양의 책을 판매하려는 구조를 갖추고 있기 때문입니다. 우리는 이 구조를 개선시키기 위해 "소가연" 프로젝트를 진행했습니다. <strong>단순히 많은 양의 책을 팔기보다는 소중한 지식를 후대에게 연결해주는 가치를 선사하는 도서 쇼핑몰입니다.</strong>
 
-_벤치마킹 사이트: 교보문고, 예스24, 알라딘 
+<br>
+
+👉 벤치마킹 사이트: 교보문고, 예스24, 알라딘 
+
+<br>
+
+<img src="https://github.com/user-attachments/assets/ae175f7e-408a-4094-9e14-0cb301174423" width="150" height="150" >
+<img src="https://github.com/user-attachments/assets/d8c3309a-2424-45b9-8ee1-caad89ef9c88" width="150" height="150" > 
+<img src="https://github.com/user-attachments/assets/ec940906-eb9b-40ce-9618-7fd9ee2d98e3" width="150" height="150" >
 
 <br>
 
@@ -26,14 +31,15 @@ JSP          : 2887 <br>
 XML          : 8742 <br>
 JavaScript   : 236 <br> </code></pre> 
 
+
 ### :busts_in_silhouette: 프로젝트 팀원
 #### 팀명: 스토리 커넥터
 - 소중한 가치를 연결해주고 전달해주는 사람들
 
 #### 팀원 구성
-|Backend<br>이종헌|Backend<br>박준홍|Backend<br>김정미|Backend<br>진상호|Backend<br>최해창|Backend<br>임찬빈|
+|Backend<br>이종헌|Backend<br>박준홍|Backend<br>임정미|Backend<br>진상호|Backend<br>최해창|
 |:---:|:---:|:---:|:---:|:---:|
-|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/52edcf1c-62b6-46b9-aeeb-31754bf37162" alt="종헌"> |<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/8996854a-d438-4dca-958b-36d841bbac04" alt="준홍">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/f6ff0253-6fb9-48ac-a26e-2047a21161a7" alt="정미">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/e07d9ac7-092c-4609-8fcd-e9ffb1da4b77" alt="상호">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/63faa396-f749-4f2c-ae9b-b650cc28f053" alt="해창">|
+|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/8996854a-d438-4dca-958b-36d841bbac04" width="150" height="150" alt="종헌"> |<img src="https://github.com/user-attachments/assets/614cb54b-773a-4fbd-b069-b71e61dc5dc7" width="150" height="150"  alt="준홍">|<img src="https://github.com/user-attachments/assets/816c534c-2076-483b-8d27-15255e0bcb63" width="150" height="150" alt="정미">|<img src="https://github.com/user-attachments/assets/b9812efe-a5c7-4bfe-ad40-95586b9f2b1c" width="150" height="150"  alt="상호">|<img src="https://github.com/user-attachments/assets/2c952555-aee8-4145-b2b3-18e3bd4a1fb3" width="150" height="150"  alt="해창">|
 
 <br>
 
@@ -50,9 +56,9 @@ JavaScript   : 236 <br> </code></pre>
 ### :hammer: Tool
 
 #### Backend
-|Java|Spring Framework|Spring Security|JDBC|MyBatis|JUnit|
-|:---:|:---:|:---:|:---:|:---:|:---:|
-|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/60bf40c0-9618-4921-ada7-dbf99f8420f9" width="200" alter="Java">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/d6b56031-cad0-4603-ae2f-6019e0678d28" width="250" alter="Spring_Framework">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/b346caad-903e-411e-ba2a-9d024ce13ad9" width="200" alt="SpringSecurity">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/229bddcd-92eb-4525-b9d5-430e258a0693" width="250" alt="JDBC">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/0a173691-17d7-41ab-beaa-219bcec56c0e" width="200" alter="MyBatis">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/de7d26b1-0a02-46aa-8885-d5b338868166" width="200" alt="JUnit">|
+|Java|Spring Framework|JDBC|MyBatis|JUnit|
+|:---:|:---:|:---:|:---:|:---:|
+|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/60bf40c0-9618-4921-ada7-dbf99f8420f9" width="200" alter="Java">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/d6b56031-cad0-4603-ae2f-6019e0678d28" width="250" alter="Spring_Framework">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/229bddcd-92eb-4525-b9d5-430e258a0693" width="250" alt="JDBC">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/0a173691-17d7-41ab-beaa-219bcec56c0e" width="200" alter="MyBatis">|<img src="https://github.com/JJackSparrow/statuscode200/assets/147983164/de7d26b1-0a02-46aa-8885-d5b338868166" width="200" alt="JUnit">|
 
 #### Frontend
 |HTML/CSS/JS|jQuery|Json|JSP|Ajax|BootStrap|
@@ -79,26 +85,21 @@ JavaScript   : 236 <br> </code></pre>
 <br>
 
 ## ERD
-### 34 tables
-<img src="" width="1000" alter=ERD>
-
-(url : )
+### 53 tables
+<img src="https://github.com/user-attachments/assets/c12e0945-18b5-4fd3-b4eb-d7f020fdc66f" width="1000" alter=ERD>
+(url : https://www.erdcloud.com/d/97RR68D92DLjaKaZK)
 
 <br>
 
 ## API 명세서 
-<img src="" width="1000" alter=ERD>
-
-(url : )
-
-<br>
-<br>
-
+<img src="https://github.com/user-attachments/assets/9b1922dc-137f-4f84-8d1e-176202a36a0e" width="1000" alter=ERD>
+(url : https://docs.google.com/spreadsheets/d/1opilBS6O1CBRZB85MZBUJ6zWhTdDo0UUxtFDgAtDaik/edit?hl=ko&gid=0#gid=0)
 
 <br>
+<br>
 
-## :factory: 팀 프로젝트 디렉토리 구조
 
+<br>
 
 <br>
 

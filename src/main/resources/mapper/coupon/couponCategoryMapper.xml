@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fastcampus.ch4.dao.coupon.CouponCategoryMapper">
+  <select id="count" resultType="int">
+    SELECT count(*)
+    FROM coupon_cate;
+  </select>
+
+  <select id="selectAll" resultType="CouponCategoryDto">
+    SELECT
+        cate_code,
+        name,
+        comt,
+        top_cate_code
+    FROM coupon_cate;
+  </select>
+
+  <select id="selectAllByJoin" resultType="CouponCategoryDto">
+    SELECT
+      CONCAT(c1.name, ' ', c2.name) AS cate_code,
+      CONCAT(c1.name, ' ', c2.name) AS cate_name,
+      c2.comt as comt
+    FROM coupon_cate c1
+    INNER JOIN coupon_cate c2
+    ON c1.cate_code = c2.top_cate_code;
+  </select>
+
+  <select id="select" parameterType="string" resultType="CouponCategoryDto">
+    SELECT
+      cate_code,
+      name,
+      comt,
+      top_cate_code
+    FROM coupon_cate
+    WHERE cate_code = #{cate_code};
+  </select>
+
+  <select id="selectByCateCode" parameterType="string" resultType="CouponCategoryDto">
+    SELECT
+      cate_code,
+      name,
+      comt,
+      top_cate_code
+    FROM coupon_cate
+    WHERE cate_code LIKE CONCAT('%', #{cate_code}, '%');
+  </select>
+
+  <insert id="insert" parameterType="CouponCategoryDto">
+    INSERT INTO coupon_cate
+    VALUES (#{cate_code}, #{name}, #{comt}, #{top_cate_code});
+  </insert>
+
+  <update id="update" parameterType="CouponCategoryDto">
+    UPDATE coupon_cate
+    SET name = #{name},
+        comt = #{comt},
+        top_cate_code = #{top_cate_code}
+    WHERE cate_code = #{cate_code};
+  </update>
+
+  <delete id="deleteAll">
+    DELETE
+    FROM coupon_cate;
+  </delete>
+
+  <delete id="delete" parameterType="string">
+    DELETE
+    FROM coupon_cate
+    WHERE cate_code = #{cate_code};
+  </delete>
+
+</mapper>

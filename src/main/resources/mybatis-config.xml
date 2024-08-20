@@ -38,5 +38,9 @@
     <typeAlias alias="QaStateDto" type="com.fastcampus.ch4.dto.qa.QaStateDto"/>
     <typeAlias alias="CodeDto" type="com.fastcampus.ch4.dto.global.CodeDto"/>
     <typeAlias alias="ReplyDto" type="com.fastcampus.ch4.dto.qa.ReplyDto"/>
+
+    <!-- coupon -->
+    <typeAlias alias="CouponCategoryDto" type="com.fastcampus.ch4.dto.coupon.CouponCategoryDto"/>
+
   </typeAliases>
 </configuration>

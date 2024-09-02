@@ -1,9 +1,11 @@
 package com.fastcampus.ch4.controller.item;
 
 import com.fastcampus.ch4.dto.item.BookDto;
+import com.fastcampus.ch4.dto.item.CategoryDto;
 import com.fastcampus.ch4.dto.item.PageHandler;
 import com.fastcampus.ch4.dto.item.BookSearchCondition;
 import com.fastcampus.ch4.service.item.BookService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +38,7 @@ public class BookController {
 //            if(!registerValueCheck(bookDto)) throw new IllegalArgumentException("Invalid value");
             //TODO 데이터 바인더 오류 - null이 들어갈 수 없는  타입을 빈 칸으로 둔 경우. 컨트롤러에 넘어오지 않음. 자스로 한번 검증시키고 컨트롤러에서 이중 검증.
 
+            System.out.println("controller: ");
             int rowCnt = bookService.write(bookDto); // insert
             System.out.println(rowCnt);
             if(rowCnt != 1)
@@ -49,16 +52,45 @@ public class BookController {
             m.addAttribute(bookDto); // 작성하던 내용
             m.addAttribute("mode", "new");
             m.addAttribute("msg", "WRT_ERR");
-            return "item/book"; // 실패하면 상품 등록 화면 보여주기
+
+            try {
+                // 전체 카테고리 리스트 받아오기
+                List<CategoryDto> cateList = bookService.getCategoryList();
+                // ObjectMapper 인스턴스 생성
+                ObjectMapper objectMapper = new ObjectMapper();
+                // 자바 객체를 JSON 문자열로 변환
+                String cateListJson = objectMapper.writeValueAsString(cateList);
+
+                m.addAttribute("mode", "new");
+                m.addAttribute("cateListJson", cateListJson);
+
+            } catch(Exception e2) {
+                e2.printStackTrace();
+            }
+
+            return "item/registerBook"; // 실패하면 상품 등록 화면 보여주기
         }
     }
 
     // 도서등록 페이지로 연결
     @GetMapping("/write")
     public String write(Model m){
-        // mode가 new이면 readonly 해제. 즉 글쓰기 모드.
-        m.addAttribute("mode", "new");
-        return "item/book";
+        try {
+            // 전체 카테고리 리스트 받아오기
+            List<CategoryDto> cateList = bookService.getCategoryList();
+            // ObjectMapper 인스턴스 생성
+            ObjectMapper objectMapper = new ObjectMapper();
+            // 자바 객체를 JSON 문자열로 변환
+            String cateListJson = objectMapper.writeValueAsString(cateList);
+
+            m.addAttribute("mode", "new");
+            m.addAttribute("cateListJson", cateListJson);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return "item/registerBook";
     }
 
     // 도서 삭제 후 보고있던 도서리스트 페이지로 이동
@@ -98,12 +130,14 @@ public class BookController {
         try {
             // bookDto 읽어와서 book.jsp에 bookDto, page, pageSize넘겨주기
             BookDto bookDto = bookService.read(isbn);
+            System.out.println(bookDto);
             // m.addAttribute("bookDto",bookDto);와 동일
             m.addAttribute(bookDto);
             m.addAttribute("page", page);
             m.addAttribute("pageSize", pageSize);
             m.addAttribute("order_criteria", order_criteria);
             m.addAttribute("order_direction", order_direction);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

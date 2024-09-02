@@ -2,6 +2,7 @@ package com.fastcampus.ch4.service.item;
 
 import com.fastcampus.ch4.dto.item.BookDto;
 import com.fastcampus.ch4.dto.item.BookSearchCondition;
+import com.fastcampus.ch4.dto.item.CategoryDto;
 
 import java.util.List;
 import java.util.Map;
@@ -42,4 +43,7 @@ public interface BookService {
 
     // 12. 검색된 총 도서 개수 카운트
     int getSearchResultCnt(BookSearchCondition bsc) throws Exception;
+
+    // 13. 전체 카테고리 리스트 받아오기
+    List<CategoryDto> getCategoryList() throws Exception;
 }

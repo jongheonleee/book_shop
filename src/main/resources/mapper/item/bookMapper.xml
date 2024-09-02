@@ -54,67 +54,37 @@
 
     <!--도서 이미지 테이블 인서트 -->
     <insert id="insertToBookImage" parameterType="BookDto">
-        INSERT INTO book_image (isbn, img_seq, img_url, img_regi_day, reg_date, reg_id, up_date, up_id)
-        VALUES (#{isbn}, #{img_seq}, #{img_url}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "reg_id",DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "up_id")
+        INSERT INTO book_image (isbn, img_seq, img_url,  main_img_chk, img_regi_day, reg_date, reg_id, up_date, up_id)
+        VALUES (#{isbn}, #{img_seq}, #{img_url}, #{main_img_chk}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "reg_id",DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "up_id")
     </insert>
 
     <!--집필 기여자 테이블 인서트 -->
     <insert id="insertToWritingContributor" parameterType="BookDto">
-        <!-- 저자 삽입 조건 -->
-        <choose>
-            <when test="wr_chk=='Y'">
-                INSERT INTO writing_contributor (
-                cb_num,
-                name,
-                job1,
-                job2,
-                cont_desc,
-                wr_chk,
-                reg_date,
-                reg_id,
-                up_date,
-                up_id
-                )
-                VALUES (
-                #{cb_num},      <!-- 저자 기여자 번호 -->
-                #{name},        <!-- 저자 이름 -->
-                "job1",        <!-- 저자 직업1 -->
-                "job2",        <!-- 저자 직업2 -->
-                "wr_desc",   <!-- 저자 설명 -->
-                'Y',               <!-- wr_chk: 저자는 'Y' -->
-                DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),  <!-- 등록일시 -->
-                "reg_id",          <!-- reg_id를 고정된 값으로 사용 -->
-                DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),  <!-- 수정일시 -->
-                "up_id"            <!-- up_id를 고정된 값으로 사용 -->
-                );
-            </when>
-            <when test="wr_chk == 'N'">
-                INSERT INTO writing_contributor (
-                cb_num,
-                name,
-                job1,
-                job2,
-                cont_desc,
-                wr_chk,
-                reg_date,
-                reg_id,
-                up_date,
-                up_id
-                )
-                VALUES (
-                #{cb_num},      <!-- 번역가 기여자 번호 -->
-                #{name},        <!-- 번역가 이름 -->
-                "job1",        <!-- 저자 직업1 -->
-                "job2",        <!-- 저자 직업2 -->
-                "trl_desc",   <!-- 저자 설명 -->
-                'N',               <!-- wr_chk: 번역가는 'N' -->
-                DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),  <!-- 등록일시 -->
-                "reg_id",          <!-- reg_id를 고정된 값으로 사용 -->
-                DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),  <!-- 수정일시 -->
-                "up_id"            <!-- up_id를 고정된 값으로 사용 -->
-                );
-            </when>
-        </choose>
+        INSERT INTO writing_contributor (
+            cb_num,
+            name,
+            job1,
+            job2,
+            cont_desc,
+            wr_chk,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id
+            )
+            VALUES (
+            #{cb_num},      <!-- 저자 기여자 번호 -->
+            #{name},        <!-- 저자 이름 -->
+            "job1",        <!-- 저자 직업1 -->
+            "job2",        <!-- 저자 직업2 -->
+            "wr_desc",   <!-- 저자 설명 -->
+            #{wr_chk},               <!-- wr_chk: 저자는 'Y' -->
+            DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),  <!-- 등록일시 -->
+            "reg_id",          <!-- reg_id를 고정된 값으로 사용 -->
+            DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),  <!-- 수정일시 -->
+            "up_id"            <!-- up_id를 고정된 값으로 사용 -->
+        );
+
     </insert>
 
 
@@ -136,24 +106,23 @@
     </select>
 
     <select id="selectMaxImgSeq" parameterType="String" resultType="int">
-        SELECT img_seq FROM book_image where isbn = #{isbn} ORDER BY img_seq DESC Limit 0,1;
+        SELECT img_seq FROM book_image where isbn = #{isbn} ORDER BY img_seq DESC Limit 0,1
     </select>
 
-    <select id="selectWrSeq">
-        select nextval('wr_seq') from dual;
+    <select id="selectWrSeq" resultType="int">
+        select nextval('wr_seq') from dual
     </select>
 
-    <select id="selectTrlSeq">
-        select nextval('trl_seq') from dual;
+    <select id="selectTrlSeq" resultType="int">
+        select nextval('trl_seq') from dual
     </select>
 
     <!-- isbn으로 조회 -->
     <select id="select" parameterType="String" resultType="BookDto">
-
         SELECT
         bi.img_url AS repre_img,
         b.*,  <!-- 도서의 기본 정보 -->
-        c.name AS whol_layr_name,  <!-- 전체 카테고리명 -->
+        c.whol_layr_name AS whol_layr_name,  <!-- 전체 카테고리명 -->
         COALESCE(bdh.papr_disc, 0) AS papr_disc,  <!-- 종이책 할인율 -->
         COALESCE(bdh.e_disc, 0) AS e_disc,  <!-- eBook 할인율 -->
         (
@@ -413,4 +382,6 @@
                 <include refid="searchCondition"/>
         ) AS Temp
     </select>
+
+
 </mapper>

@@ -16,6 +16,20 @@ public class CategoryDto {
     private String up_id;
 
     public CategoryDto() {}
+
+    public CategoryDto(String cate_num, String name, int lev, char last_cate_chk, String cur_layr_num, String whol_layr_name, Date reg_date, String reg_id, Date up_date, String up_id) {
+        this.cate_num = cate_num;
+        this.name = name;
+        this.lev = lev;
+        this.last_cate_chk = last_cate_chk;
+        this.cur_layr_num = cur_layr_num;
+        this.whol_layr_name = whol_layr_name;
+        this.reg_date = reg_date;
+        this.reg_id = reg_id;
+        this.up_date = up_date;
+        this.up_id = up_id;
+    }
+
     public CategoryDto(String cate_num, String name, int lev, char last_cate_chk, String cur_layr_num, String whol_layr_name) {
         this.cate_num = cate_num;
         this.name = name;
@@ -63,11 +77,11 @@ public class CategoryDto {
         this.cate_num = cate_num;
     }
 
-    public String getCate_name() {
+    public String getName() {
         return name;
     }
 
-    public void setCate_name(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 

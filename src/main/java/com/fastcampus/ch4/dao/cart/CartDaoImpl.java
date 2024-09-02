@@ -31,7 +31,7 @@ public class CartDaoImpl implements CartDao {
     public List<CartDto> selectListByCondition(Integer cartSeq, String userId) {
         Map<String, Object> map = new HashMap<>();
         map.put("cart_seq", cartSeq);
-        map.put("user_id", userId);
+        map.put("userId", userId);
         return sqlSession.selectList(namespace + "selectByCondition", map);
     }
 

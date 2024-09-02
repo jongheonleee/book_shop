@@ -32,7 +32,7 @@ public interface MemberDao {
   boolean validatePassword(String id, String password);
 
   // 이메일로 아이디 찾기
-  String findUsernameByEmail(String email);
+  MemberDto findUsernameByEmail(String email);
 
   // 이메일과 아이디로 비밀번호 찾기
   MemberDto selectMemberByEmailAndId(String email, String id);
@@ -47,7 +47,7 @@ public interface MemberDao {
 //  // 회원 정보 수정 이력 저장
 //  void insertMemberChangeHistory(MemberChangeHistoryDto dto); // 회원 정보 수정 이력 저장
 //  회원정보수정 dto 따로 만들지 고민
-
+  MemberDto selectMemberByToken(String token);
 }
 
 

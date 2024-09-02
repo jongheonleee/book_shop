@@ -1,18 +1,19 @@
 package com.fastcampus.ch4.dto.member;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class InfoChangeHistoryDto {
 
   private int chgId;        // 변경 이력 ID
   private String id;            // 고유 식별자
-  private Date chgTime;        // 변경 시각
+  private LocalDate chgTime;        // 변경 시각
   private String chgInfo;      // 변경 사항 설명
   private String bforChg;      // 변경 전 값
   private String aftrChg;      // 변경 후 값
-  private Date regDate;        // 등록 시각
+  private LocalDate regDate;        // 등록 시각
   private String regId;        // 등록자 ID
-  private Date upDate;         // 업데이트 시각
+  private LocalDate upDate;         // 업데이트 시각
   private String upId;         // 업데이트자 ID
 
   // Getters and Setters
@@ -35,11 +36,11 @@ public class InfoChangeHistoryDto {
     this.id = id;
   }
 
-  public Date getChgTime() {
+  public LocalDate getChgTime() {
     return chgTime;
   }
 
-  public void setChgTime(Date chgTime) {
+  public void setChgTime(LocalDate chgTime) {
     this.chgTime = chgTime;
   }
 
@@ -67,11 +68,11 @@ public class InfoChangeHistoryDto {
     this.aftrChg = aftrChg;
   }
 
-  public Date getRegDate() {
+  public LocalDate getRegDate() {
     return regDate;
   }
 
-  public void setRegDate(Date regDate) {
+  public void setRegDate(LocalDate regDate) {
     this.regDate = regDate;
   }
 
@@ -83,11 +84,11 @@ public class InfoChangeHistoryDto {
     this.regId = regId;
   }
 
-  public Date getUpDate() {
+  public LocalDate getUpDate() {
     return upDate;
   }
 
-  public void setUpDate(Date upDate) {
+  public void setUpDate(LocalDate upDate) {
     this.upDate = upDate;
   }
 

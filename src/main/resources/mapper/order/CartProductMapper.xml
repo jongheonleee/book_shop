@@ -55,7 +55,7 @@
         cp.isbn,
         cp.prod_type_code,
         cp.item_quan,
-        book.book_title,
+        book.title,
         book.papr_pric,
         book.e_pric,
         book.papr_point,
@@ -72,6 +72,8 @@
         AND NOW() BETWEEN bdh.disc_start_date AND bdh.disc_end_date
         INNER JOIN book_shop.book_image bi
         ON cp.isbn = bi.isbn
+        AND book.isbn = bi.isbn
+        AND bi.main_img_chk = 'Y' -- main 이미지 인 것만 출력
         <where>
             <if test="cart_seq != null">
                 cp.cart_seq = #{cart_seq}
@@ -106,11 +108,11 @@
             up_date = NOW(),
             up_id = #{userId},
             updated_at = NOW(),
-            <if test="isPlus == true">
-                item_quan = item_quan + 1
+            <if test="item_quan > 1">
+                item_quan = #{item_quan},
             </if>
-            <if test="isPlus == false">
-                item_quan = item_quan - 1
+            <if test="1 >= item_quan">
+                item_quan = 1
             </if>
         </set>
         WHERE

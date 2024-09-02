@@ -7,6 +7,7 @@ import com.fastcampus.ch4.dto.member.MemberDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -69,13 +70,13 @@ public class InfoChangeHistoryServiceImpl implements InfoChangeHistoryService {
   private InfoChangeHistoryDto createChangeHistory(String changeType, String beforeChange, String afterChange, MemberDto currentUser) {
     InfoChangeHistoryDto changeLog = new InfoChangeHistoryDto();
     changeLog.setId(currentUser.getId());
-    changeLog.setChgTime(new Date());
+    changeLog.setChgTime(LocalDate.now());
     changeLog.setChgInfo(changeType + " updated");
     changeLog.setBforChg(beforeChange);
     changeLog.setAftrChg(afterChange);
-    changeLog.setRegDate(new Date());
+    changeLog.setRegDate(LocalDate.now());
     changeLog.setRegId(currentUser.getId());
-    changeLog.setUpDate(new Date());
+    changeLog.setUpDate(LocalDate.now());
     changeLog.setUpId(currentUser.getId());
 
     return changeLog;

@@ -8,9 +8,9 @@ import com.fastcampus.ch4.domain.qa.PageHandler;
 import com.fastcampus.ch4.dto.global.CodeDto;
 import com.fastcampus.ch4.dto.qa.QaDto;
 import com.fastcampus.ch4.domain.qa.SearchCondition;
-import com.fastcampus.ch4.dto.qa.QaStateDto;
+
+import com.fastcampus.ch4.dto.qa.ReplyDto;
 import com.fastcampus.ch4.service.qa.QaService;
-import com.fastcampus.ch4.service.qa.QaServiceImp;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,13 +22,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -36,11 +34,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Controller
 public class QaController {
 
-    private final QaService service; // 이름 명확히
+    private final QaService qaService; // 이름 명확히
 
     @Autowired
-    public QaController(QaService service) {
-        this.service = service;
+    public QaController(QaService qaService) {
+        this.qaService = qaService;
     }
 
     /**
@@ -81,7 +79,7 @@ public class QaController {
         HttpSession session = request.getSession();
         String userId = (String) session.getAttribute("userId");
         userId = "user1";
-        List<QaDto> selected = service.read(userId, sc);
+        List<QaDto> selected = qaService.read(userId, sc);
         int totalCnt = count(userId);
         PageHandler ph = new PageHandler(totalCnt, sc);
 
@@ -104,9 +102,9 @@ public class QaController {
         HttpSession session = request.getSession();
         String userId = (String) session.getAttribute("userId");
         userId = "user1";
-        List<QaDto> selected = service.readBySearchCondition(userId, sc); // 여기 최대 길이 10임
+        List<QaDto> selected = qaService.readBySearchCondition(userId, sc); // 여기 최대 길이 10임
 
-        int totalCnt = service.count(userId, sc); // 이 부분 고쳐야함 count(userId, sc)
+        int totalCnt = qaService.count(userId, sc); // 이 부분 고쳐야함 count(userId, sc)
         PageHandler ph = new PageHandler(totalCnt, sc);
 
         // 정보 저장
@@ -125,12 +123,14 @@ public class QaController {
         if (!isLogin(request)) return "redirect:/loginForm";
 
         // 필요 정보 조회 - 1. 해당 문의글, 2. 답변글(추후에 개발)
-        QaDto qa = service.readDetail(qaNum);
+        QaDto qaDto = qaService.readDetail(qaNum);
 
         // AnswerList 조회
+        ReplyDto replyDto = qaService.readReply(qaNum);
 
         // 정보 저장
-        model.addAttribute("qa", qa);
+        model.addAttribute("qa", qaDto);
+        model.addAttribute("reply", replyDto);
 
         // 뷰 반환
         return "/qa/detail";
@@ -159,7 +159,7 @@ public class QaController {
         userId = "user1";
 
         // 등록 실패 시 에러 메시지 전달
-        if (!service.write(userId, qaDto)) {
+        if (!qaService.write(userId, qaDto)) {
             String errorMsg = "서버 내부 오류가 발생했거나, 동일한 제목의 문의글이 존재합니다.";
             model.addAttribute("errorMsg", errorMsg);
             return "/qa/error";
@@ -177,13 +177,13 @@ public class QaController {
 
         // 삭제 작업 시행
         dto.setQa_num(qaNum);
-        if (!service.remove(dto)) {
+        if (!qaService.remove(dto)) {
             model.addAttribute("msg", "문의글 삭제에 실패했습니다.");
             return "/qa/error";
         }
 
         // 삭제 성고하면 문의글 리스트로 이동
-        return "/qa/list";
+        return "redirect:/qa/list";
     }
 
     // (8) 유저 문의글 수정 페이지
@@ -193,7 +193,7 @@ public class QaController {
         if (!isLogin(request)) return "redirect:/loginForm";
 
         // 기존 문의글 저장
-        QaDto qa = service.readDetail(qaNum);
+        QaDto qa = qaService.readDetail(qaNum);
         model.addAttribute("qa", qa);
 
         // 문의글 수정 페이지 반환
@@ -211,13 +211,13 @@ public class QaController {
         String userId = (String) session.getAttribute("userId");
         userId = "user1";
 
-        if (!service.modify(userId, dto, sc)) {
+        if (!qaService.modify(userId, dto, sc)) {
             model.addAttribute("msg", "문의글 수정에 실패했습니다");
             return "/qa/error";
         }
 
         // 수정 성공하면 문의글 리스트로 이동
-        return "/qa/list";
+        return "redirect:/qa/list";
     }
 
     @GetMapping("/qa/list/{qa_stat_code}")
@@ -232,8 +232,8 @@ public class QaController {
 
 
         // 상태를 기반으로 관련 문의글 카운트 및 조회
-        int totalCnt = service.countByState(userId, qa_stat_code);
-        List<QaDto> selected = service.readByState(userId, qa_stat_code, sc);
+        int totalCnt = qaService.countByState(userId, qa_stat_code);
+        List<QaDto> selected = qaService.readByState(userId, qa_stat_code, sc);
 
         // 페이지 핸들러 생성
         PageHandler ph = new PageHandler(totalCnt, sc);
@@ -260,19 +260,37 @@ public class QaController {
         return true;
     }
 
+    @PostMapping("/admin/qa/reply")
+    public String addReply(HttpServletRequest request, ReplyDto dto) {
+        // 로그인 여부 확인
+        if (!isLogin(request)) return "redirect:/loginForm";
+
+        // 관리자 여부 확인
+
+
+        // 답변 등록
+        if (!qaService.addReply(dto)) {
+            return "/qa/error";
+        }
+
+        // 답변 등록 성공하면 문의글 상세 페이지로 이동
+        return "redirect:/qa/" + dto.getQa_num();
+    }
+
     // (1) 유저 관련 문의글 카운팅
     private int count(String userId) {
-        return service.count(userId);
+        return qaService.count(userId);
     }
 
 
     @ModelAttribute("states")
     private List<CodeDto> readState() {
-        return service.readAllCategory("01");
+        return qaService.readAllCategory("01");
     }
 
     @ModelAttribute("categories")
     private List<CodeDto> readCategory() {
-        return service.readAllCategory("02");
+        return qaService.readAllCategory("02");
     }
+
 }

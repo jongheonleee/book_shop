@@ -92,8 +92,8 @@
     </delete>
 
     <!-- 이메일로 아이디 찾기 -->
-    <select id="findUsernameByEmail" parameterType="String" resultType="String">
-        SELECT id FROM member WHERE email = #{email}
+    <select id="findUsernameByEmail" parameterType="String" resultMap="memberResultMap">
+        SELECT * FROM member WHERE email = #{email}
     </select>
 
     <!-- 이메일과 아이디를 기반으로 사용자 조회 -->
@@ -122,5 +122,10 @@
         INSERT INTO term_agree (id, term_id, term_agree, reg_date, reg_id, up_date, up_id)
         VALUES (#{id}, #{termId}, #{termAgree}, #{regDate}, #{regId}, #{upDate}, #{upId})
     </insert>
-
+    <!-- 토큰으로 회원 조회 -->
+    <select id="selectMemberByToken" parameterType="String" resultType="com.fastcampus.ch4.dto.member.MemberDto">
+        SELECT *
+        FROM members
+        WHERE mail_tokn = #{token}
+    </select>
 </mapper>

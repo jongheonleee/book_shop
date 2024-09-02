@@ -12,9 +12,12 @@ public class TermDto {
   private LocalDateTime upDate; // up_date
   private String upId;         // up_id
 
-  public TermDto(){
+  public TermDto(){}
 
+  public TermDto(int termId) {
+    this.termId = termId;
   }
+
   public TermDto(int termId, String termName, String termContent, String required, LocalDateTime regDate, String regId, LocalDateTime upDate, String upId) {
     this.termId = termId;
     this.termName = termName;
@@ -25,6 +28,21 @@ public class TermDto {
     this.upDate = upDate;
     this.upId = upId;
   }
+
+  public TermDto(int termId, String termName) {
+    this.termId = termId;
+    this.termName = termName;
+  }
+
+  public TermDto(int termId, String termName, String termContent, String required) {
+    this.termId = termId;
+    this.termName = termName;
+    this.termContent = termContent;
+    this.required = required;
+  }
+
+
+
 
   // Getters and Setters
   public int getTermId() {

@@ -82,4 +82,16 @@ public class AdminDto {
     public void setUp_id(String up_id) {
         this.up_id = up_id;
     }
+
+    @Override
+    public String toString() {
+        return "AdminDto{" +
+                "id='" + id + '\'' +
+                ", auth=" + auth +
+                ", reg_date=" + reg_date +
+                ", reg_id='" + reg_id + '\'' +
+                ", up_date=" + up_date +
+                ", up_id='" + up_id + '\'' +
+                '}';
+    }
 }

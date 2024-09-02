@@ -14,7 +14,7 @@ public class CartProductDetailDto implements PriceManipulatable {
     String updated_at;
 
     // BookDto
-    String book_title;
+    String title;
     String img_url;
 
     // 정가
@@ -48,7 +48,7 @@ public class CartProductDetailDto implements PriceManipulatable {
                 ", item_quan=" + item_quan +
                 ", created_at='" + created_at + '\'' +
                 ", updated_at='" + updated_at + '\'' +
-                ", book_title='" + book_title + '\'' +
+                ", book_title='" + title + '\'' +
                 ", img_url='" + img_url + '\'' +
                 ", papr_pric=" + papr_pric +
                 ", e_pric=" + e_pric +
@@ -115,12 +115,12 @@ public class CartProductDetailDto implements PriceManipulatable {
         this.updated_at = updated_at;
     }
 
-    public String getBook_title() {
-        return book_title;
+    public String getTitle() {
+        return title;
     }
 
-    public void setBook_title(String book_title) {
-        this.book_title = book_title;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getImg_url() {

@@ -17,7 +17,6 @@ public class ShippingAddressServiceImpl implements ShippingAddressService {
   @Override
   @Transactional
   public void addAddress(ShippingAddressDto address) {
-    // 새 주소를 추가
     shippingAddressDao.insertAddress(address);
   }
 
@@ -26,14 +25,6 @@ public class ShippingAddressServiceImpl implements ShippingAddressService {
   public void updateAddress(ShippingAddressDto address) {
     shippingAddressDao.updateAddress(address);
   }
-
-  @Override
-  @Transactional
-  public void deleteAddress(String userId) {
-    shippingAddressDao.deleteAddress(userId);
-  }
-
-
 
   @Override
   public ShippingAddressDto getAddressById(String userId) {
@@ -47,7 +38,19 @@ public class ShippingAddressServiceImpl implements ShippingAddressService {
 
   @Override
   @Transactional
+  public void deleteAddress(String userId) {
+    shippingAddressDao.deleteAddress(userId);
+  }
+
+  @Override
+  @Transactional
   public void deleteAllAddresses() {
     shippingAddressDao.deleteAllShippingAddresses();
   }
+
+
+
+
+
+
 }

@@ -1,23 +1,19 @@
 package com.fastcampus.ch4.controller.cart;
 
+import com.fastcampus.ch4.domain.cart.ItemInfoDto;
 import com.fastcampus.ch4.dto.cart.CartProductDetailDto;
-import com.fastcampus.ch4.dto.cart.temp.FakeMemberDto;
-import com.fastcampus.ch4.dto.order.temp.TempBookDto;
 import com.fastcampus.ch4.service.cart.CartService;
-import com.google.protobuf.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /*
@@ -96,6 +92,14 @@ public class CartController {
     @Autowired
     CartService cartService;
 
+    @ExceptionHandler(Exception.class)
+    public String handleException(Model model) {
+        String message = "예기치 못한 동작이 발생했습니다. 다시 시도해주세요.";
+        model.addAttribute("message", message);
+        return "exception/exceptionPage";
+    }
+
+
     @GetMapping("/list")
     public String cartList(HttpServletRequest request, Model model) {
         // 회원 / 비회원 에 해당하는 값 추출하기
@@ -103,7 +107,7 @@ public class CartController {
         String userId;
         // 회원 = session 에서 관리
         HttpSession session = request.getSession();
-        userId = (String) session.getAttribute("userId");
+        userId = (String) session.getAttribute("id");
 
         // 비회원 Cookie
         if (userId == null) {
@@ -129,41 +133,97 @@ public class CartController {
     }
 
     @PostMapping("/add")
-    public String addCart(@RequestBody String bookTitle, HttpServletRequest request, Model model) {
-        return "cart/add";
+    public String addCart(
+            String isbn, String product_type,
+            HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+        /*
+        필요한 변수 : cartSeq, isbn, prodTypeCode
+
+        - 회원 검사
+        - cart 생성 및 조회
+        - cart Proudct 추가
+        - 장바구니 품목을 추가할 때 cookie 로 생성해서 추가하도록 한다.
+         */
+
+        // 회원 / 비회원 에 해당하는 값 추출하기
+        Integer cartSeq = null;
+        String userId;
+        // 회원 = session 에서 관리
+        HttpSession session = request.getSession();
+        userId = (String) session.getAttribute("id");
+
+        // 비회원 Cookie
+        if (userId == null) {
+            Cookie[] cookies = request.getCookies();
+
+            Optional<Integer> optCartSeq = Arrays.stream(cookies)
+                    .filter(cookie -> cookie.getName().equals("cartSeq"))
+                    .map(cookie -> Integer.valueOf(cookie.getValue()))
+                    .findFirst();
+
+            if (optCartSeq.isPresent()) {
+                cartSeq = optCartSeq.get();
+            }
+        }
+
+        cartSeq = cartService.createOrGetCart(cartSeq, userId);
+
+        // cookie 셋팅
+        if (userId == null) {
+            Cookie cookie = new Cookie("cartSeq", String.valueOf(cartSeq));
+            cookie.setDomain("localhost");
+            cookie.setPath("/");
+            cookie.setMaxAge(60*60*24);
+            response.addCookie(cookie);
+        }
+
+        int result = cartService.addCartProduct(cartSeq, isbn, product_type, userId);
+        return "redirect:/cart/list";
     }
 
-    @PatchMapping("/product/quantity")
-//    public ResponseEntity updateQuantity(@RequestBody CartProductDetailDto cartProductDetailDto, @RequestBody boolean isPlus, HttpServletRequest request, Model model) {
-    public ResponseEntity updateQuantity(CartProductDetailDto cartProductDetailDto, boolean isPlus,  HttpServletRequest request, Model model) {
+    @PostMapping("/product/quantity")
+    public String updateQuantity(ItemInfoDto infoDto, HttpServletRequest request, Model model) {
         /*
-        필요한 변수 : cartSeq, isbn, prodTypeCode, isPlus, userId
+        필요한 변수 : cartSeq, isbn, prodTypeCode, itemQuantity, userId
 
         필요한 서비스 : updateItemQuantity
 
         반환 : update 성공여부, 업데이트된 수치
          */
 
-        //
-
         // userId 추출하기
         String userId;
         // 회원 = session 에서 관리
         HttpSession session = request.getSession();
-        userId = (String) session.getAttribute("userId");
+        userId = (String) session.getAttribute("id");
 
-//        Integer cartSeq = cartProductDetailDto.getCart_seq();
-//        String isbn = cartProductDetailDto.getIsbn();
-//        String prodTypeCode = cartProductDetailDto.getProd_type_code();
-//        map.keySet().forEach(i -> System.out.println(i.toString()));
-
-//        request.getParameter()
-
+        Integer updateItemQuantity = infoDto.getItemQuantity();
+        Integer cartSeq = infoDto.getCartSeq();
+        String isbn = infoDto.getIsbn();
+        String prodTypeCode = infoDto.getProdTypeCode();
 
         // updateItemQuantity
-//        int updateResult = cartService.updateItemQuantity(cartSeq, isbn, prodTypeCode, isPlus, userId);
+        int resultItemQuantity = cartService.updateItemQuantity(cartSeq, isbn, prodTypeCode, updateItemQuantity, userId);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return "redirect:/cart/list";
+    }
+
+    @PostMapping("/product/delete")
+    public String deleteCartProduct(ItemInfoDto infoDto, HttpServletRequest request, Model model) {
+        // userId 추출하기
+        String userId;
+        // 회원 = session 에서 관리
+        HttpSession session = request.getSession();
+        userId = (String) session.getAttribute("id");
+
+        Integer cartSeq = infoDto.getCartSeq();
+        String isbn = infoDto.getIsbn();
+        String prodTypeCode = infoDto.getProdTypeCode();
+
+        // delete
+        int deleteResult = cartService.deleteCartProduct(cartSeq, isbn, prodTypeCode);
+
+        return "redirect:/cart/list";
     }
 }
 

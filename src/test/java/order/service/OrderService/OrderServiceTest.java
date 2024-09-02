@@ -140,7 +140,7 @@ public class OrderServiceTest {
 
         for (int i = 0; i < ordProdList.size(); i++) {
             Map<String, Object> currentOrdProd = ordProdList.get(i);
-            TempBookDto bookDto = bookService.getBookByIsbn(currentOrdProd.get("isbn").toString());
+            TempBookDto bookDto = bookService.read(currentOrdProd.get("isbn").toString());
             int itemQuantity = (int) currentOrdProd.get("item_quan");
             String prodTypeCode = currentOrdProd.get("prod_type_code").toString();
 

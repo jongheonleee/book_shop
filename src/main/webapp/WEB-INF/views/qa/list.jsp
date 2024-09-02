@@ -302,8 +302,14 @@
                     <td>${qaDto.stat_name}</td>
                     <td>${qaDto.chk_repl}</td>
                     <td>${qaDto.created_at}</td>
-                    <td><button id="edit-button" value="${qaDto.qa_num}">수정</button></td>
-                    <td><button id="delete-button" value="${qaDto.qa_num}">삭제</button></td>
+                    <c:if test="${qaDto.chk_repl== 'N'}">
+                        <td><button id="edit-button" value="${qaDto.qa_num}">수정</button></td>
+                        <td><button id="delete-button" value="${qaDto.qa_num}">삭제</button></td>
+                    </c:if>
+                    <c:if test="${qaDto.chk_repl == 'Y'}">
+                        <td>🙅🏻‍♂️</td>
+                        <td>️🙅🏻‍♂️</td>
+                    </c:if>
                 </tr>
             </c:forEach>
 

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fastcampus.ch4.mapper.InfoChangeHistoryMapper">
+
+<!-- InfoChangeHistoryDto를 매핑하기 위한 resultMap 정의 -->
+<resultMap id="infoChangeHistoryMap" type="com.fastcampus.ch4.dto.member.InfoChangeHistoryDto">
+
+    <id property="chgId" column="chg_id"/>
+    <result property="chgTime" column="chg_time"/>
+    <result property="chgInfo" column="chg_info"/>
+    <result property="bforChg" column="bfor_chg"/>
+    <result property="aftrChg" column="aftr_chg"/>
+    <result property="regDate" column="reg_date"/>
+    <result property="regId" column="reg_id"/>
+    <result property="upDate" column="up_date"/>
+    <result property="upId" column="up_id"/>
+</resultMap>
+
+<!-- 새로운 변경 이력 레코드를 삽입하는 쿼리 -->
+    <insert id="saveChangeHistory" parameterType="com.fastcampus.ch4.dto.member.InfoChangeHistoryDto">
+
+        INSERT INTO info_change_history (
+            chg_time,
+            chg_info,
+            bfor_chg,
+            aftr_chg,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id,
+            id
+        )
+        VALUES (
+                   #{chgTime},
+                   #{chgInfo},
+                   #{bforChg},
+                   #{aftrChg},
+                   #{regDate},
+                   #{regId},
+                   #{upDate},
+                   #{upId},
+                   #{id}
+               )
+    </insert>
+
+<!-- ID로 변경 이력 레코드를 조회하는 쿼리 -->
+<select id="getChangeHistoryById" parameterType="String" resultMap="infoChangeHistoryMap">
+    SELECT * FROM info_change_history WHERE id = #{id}
+</select>
+
+    <delete id="deleteAllChangeHistories">
+        DELETE FROM info_change_history
+    </delete>
+
+</mapper>

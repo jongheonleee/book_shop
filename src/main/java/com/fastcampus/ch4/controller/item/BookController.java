@@ -130,7 +130,7 @@ public class BookController {
         try {
             // bookDto 읽어와서 book.jsp에 bookDto, page, pageSize넘겨주기
             BookDto bookDto = bookService.read(isbn);
-
+            System.out.println(bookDto);
             // m.addAttribute("bookDto",bookDto);와 동일
             m.addAttribute(bookDto);
             m.addAttribute("page", page);

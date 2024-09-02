@@ -54,8 +54,8 @@
 
     <!--도서 이미지 테이블 인서트 -->
     <insert id="insertToBookImage" parameterType="BookDto">
-        INSERT INTO book_image (isbn, img_seq, img_url, img_regi_day, reg_date, reg_id, up_date, up_id)
-        VALUES (#{isbn}, #{img_seq}, #{img_url}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "reg_id",DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "up_id")
+        INSERT INTO book_image (isbn, img_seq, img_url,  main_img_chk, img_regi_day, reg_date, reg_id, up_date, up_id)
+        VALUES (#{isbn}, #{img_seq}, #{img_url}, #{main_img_chk}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "reg_id",DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "up_id")
     </insert>
 
     <!--집필 기여자 테이블 인서트 -->

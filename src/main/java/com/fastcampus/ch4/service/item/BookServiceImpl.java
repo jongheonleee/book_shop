@@ -66,6 +66,7 @@ public class BookServiceImpl implements com.fastcampus.ch4.service.item.BookServ
         // 대표_이미지 설정
         bookImageDto.setImg_url(bookDto.getRepre_img());
         bookImageDto.setMain_img_chk('Y');
+        System.out.println(bookImageDto);
 
         bookDao.insertToBookImage(bookImageDto);
 

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fastcampus.ch4.dao.member.TermAgreeDao">
+
+    <!-- ResultMap 정의 -->
+    <resultMap id="TermAgreeResultMap" type="com.fastcampus.ch4.dto.member.TermAgreeDto">
+        <id property="id" column="id"/>
+        <id property="termId" column="term_id"/>
+        <result property="termAgree" column="is_agrd"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="regId" column="reg_id"/>
+        <result property="upDate" column="up_date"/>
+        <result property="upId" column="up_id"/>
+    </resultMap>
+
+
+    <!-- 데이터 업데이트 쿼리 -->
+    <update id="updateTermAgreement" parameterType="com.fastcampus.ch4.dto.member.TermAgreeDto">
+        UPDATE term_agree
+        SET is_agrd = #{termAgree},
+            reg_date = #{regDate},
+            reg_id = #{regId},
+            up_date = #{upDate},
+            up_id = #{upId}
+        WHERE id = #{id} AND term_id = #{termId}
+    </update>
+
+    <!-- 데이터 삭제 쿼리 -->
+    <delete id="deleteTermAgreement" parameterType="map">
+        DELETE FROM term_agree
+        WHERE id = #{id} AND term_id = #{termId}
+    </delete>
+
+    <!-- 데이터 전체 삭제 쿼리  -->
+    <delete id="deleteAllTermAgreements">
+        DELETE FROM term_agree
+    </delete>
+    <!-- 데이터 조회 쿼리 -->
+    <select id="getTermAgree" parameterType="map" resultMap="TermAgreeResultMap">
+        SELECT * FROM term_agree
+        WHERE id = #{id} AND term_id = #{termId}
+    </select>
+
+    <select id="getTermAgreements" parameterType="String" resultType="com.fastcampus.ch4.dto.member.TermAgreeDto">
+        SELECT * FROM term_agree WHERE id = #{id}
+    </select>
+
+    <!-- 약관 동의 정보 추가 (리스트 형태) -->
+    <insert id="insertTermAgreement" parameterType="java.util.List">
+        INSERT INTO term_agree (id, term_id, is_agrd, reg_date, reg_id, up_date, up_id)
+        VALUES
+        <foreach collection="list" item="termAgreeDto" separator=",">
+            (#{termAgreeDto.id}, #{termAgreeDto.termId}, #{termAgreeDto.termAgree},
+            #{termAgreeDto.regDate}, #{termAgreeDto.regId}, #{termAgreeDto.upDate}, #{termAgreeDto.upId})
+        </foreach>
+    </insert>
+
+</mapper>

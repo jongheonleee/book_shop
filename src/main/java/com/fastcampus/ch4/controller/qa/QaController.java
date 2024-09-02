@@ -66,7 +66,7 @@ public class QaController {
     @ResponseStatus(value = HttpStatus.CONFLICT)
     public ResponseEntity<String> handleConflict() {
         return ResponseEntity.status(DUPLICATED_KEY.getHttpStatus()).body(DUPLICATED_KEY.getMessage());
-    }
+}
 
 
     // (2) 유저 관련 문의글 조회

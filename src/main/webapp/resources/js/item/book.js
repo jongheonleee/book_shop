@@ -92,6 +92,32 @@ $(function() {
     // 폼에 있는 input, textarea태그 값들 전송
     $('#writeBtn').on("click", () => {
         const form = $('#form');
+        const cateNum = getCateNum();
+
+        // cate_num을 폼 데이터에 추가
+        $('#form').append(`<input type="hidden" name="cate_num" value="${cateNum}">`);
+
+        if (form.length) {
+            const actionUrl = `/ch4/book/write`;
+            form.attr({
+                action: actionUrl,
+                method: "post"
+            }).submit();
+        }
+    });
+
+    // 수정 버튼
+    $('modifyBtn').on("click", () => {
+        // 1. 읽기 상태이면 수정 상태로 변경
+        const form = $('#form');
+        let isReadOnly = $("input[name=wr_name]")
+        // 2. 수정 상태이면 수정된 내용을 서버로 전송
+
+        const cateNum = getCateNum();
+
+        // cate_num을 폼 데이터에 추가
+        $('#form').append(`<input type="hidden" name="cate_num" value="${cateNum}">`);
+
         if (form.length) {
             const actionUrl = `/ch4/book/write`;
             form.attr({
@@ -101,3 +127,84 @@ $(function() {
         }
     });
 });
+
+// 레벨에 맞춰 select 박스를 업데이트하는 함수
+function updateSelect(level) {
+    const prevLevel = level - 1;
+    const selectedValue = document.getElementById(`level${prevLevel}`).value;
+    const nextSelect = document.getElementById(`level${level}`);
+
+    // 선택된 값이 없으면 다음 레벨 select 초기화
+    if (!selectedValue) {
+        nextSelect.innerHTML = `<option value="">Select Level ${level}</option>`;
+        nextSelect.style.display = 'none'; // 선택된 값이 없으면 select 박스를 숨김
+        return;
+    }
+
+    // cateList에서 앞자리가 일치하는 옵션 필터링
+    const options = cateList.filter(categoryDto => {
+        return categoryDto.lev == level && categoryDto.cate_num.startsWith(selectedValue);
+    });
+
+    console.log(`Level ${level} options:`, options); // 디버깅을 위한 로그
+
+    // 새 옵션으로 select 박스를 업데이트
+    nextSelect.innerHTML = options.map(categoryDto => {
+        return `<option value="${categoryDto.cur_layr_num}">${categoryDto.name}</option>`;
+    }).join('');
+
+    // 옵션이 있으면 다음 셀렉트 박스를 표시함
+    if (options.length > 0) {
+        nextSelect.style.display = 'block';
+    }
+
+    // 만약 마지막 카테고리라면 다음 셀렉트 박스를 숨김
+    if (options.some(categoryDto => categoryDto.last_cate_chk === 'Y')) {
+        document.getElementById(`level${level + 1}`).style.display = 'none';
+    }
+}
+
+// JSON 데이터를 사용하여 동적으로 콘텐츠를 생성
+$(document).ready(function () {
+    const container = $('#level1');
+    cateList.forEach(categoryDto => {
+        if (categoryDto["lev"] == 1) {
+            container.append(`<option value="${categoryDto.cur_layr_num}">${categoryDto.name}</option>`);
+        }
+    });
+
+    // 첫 번째 셀렉트 박스의 첫 번째 옵션을 자동으로 선택
+    const firstOptionValue = $('#level1 option').eq(1).val(); // 첫 번째 옵션이 <option value="">Select Level 1</option>일 경우 두 번째 옵션 선택
+    $('#level1').val(firstOptionValue);
+
+    // 선택된 첫 번째 옵션에 따라 다음 레벨 셀렉트 박스 업데이트
+    updateSelect(2);
+
+    // 두 번째 셀렉트 박스의 첫 번째 옵션을 자동으로 선택
+    const secondOptionValue = $('#level2 option').eq(1).val(); // 첫 번째 옵션이 <option value="">Select Level 2</option>일 경우 두 번째 옵션 선택
+    $('#level2').val(secondOptionValue);
+
+    // 선택된 두 번째 옵션에 따라 다음 레벨 셀렉트 박스 업데이트
+    updateSelect(3);
+
+    // 세 번째 셀렉트 박스의 첫 번째 옵션을 자동으로 선택하고 마지막 카테고리 여부 확인
+    const thirdOptionValue = $('#level3 option').eq(1).val(); // 첫 번째 옵션이 <option value="">Select Level 3</option>일 경우 두 번째 옵션 선택
+    $('#level3').val(thirdOptionValue);
+
+    updateSelect(4);
+});
+
+function getCateNum() {
+    // 각 레벨의 select 박스에서 선택된 값을 가져옵니다.
+    const level1Value = document.getElementById('level1').value;
+    const level2Value = document.getElementById('level2').value;
+    const level3Value = document.getElementById('level3').value;
+    const level4Value = document.getElementById('level4').value;
+
+    // 선택된 값들을 합쳐 하나의 문자열로 만듭니다.
+    const combinedCateNum = `${level1Value}${level2Value}${level3Value}${level4Value}`;
+
+    console.log('Combined Cate Num:', combinedCateNum); // 디버깅을 위한 로그
+
+    return combinedCateNum;
+}

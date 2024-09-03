@@ -190,7 +190,7 @@
                 ORDER BY b.sale_vol ${order_direction == 'DESC' ? 'DESC' : 'ASC'}
             </when>
             <when test="order_criteria == 'pub_date'">
-                ORDER ㅐㅔ샤ㅐㅜ b.pub_date ${order_direction == 'DESC' ? 'DESC' : 'ASC'}
+                ORDER BY b.pub_date ${order_direction == 'DESC' ? 'DESC' : 'ASC'}
             </when>
             <otherwise>
                 ORDER BY b.book_reg_date DESC

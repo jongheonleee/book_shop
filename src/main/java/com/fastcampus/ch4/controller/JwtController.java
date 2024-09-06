@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8000")  // Flask 서버 주소 허용
 public class JwtController {
 
     @Autowired

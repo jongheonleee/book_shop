@@ -3,12 +3,10 @@ package com.fastcampus.ch4.util;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -35,7 +33,7 @@ public class JwtUtil {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .claim("userID", id)
-                .signWith(algorithm, secretKey)  // Enum 타입의 알고리즘 사용
+                .signWith(algorithm, secretKey)  // Base64 인코딩 없이 비밀키 사용
                 .compact();
 
         System.out.println("jwtUtils 생성된 토큰: " + generatedToken);
@@ -48,7 +46,7 @@ public class JwtUtil {
         try {
             // 토큰 검증 및 클레임 추출
             return Jwts.parser()
-                    .setSigningKey(secretKey)
+                    .setSigningKey(secretKey)  // Base64 인코딩 없이 원래 비밀키 사용
                     .parseClaimsJws(token)
                     .getBody()
                     .get("userID", String.class);  // "userID" 클레임에서 값을 추출

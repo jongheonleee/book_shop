@@ -23,8 +23,8 @@ public class BookController {
     BookService bookService;
 
     // 도서 저장
-    @PostMapping("/write")
-    public String write(BookDto bookDto, Model m, HttpSession session, RedirectAttributes rattr) {
+    @PostMapping("/register")
+    public String register(BookSearchCondition bsc, BookDto bookDto, Model m, HttpSession session, RedirectAttributes rattr) {
 
         // TODO: 관리자 아이디(상품 등록자) bookDto에 저장
 //        String writer = (String)session.getAttribute("id");
@@ -63,7 +63,7 @@ public class BookController {
 
                 m.addAttribute("mode", "new");
                 m.addAttribute("cateListJson", cateListJson);
-
+                m.addAttribute("bsc", bsc);
             } catch(Exception e2) {
                 e2.printStackTrace();
             }
@@ -73,19 +73,19 @@ public class BookController {
     }
 
     // 도서등록 페이지로 연결
-    @GetMapping("/write")
-    public String write(Model m){
+    @GetMapping("/register")
+    public String register(BookSearchCondition bsc, Model m){
         try {
             // 전체 카테고리 리스트 받아오기
             List<CategoryDto> cateList = bookService.getCategoryList();
-            // ObjectMapper 인스턴스 생성
+
             ObjectMapper objectMapper = new ObjectMapper();
             // 자바 객체를 JSON 문자열로 변환
             String cateListJson = objectMapper.writeValueAsString(cateList);
 
             m.addAttribute("mode", "new");
             m.addAttribute("cateListJson", cateListJson);
-
+            m.addAttribute("bsc", bsc);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -95,24 +95,21 @@ public class BookController {
 
     // 도서 삭제 후 보고있던 도서리스트 페이지로 이동
     @PostMapping("/remove")
-    public String remove(Integer page, Integer pageSize, String order_criteria, String order_direction, String isbn, Model m, HttpSession session, RedirectAttributes rattr) {
+    public String remove(BookSearchCondition bsc, String isbn, Model m, HttpSession session, RedirectAttributes rattr) {
         // 세션에 저장된 작성자 id가져오기
 //         String writer = (String)session.getAttribute("id");
         // TODO: 관리자 아이디(상품 등록자) 체크해서 삭제로 구현.
 
         try {
-            // 메세지를 한번만 뜨게 할 때 쓰는게 RedirectAttribute(세션을 이용. 한번 이용했다가 지워버림)
-            rattr.addAttribute("page", page);
-            rattr.addAttribute("pageSize", pageSize);
-            rattr.addAttribute("order_criteria", order_criteria);
-            rattr.addAttribute("order_direction", order_direction);
+
+            rattr.addAttribute("bsc", bsc);
 
             // 해당 도서 삭제
             int rowCnt = bookService.remove(isbn);
 
             //삭제가 안된 경우
             if (rowCnt != 1) throw new Exception("book remove error");
-
+            // 메세지를 한번만 뜨게 할 때 쓰는게 RedirectFlashAttribute(세션을 이용. 한번 이용했다가 지워버림)
             rattr.addFlashAttribute("msg", "DEL_OK");
             return "redirect:/book/list";
 
@@ -126,17 +123,14 @@ public class BookController {
 
     // 도서 상세 페이지 매핑
     @GetMapping("/read")
-    public String read(Integer page, Integer pageSize, String order_criteria, String order_direction, String isbn, Model m) {
+    public String read(BookSearchCondition bsc, String isbn, Model m) {
         try {
             // bookDto 읽어와서 book.jsp에 bookDto, page, pageSize넘겨주기
             BookDto bookDto = bookService.read(isbn);
             System.out.println(bookDto);
             // m.addAttribute("bookDto",bookDto);와 동일
             m.addAttribute(bookDto);
-            m.addAttribute("page", page);
-            m.addAttribute("pageSize", pageSize);
-            m.addAttribute("order_criteria", order_criteria);
-            m.addAttribute("order_direction", order_direction);
+            m.addAttribute("bsc", bsc);
 
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false"%>
 <c:set var="loginId" value="${pageContext.request.getSession(false)==null ? '' : pageContext.request.session.getAttribute('id')}"/>
-<c:set var="loginOutLink" value="${loginId=='' ? '/login/login' : '/login/logout'}"/>
+<c:set var="loginOutLink" value="${loginId=='' ? '/member/login' : '/member/logout'}"/>
 <c:set var="loginOut" value="${loginId=='' ? 'Login' : 'ID='+=loginId}"/>
 <!DOCTYPE html>
 <html>
@@ -182,79 +182,83 @@
         event.preventDefault();
         const userInput = document.getElementById('user_input').value;
 
-        fetch('http://127.0.0.1:5000/', {
+        // 로컬 스토리지에서 JWT 토큰 가져오기
+        const token = localStorage.getItem('token');  // 'token'이 로컬 스토리지에 저장된 이름
+        console.log("저장된 토큰: " + token)
+        fetch('http://127.0.0.1:8000/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': token  // JWT 토큰을 Authorization 헤더에 추가
             },
             credentials: 'include',
             body: JSON.stringify({
                 user_input: userInput
             }),
         })
-        .then(response => response.json())
-        .then(data => {
-            const messages = document.getElementById('messages');
+            .then(response => response.json())
+            .then(data => {
+                const messages = document.getElementById('messages');
 
-            // 사용자 메시지 추가
-            const userMessage = document.createElement('div');
-            userMessage.classList.add('message', 'user');
-            userMessage.textContent = "👤: " + userInput;
-            messages.appendChild(userMessage);
+                // 사용자 메시지 추가
+                const userMessage = document.createElement('div');
+                userMessage.classList.add('message', 'user');
+                userMessage.textContent = "👤: " + userInput;
+                messages.appendChild(userMessage);
 
-            // 봇의 응답 처리
-            if (data.bot_response) {
-                const botMessage = document.createElement('div');
-                botMessage.classList.add('message', 'bot');
+                // 봇의 응답 처리
+                if (data.bot_response) {
+                    const botMessage = document.createElement('div');
+                    botMessage.classList.add('message', 'bot');
 
-                // 책 정보가 있는 경우
-                if (data.books && data.books.length > 0) {
-                    botMessage.innerHTML = "🤖: 다음은 검색된 책들입니다:<br>";
-                    data.books.forEach(function (book) {
-                        botMessage.innerHTML +=
-                            "<div class='book-block'>" +
-                            "<h4>" + book.title + "</h4>" +
-                            "<p><strong>ISBN:</strong> " + book.isbn + "</p>" +
-                            "<p><strong>출판사:</strong> " + book.pub_name + "</p>" +
-                            "<p><strong>출판일:</strong> " + book.pub_date + "</p>" +
-                            "<p><strong>판매 상태:</strong> " + book.sale_stat + "</p>" +
-                            "<p><strong>판매량:</strong> " + book.sale_vol + "</p>" +
-                            "<p><strong>종이책 가격:</strong> " + book.papr_pric + "원</p>" +
-                            "<p><strong>전자책 가격:</strong> " + book.e_pric + "원</p>" +
-                            "<p><strong>판매 회사:</strong> " + book.sale_com + "</p>" +
-                            "<p><strong>출판사 리뷰:</strong> " + book.pub_review + "</p>" +
-                            "</div>";
-                    })
+                    // 책 정보가 있는 경우
+                    if (data.books && data.books.length > 0) {
+                        botMessage.innerHTML = "🤖: 다음은 검색된 책들입니다:<br>";
+                        data.books.forEach(function (book) {
+                            botMessage.innerHTML +=
+                                "<div class='book-block'>" +
+                                "<h4>" + book.title + "</h4>" +
+                                "<p><strong>ISBN:</strong> " + book.isbn + "</p>" +
+                                "<p><strong>출판사:</strong> " + book.pub_name + "</p>" +
+                                "<p><strong>출판일:</strong> " + book.pub_date + "</p>" +
+                                "<p><strong>판매 상태:</strong> " + book.sale_stat + "</p>" +
+                                "<p><strong>판매량:</strong> " + book.sale_vol + "</p>" +
+                                "<p><strong>종이책 가격:</strong> " + book.papr_pric + "원</p>" +
+                                "<p><strong>전자책 가격:</strong> " + book.e_pric + "원</p>" +
+                                "<p><strong>판매 회사:</strong> " + book.sale_com + "</p>" +
+                                "<p><strong>출판사 리뷰:</strong> " + book.pub_review + "</p>" +
+                                "</div>";
+                        });
+                    }
+
+                    // FAQ 정보가 있는 경우
+                    if (data.faqs && data.faqs.length > 0) {
+                        botMessage.innerHTML += "🤖: 다음은 검색된 FAQ 항목들입니다:<br>";
+                        data.faqs.forEach(function(faq) {
+                            botMessage.innerHTML +=
+                                "<div class='faq-block'>" +
+                                "<h4>" + faq.title + "</h4>" +
+                                "<p>" + faq.cont + "</p>" +
+                                "<p><strong>조회수:</strong> " + faq.view_cnt + "</p>" +
+                                "</div>";
+                        });
+                    }
+
+                    // 일반 텍스트 응답 처리
+                    if ((!data.books || data.books.length === 0) && (!data.faqs || data.faqs.length === 0)) {
+                        botMessage.textContent = "🤖: " + data.bot_response;
+                    }
+
+                    messages.appendChild(botMessage);
                 }
 
-                // FAQ 정보가 있는 경우
-                if (data.faqs && data.faqs.length > 0) {
-                    botMessage.innerHTML += "🤖: 다음은 검색된 FAQ 항목들입니다:<br>";
-                    data.faqs.forEach(function(faq) {
-                        botMessage.innerHTML +=
-                            "<div class='faq-block'>" +
-                            "<h4>" + faq.title + "</h4>" +
-                            "<p>" + faq.cont + "</p>" +
-                            "<p><strong>조회수:</strong> " + faq.view_cnt + "</p>" +
-                            "</div>";
-                    });
-                }
+                // 메시지 추가 후 스크롤을 맨 아래로 이동
+                messages.scrollTop = messages.scrollHeight;
 
-                // 일반 텍스트 응답 처리
-                if ((!data.books || data.books.length === 0) && (!data.faqs || data.faqs.length === 0)) {
-                    botMessage.textContent = "🤖: " + data.bot_response;
-                }
-
-                messages.appendChild(botMessage);
-            }
-
-            // 메시지 추가 후 스크롤을 맨 아래로 이동
-            messages.scrollTop = messages.scrollHeight;
-
-            // 입력 필드 초기화
-            document.getElementById('user_input').value = '';
-        })
-        .catch(error => console.error('Error:', error));
+                // 입력 필드 초기화
+                document.getElementById('user_input').value = '';
+            })
+            .catch(error => console.error('Error:', error));
     }
 </script>
 

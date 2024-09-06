@@ -11,20 +11,19 @@
   <title>fastcampus</title>
   <%--    <link rel="stylesheet" href="<c:url value='/css/item/menu.css'/>">--%>
   <link rel="stylesheet" href="<c:url value='/css/item/book.css'/>">
-  <script src="<c:url value='/js/item/book.js'/>" defer></script>
+  <script src="<c:url value='/js/item/registerBook.js'/>" defer></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script>
     // JSP 변수 값을 전역 변수로 설정
-    let page = '<c:out value="${page}"/>';
-    let pageSize = '<c:out value="${pageSize}"/>';
-    let order_criteria = '<c:out value="${order_criteria}"/>';
-    let order_direction = '<c:out value="${order_direction}"/>';
+    var page = '<c:out value="${bsc.page}"/>';
+    var pageSize = '<c:out value="${bsc.pageSize}"/>';
+    var order_criteria = '<c:out value="${bsc.order_criteria}"/>';
+    var order_direction = '<c:out value="${bsc.order_direction}"/>';
 
     let msg = '<c:out value="${msg}"/>';
     if(msg == "WRT_ERR") alert("게시물 등록에 실패했습니다. 다시 시도해 주세요.");
 
-    // cateList를 JSON으로 변환하여 전역 변수로 설정
-    let cateList = ${cateListJson}
+    var cateList = '<c:out value="${cateListJson}"/>';
     <%--console.log("stringify: ", JSON.stringify(${cateListJson}));--%>
     <%--let cateList = JSON.parse(JSON.stringify(${cateListJson}));--%>
     // console.log(cateList);

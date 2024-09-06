@@ -15,10 +15,10 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
         // JSP 변수 값을 전역 변수로 설정
-        var page = '<c:out value="${page}"/>';
-        var pageSize = '<c:out value="${pageSize}"/>';
-        var order_criteria = '<c:out value="${order_criteria}"/>';
-        var order_direction = '<c:out value="${order_direction}"/>';
+        var page = '<c:out value="${bsc.page}"/>';
+        var pageSize = '<c:out value="${bsc.pageSize}"/>';
+        var order_criteria = '<c:out value="${bsc.order_criteria}"/>';
+        var order_direction = '<c:out value="${bsc.order_direction}"/>';
 
         let msg = '<c:out value="${msg}"/>';
         if(msg == "WRT_ERR") alert("게시물 등록에 실패했습니다. 다시 시도해 주세요.");

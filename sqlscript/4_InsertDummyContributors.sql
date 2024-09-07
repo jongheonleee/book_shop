@@ -121,9 +121,6 @@ DELIMITER ;
 
 
 DROP PROCEDURE IF EXISTS InsertDummyContributors;
-delete from writing_contributor;
 delete from book_contributor;
+delete from writing_contributor;
 CALL InsertDummyContributors();
-
-call create_sequence('wr_seq');
-call create_sequence('trl_seq');

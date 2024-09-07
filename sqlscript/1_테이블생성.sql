@@ -116,9 +116,9 @@ CREATE TABLE `category`
 
 
 
-ALTER TABLE book_shop.`writing_contributor` ADD CONSTRAINT `PK_WRITING_CONTRIBUTOR` PRIMARY KEY (
-	`cb_num`
-);
+-- ALTER TABLE book_shop.`writing_contributor` ADD CONSTRAINT `PK_WRITING_CONTRIBUTOR` PRIMARY KEY (
+-- 	`cb_num`
+-- );
 
 -- ALTER TABLE `writing_contributer` ADD CONSTRAINT `PK_WRITING_CONTRIBUTER` PRIMARY KEY (  `cb_num` );
 
@@ -127,28 +127,28 @@ ALTER TABLE book_shop.`writing_contributor` ADD CONSTRAINT `PK_WRITING_CONTRIBUT
 -- 	`isbn`
 -- );
 
-ALTER TABLE `category` ADD CONSTRAINT `PK_CATEGORY` PRIMARY KEY (
-	`cate_num`
-);
+-- ALTER TABLE `category` ADD CONSTRAINT `PK_CATEGORY` PRIMARY KEY (
+-- 	`cate_num`
+-- );
 
-ALTER TABLE `book_disc_hist` ADD CONSTRAINT `PK_BOOK_DISC_HIST` PRIMARY KEY (
-	`disc_seq`,
-	`isbn`
-);
+-- ALTER TABLE `book_disc_hist` ADD CONSTRAINT `PK_BOOK_DISC_HIST` PRIMARY KEY (
+-- 	`disc_seq`,
+-- 	`isbn`
+-- );
 
-ALTER TABLE `book` ADD CONSTRAINT `PK_BOOK` PRIMARY KEY (
-	`isbn`
-);
+-- ALTER TABLE `book` ADD CONSTRAINT `PK_BOOK` PRIMARY KEY (
+-- 	`isbn`
+-- );
 
-ALTER TABLE `book_image` ADD CONSTRAINT `PK_BOOK_IMAGE` PRIMARY KEY (
-	`img_seq`,
-	`isbn`
-);
+-- ALTER TABLE `book_image` ADD CONSTRAINT `PK_BOOK_IMAGE` PRIMARY KEY (
+-- 	`img_seq`,
+-- 	`isbn`
+-- );
 
-ALTER TABLE `book_contributor` ADD CONSTRAINT `PK_BOOK_CONTRIBUTOR` PRIMARY KEY (
-	`cb_num`,
-	`isbn`
-);
+-- ALTER TABLE `book_contributor` ADD CONSTRAINT `PK_BOOK_CONTRIBUTOR` PRIMARY KEY (
+-- 	`cb_num`,
+-- 	`isbn`
+-- );
 
 -- ALTER TABLE `book_md_history` ADD CONSTRAINT `FK_book_TO_book_md_history_1` FOREIGN KEY (
 -- 	`isbn`
@@ -157,40 +157,40 @@ ALTER TABLE `book_contributor` ADD CONSTRAINT `PK_BOOK_CONTRIBUTOR` PRIMARY KEY 
 -- 	`isbn`
 -- );
 
-ALTER TABLE `book_disc_hist` ADD CONSTRAINT `FK_book_TO_book_disc_hist_1` FOREIGN KEY (
-	`isbn`
-)
-REFERENCES `book` (
-	`isbn`
-);
+-- ALTER TABLE `book_disc_hist` ADD CONSTRAINT `FK_book_TO_book_disc_hist_1` FOREIGN KEY (
+-- 	`isbn`
+-- )
+-- REFERENCES `book` (
+-- 	`isbn`
+-- );
 
-ALTER TABLE `book` ADD CONSTRAINT `FK_category_TO_book_1` FOREIGN KEY (
-	`cate_num`
-)
-REFERENCES `category` (
-	`cate_num`
-);
+-- ALTER TABLE `book` ADD CONSTRAINT `FK_category_TO_book_1` FOREIGN KEY (
+-- 	`cate_num`
+-- )
+-- REFERENCES `category` (
+-- 	`cate_num`
+-- );
 
-ALTER TABLE `book_image` ADD CONSTRAINT `FK_book_TO_book_image_1` FOREIGN KEY (
-	`isbn`
-)
-REFERENCES `book` (
-	`isbn`
-);
+-- ALTER TABLE `book_image` ADD CONSTRAINT `FK_book_TO_book_image_1` FOREIGN KEY (
+-- 	`isbn`
+-- )
+-- REFERENCES `book` (
+-- 	`isbn`
+-- );
 
-ALTER TABLE `book_contributor` ADD CONSTRAINT `FK_writing_contributer_TO_book_contributor_1` FOREIGN KEY (
-	`cb_num`
-)
-REFERENCES `writing_contributor` (
-	`cb_num`
-);
+-- ALTER TABLE `book_contributor` ADD CONSTRAINT `FK_writing_contributer_TO_book_contributor_1` FOREIGN KEY (
+-- 	`cb_num`
+-- )
+-- REFERENCES `writing_contributor` (
+-- 	`cb_num`
+-- );
 
-ALTER TABLE `book_contributor` ADD CONSTRAINT `FK_book_TO_book_contributor_1` FOREIGN KEY (
-	`isbn`
-)
-REFERENCES `book` (
-	`isbn`
-);
+-- ALTER TABLE `book_contributor` ADD CONSTRAINT `FK_book_TO_book_contributor_1` FOREIGN KEY (
+-- 	`isbn`
+-- )
+-- REFERENCES `book` (
+-- 	`isbn`
+-- );
 
 --
 -- QA

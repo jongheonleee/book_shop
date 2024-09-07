@@ -95,5 +95,3 @@ DROP PROCEDURE IF EXISTS InsertDummyBookDiscHist;
 delete from book_disc_hist;
 -- 프로시저 호출하여 1500개의 더미 데이터 삽입
 CALL InsertDummyBookDiscHist();
-
-call create_sequence('disc_seq');

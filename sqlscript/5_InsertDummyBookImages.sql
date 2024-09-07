@@ -85,8 +85,6 @@ END$$
 
 DELIMITER ;
 
-
-
 DROP PROCEDURE IF EXISTS InsertDummyBookImages;
 delete from book_image;
 CALL InsertDummyBookImages();

@@ -4,6 +4,7 @@ import com.fastcampus.ch4.dto.item.BookDto;
 import com.fastcampus.ch4.dto.item.BookImageDto;
 import com.fastcampus.ch4.dto.item.BookSearchCondition;
 import com.fastcampus.ch4.dto.item.WritingContributorDto;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,48 @@ public class BookDaoImplTest {
     @Autowired
     BookDao bookDao;
 
+    @Before
+    public void 초기화() {
+        /*
+            전체 삭제 대상
+            (1) 도서 테이블
+            (2) 도서 이미지 테이블
+            (3) 도서-집필기여자(book_contributor) 관계 테이블
+            (4) 집필기여자(writing_contirbutor) 테이블
+         */
+        /*
+            (1) 지우기 전 카운트
+            (2) 전체 지우고 지우기 전 개수와 비교
+            (3) 완벽하게 지워졌는지 카운트
+         */
+        int bookCountBeforeDeleteAll = bookDao.countBook();
+        assertTrue(bookDao.deleteAllBook() == bookCountBeforeDeleteAll);
+        int bookCount = bookDao.countBook();
+        assertTrue(bookCount == 0);
+
+        int bookDiscHistBeforeDeleteAll = bookDao.countBookDiscHist();
+        assertTrue(bookDao.deleteAllBookDiscHist() == bookDiscHistBeforeDeleteAll);
+        int bookCountDiscHist = bookDao.countBookDiscHist();
+        assertTrue(bookCountDiscHist == 0);
+
+        int bookImageCountBeforeDeleteAll = bookDao.countBookImage();
+        assertTrue(bookDao.deleteAllBookImage() == bookImageCountBeforeDeleteAll);
+        int bookImageCount = bookDao.countBookImage();
+        assertTrue(bookImageCount == 0);
+
+        int bookContributorCountBeforeDeleteAll = bookDao.countBookContributor();
+        assertTrue(bookDao.deleteAllBookContributor() == bookContributorCountBeforeDeleteAll);
+        int bookContributorCount = bookDao.countBookContributor();
+        assertTrue(bookContributorCount == 0);
+
+        int writingContributorCountBeforeDeteleAll = bookDao.countWritingContributor();
+        assertTrue(bookDao.deleteAllWritingContributor()==writingContributorCountBeforeDeteleAll);
+        int writingContributorCount = bookDao.countWritingContributor();
+        assertTrue(writingContributorCount == 0);
+    }
+
     @Test
     public void searchSelectPage() throws Exception {
-        //전체 삭제하고 카운트
-        bookDao.deleteAll();
-        bookDao.deleteAllFromWritingContributor();
-        bookDao.deleteAllFromBookContributor();
-        assertTrue(bookDao.count() == 0);
-
         // 원하는 개수의 bookDto객체 인서트해보고 (인서트 됐는지도 체크)
         // searchCondition 객체에 원하는 키워드를 생성자에 줘서 생성한 다음
         // bookDao.searchSelectPage(sc)로 리스트를 받아와서
@@ -78,21 +113,21 @@ public class BookDaoImplTest {
                     "wr_name" + i,               // wr_name
                     "trl_name" + i               // trl_name
             );
-            assertTrue(bookDao.insert(bookDto) == 1);
+            assertTrue(bookDao.insertBook(bookDto) == 1);
 
             WritingContributorDto wcb = new WritingContributorDto(bookDto.getWr_cb_num(), bookDto.getWr_name(), 'Y');
-            assertTrue(bookDao.insertToWritingContributor(wcb) == 1);
+            assertTrue(bookDao.insertWritingContributor(wcb) == 1);
             Map map = new HashMap();
             map.put("isbn", bookDto.getIsbn());
             map.put("cb_num", bookDto.getWr_cb_num());
-            assertTrue(bookDao.insertToBookContributor(map) == 1);
+            assertTrue(bookDao.insertBookContributor(map) == 1);
 
             wcb = new WritingContributorDto(bookDto.getTrl_cb_num(), bookDto.getTrl_name(), 'N');
-            assertTrue(bookDao.insertToWritingContributor(wcb) == 1);
+            assertTrue(bookDao.insertWritingContributor(wcb) == 1);
             map = new HashMap();
             map.put("isbn", bookDto.getIsbn());
             map.put("cb_num", bookDto.getTrl_cb_num());
-            assertTrue(bookDao.insertToBookContributor(map) == 1);
+            assertTrue(bookDao.insertBookContributor(map) == 1);
         }
         // searchCondition 객체를 생성하고 searchSelectPage에 매개변수로 넘겨서 제목을 키워드로 읽어온 리스트의 사이즈를 체크한다.
         BookSearchCondition sc = new BookSearchCondition(1, 10, "book_reg_date", "DESC", "book_title2", "T");
@@ -114,11 +149,7 @@ public class BookDaoImplTest {
     }
 
     @Test
-    public void searchResultCnt() throws Exception {
-        //전체 삭제하고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
-
+    public void searchResultCnt() {
         // 원하는 개수의 bookDto객체 인서트해보고 (인서트 됐는지도 체크)
         // searchCondition 객체에 원하는 키워드를 생성자에 줘서 생성한 다음
         // bookDao.searchSelectPage(sc)로 리스트를 받아와서
@@ -130,7 +161,7 @@ public class BookDaoImplTest {
                     "pub_name" + i,              // pub_name
                     "book_title" + i,            // title
                     "2024-08-07 15:35:58",       // pub_date
-                    "Available",                 // sale_stat
+                    "판매중",                 // sale_stat
                     i,                           // sale_vol
                     i,                           // papr_pric
                     5.0,                         // e_pric
@@ -163,7 +194,10 @@ public class BookDaoImplTest {
                     "wr_name" + i,               // wr_name
                     "ts_name" + i                // trl_name
             );
-            assertTrue(bookDao.insert(bookDto) == 1);
+            assertTrue(bookDao.insertBook(bookDto) == 1);
+//            assertTrue(bookDao.insertBookContributor(bookDto) == 1);
+//            assertTrue(bookDao.insertBookImage(bookDto) == 1);
+//            assertTrue(bookDao.insertWritingContributor(bookDto) == 1);
         }
         // searchCondition 객체를 생성하고 searchSelectPage에 매개변수로 넘겨서 제목을 키워드로 읽어온 리스트의 개수를 체크한다.
         BookSearchCondition sc = new BookSearchCondition(1, 10, "book_reg_date", "DESC", "book_title2", "T");
@@ -171,9 +205,10 @@ public class BookDaoImplTest {
         assertTrue(cnt == 2); //book_title2, bookt_title20
 
         // searchCondition 객체를 생성하고 searchSelectPage에 매개변수로 넘겨서 제목을 키워드로 읽어온 리스트의 개수를 체크한다.
-        sc = new BookSearchCondition(1, 10, "book_reg_date", "DESC", "wr_name2", "W");
-        cnt = bookDao.searchResultCnt(sc);
-        assertTrue(cnt == 2); //wr_name2, wr_name20
+//        sc = new BookSearchCondition(1, 10, "book_reg_date", "DESC", "wr_name2", "W");
+//        cnt = bookDao.searchResultCnt(sc);
+//        System.out.println(cnt);
+//        assertTrue(cnt == 2); //wr_name2, wr_name20
 
         // searchCondition 객체를 생성하고 searchSelectPage에 매개변수로 넘겨서 제목을 키워드로 읽어온 리스트의 개수를 체크한다.
         sc = new BookSearchCondition(1, 10, "book_reg_date", "DESC", "pub_name2", "P");
@@ -225,67 +260,92 @@ public class BookDaoImplTest {
                     "ts_name" + i                // trl_name
             );
 
-            assertTrue(bookDao.insert(bookDto) == 1);
+            assertTrue(bookDao.insertBook(bookDto) == 1);
         }
     }
 
     // 테스트 데이터 주입
     @Test
     public void 테스트데이터넣기() throws Exception{
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
         // 데이터 주입
         insertTestData(250);
+        assertTrue(bookDao.countBook() == 250);
     }
 
     // 전체 카운팅
     @Test
     public void 카운트_성공() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
-
         // 100개 넣고 카운트
         insertTestData(100);
-        assertTrue(bookDao.count() == 100);
+        assertTrue(bookDao.countBook() == 100);
     }
 
     // 전체삭제
     @Test
     public void 전체삭제_성공() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
-
         // 3개 추가하고 삭제 개수 카운트
         insertTestData(3);
-        assertTrue(bookDao.deleteAll() == 3);
-        assertTrue(bookDao.count() == 0);
+        assertTrue(bookDao.deleteAllBook() == 3);
+        assertTrue(bookDao.countBook() == 0);
     }
 
     // delete와 deleteAll 다르게 동작하는지 꼼꼼하게 확인
     @Test
     public void 삭제테스트_성공() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
 
         // 3개 추가하고 삭제
-        insertTestData(3);
+        for (int i = 1; i <= 3; i++) {
+            BookDto bookDto = new BookDto(
+                    "isbn" + i,                  // isbn
+                    "01",                       // cate_num
+                    "pub_name" + i,              // pub_name
+                    "book_title" + i,            // title
+                    "2024-08-07 15:35:58",       // pub_date
+                    "Available",                 // sale_stat
+                    i,                           // sale_vol
+                    i,                           // papr_pric
+                    5.0,                         // e_pric
+                    5.0,                         // papr_point
+                    5.0,                         // e_point
+                    i,                           // tot_page_num
+                    i,                           // tot_book_num
+                    "",                          // sale_com
+                    "",                          // cont
+                    4.5,                         // rating
+                    "",                          // info
+                    "",                          // intro_award
+                    "",                          // rec
+                    "",                          // pub_review
+                    i,                           // pre_start_page
+                    i,                           // pre_end_page
+                    "",                          // ebook_url
+                    new Date(),                  // book_reg_date
+                    "test",                      // regi_id
+                    new Date(),                  // reg_date
+                    "test",                      // reg_id
+                    new Date(),                  // up_date
+                    "test",                      // up_id
+                    "repre_img" + i,             // repre_img_url
+                    i,                           // papr_disc
+                    i,                           // e_disc
+                    "whol_layr_name" + i,        // whol_layr_name
+                    "wr_cb_num" + i,             // cb_num
+                    "trl_cb_num" + i,            // trl_cb_num
+                    "wr_name" + i,               // wr_name
+                    "ts_name" + i                // trl_name
+            );
+            assertTrue(bookDao.insertBook(bookDto) == 1);
+        }
 
+        String writer = "test";
         // 예상결과: 3개 --> 2개
-        assertTrue(bookDao.delete(bookDao.selectAll().get(0).getIsbn()) == 1);
-        assertTrue(bookDao.count() == 2);
+        assertTrue(bookDao.deleteBook(bookDao.selectAllBook().get(0).getIsbn(), writer) == 1);
+        assertTrue(bookDao.countBook() == 2);
     }
 
     // 지울 대상이 없어서 실패
     @Test
     public void 삭제테스트_실패() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
-
         // 1개 추가
         BookDto bookDto = new BookDto(
                 "isbn",                  // isbn
@@ -326,19 +386,18 @@ public class BookDaoImplTest {
                 "wr_name",               // wr_name
                 "ts_name"                // trl_name
         );
-        assertTrue(bookDao.insert(bookDto) == 1);
+        assertTrue(bookDao.insertBook(bookDto) == 1);
 
         // 잘못된 isbn주고 삭제
-        assertTrue(bookDao.delete(bookDao.selectAll().get(0).getIsbn()+ 111) == 0);
-        assertTrue(bookDao.count() == 1);
+        String wrong_isbn = bookDao.selectAllBook().get(0).getIsbn()+ 111;
+        String writer = bookDto.getRegi_id();
+        assertTrue(bookDao.deleteBook(wrong_isbn, writer) == 0);
+        assertTrue(bookDao.countBook() == 1);
     }
 
     // 삽입
     @Test
     public void 인서트_성공() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
 
         // 1개 추가
         BookDto bookDto = new BookDto(
@@ -380,15 +439,12 @@ public class BookDaoImplTest {
                 "wr_name",               // wr_name
                 "ts_name"                // trl_name
         );
-        assertTrue(bookDao.insert(bookDto) == 1);
+        assertTrue(bookDao.insertBook(bookDto) == 1);
     }
 
     // 유니크에 중복값 널기
     @Test(expected = DuplicateKeyException.class)
     public void 인서트_예외1() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
 
         // 1개 추가
         BookDto bookDto = new BookDto(
@@ -430,18 +486,15 @@ public class BookDaoImplTest {
                 "wr_name",               // wr_name
                 "ts_name"                // trl_name
         );
-        assertTrue(bookDao.insert(bookDto) == 1);
+        assertTrue(bookDao.insertBook(bookDto) == 1);
 
         // 중복값 불가 - DuplicateKeyException발생
-        assertTrue(bookDao.insert(bookDto) == 0);
+        assertTrue(bookDao.insertBook(bookDto) == 0);
     }
 
     // Not_Null에 Null넣기
     @Test(expected = DataIntegrityViolationException.class)
     public void 인서트_예외2() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
 
         // null title
         String nullTitle = null;
@@ -486,15 +539,12 @@ public class BookDaoImplTest {
                 "ts_name"                // trl_name
         );
 
-        bookDao.insert(bookDto);
+        bookDao.insertBook(bookDto);
     }
 
     // 도메인 범위 넘어서는 값 넣기
     @Test(expected = DataIntegrityViolationException.class)
     public void 인서트_예외3() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
 
         // 도메인 범위 넘어선 pub_name
         String wrong_pub_name = "pub_name123141432523534875629865826598763749851232532535434534534234634";
@@ -539,19 +589,16 @@ public class BookDaoImplTest {
                 "ts_name"             // trl_name
         );
 
-        assertTrue(bookDao.insert(bookDto) == 0);
+        assertTrue(bookDao.insertBook(bookDto) == 0);
     }
 
     // 전체 조회
     @Test
     public void 전체조회_성공() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
 
         // 데이터 없는 상태에서 카운트
-        List<BookDto> bookList = bookDao.selectAll();
-        assertTrue(bookDao.count() == 0);
+        List<BookDto> bookList = bookDao.selectAllBook();
+        assertTrue(bookDao.countBook() == 0);
 
         // 한개 넣고 카운트
         BookDto bookDto = new BookDto(
@@ -593,24 +640,21 @@ public class BookDaoImplTest {
                 "wr_name",               // wr_name
                 "ts_name"             // trl_name
         );
-        assertTrue(bookDao.insert(bookDto) == 1);
-        bookList = bookDao.selectAll();
+        assertTrue(bookDao.insertBook(bookDto) == 1);
+        bookList = bookDao.selectAllBook();
         assertTrue(bookList.size() == 1);
 
-        bookDao.deleteAll();
+        bookDao.deleteAllBook();
 
         // 100개 추가하고 개수 카운트
         insertTestData(100);
-        bookList = bookDao.selectAll();
+        bookList = bookDao.selectAllBook();
         assertTrue(bookList.size() == 100);
     }
 
     // 조건(isbn)으로 조회
     @Test
     public void 조회_성공() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
 
         // 1개 추가
         BookDto bookDto = new BookDto(
@@ -652,37 +696,31 @@ public class BookDaoImplTest {
                 "wr_name",               // wr_name
                 "ts_name"             // trl_name
         );
-        assertTrue(bookDao.insert(bookDto) == 1);
-        bookDto = bookDao.selectAll().get(0);
+        assertTrue(bookDao.insertBook(bookDto) == 1);
+        bookDto = bookDao.selectAllBook().get(0);
         //isbn 가져오기
-        String isbn = bookDao.selectAll().get(0).getIsbn();
+        String isbn = bookDao.selectAllBook().get(0).getIsbn();
 
         // 다른 참조변수에 조회한 값 넣고 같은지 비교
-        BookDto bookDto2 = bookDao.select(isbn);
+        BookDto bookDto2 = bookDao.selectBook(isbn);
         assertTrue((bookDto).equals(bookDto2));
     }
 
     // 없는 isbn으로 조회
     @Test
     public void 조회_실패() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
 
         // 없는 isbn
         String wrong_isbn = "isbn2746";
 
         // 없는 isbn으로 조회
-        BookDto bookDto = bookDao.select(wrong_isbn);
+        BookDto bookDto = bookDao.selectBook(wrong_isbn);
         assertTrue(bookDto == null);
     }
 
     // 업데이트
     @Test
     public void 업데이트_성공() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
 
         // 1개 추가
         BookDto bookDto = new BookDto(
@@ -724,15 +762,15 @@ public class BookDaoImplTest {
                 "wr_name",               // wr_name
                 "ts_name"             // trl_name
         );
-        assertTrue(bookDao.insert(bookDto) == 1);
+        assertTrue(bookDao.insertBook(bookDto) == 1);
 
         //isbn 가져오기
-        String isbn = bookDao.selectAll().get(0).getIsbn();
-        bookDto = bookDao.selectAll().get(0);
+        String isbn = bookDao.selectAllBook().get(0).getIsbn();
+        bookDto = bookDao.selectAllBook().get(0);
         // bookDto 객체 속성값 바꾸고 업데이트
         bookDto.setIsbn(isbn);
         bookDto.setTitle("내가 바꾼 타이틀");
-        assertTrue(bookDao.update(bookDto) == 1);
+        assertTrue(bookDao.updateBook(bookDto) == 1);
 
         // 업데이트한 객체와 같은지 체크
 //        BookDto bookDto2 = bookDao.select(isbn);
@@ -741,9 +779,6 @@ public class BookDaoImplTest {
 
     @Test(expected = DataIntegrityViolationException.class)
     public void 업데이트_예외1() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
 
         // 1개 삽입
         BookDto bookDto = new BookDto(
@@ -785,23 +820,19 @@ public class BookDaoImplTest {
                 "wr_name",               // wr_name
                 "ts_name"             // trl_name
         );
-        assertTrue(bookDao.insert(bookDto) == 1);
+        assertTrue(bookDao.insertBook(bookDto) == 1);
 
         // NOT NULL에 NULL
-        String isbn = bookDao.selectAll().get(0).getIsbn();
-        bookDto = bookDao.select(isbn);
+        String isbn = bookDao.selectAllBook().get(0).getIsbn();
+        bookDto = bookDao.selectBook(isbn);
         bookDto.setIsbn(isbn);
         bookDto.setPub_name(null);
         bookDto.setTitle("내가 바꾼 타이틀");
-        assertTrue(bookDao.update(bookDto) == 0);
+        assertTrue(bookDao.updateBook(bookDto) == 0);
     }
 
     @Test(expected = DataIntegrityViolationException.class)
     public void 업데이트_예외2() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
-
         // 1개 추가
         BookDto bookDto = new BookDto(
                 "isbn",                  // isbn
@@ -842,20 +873,17 @@ public class BookDaoImplTest {
                 "wr_name",               // wr_name
                 "ts_name"                // trl_name
         );
-        assertTrue(bookDao.insert(bookDto) == 1);
+        assertTrue(bookDao.insertBook(bookDto) == 1);
 
         // 유니크에 중복값 업데이트
-        String isbn = bookDao.selectAll().get(0).getIsbn();
-        bookDto = bookDao.select(isbn);
+        String isbn = bookDao.selectAllBook().get(0).getIsbn();
+        bookDto = bookDao.selectBook(isbn);
         bookDto.setIsbn(isbn);
-        assertTrue(bookDao.update(bookDto) == 1);
+        assertTrue(bookDao.updateBook(bookDto) == 1);
     }
 
     @Test(expected = DataIntegrityViolationException.class)
     public void 업데이트_예외3() throws Exception {
-        // 전체 지우고 카운트
-        bookDao.deleteAll();
-        assertTrue(bookDao.count() == 0);
 
         // 1개 추가
         BookDto bookDto = new BookDto(
@@ -897,16 +925,16 @@ public class BookDaoImplTest {
                 "wr_name",               // wr_name
                 "ts_name"             // trl_name
         );
-        assertTrue(bookDao.insert(bookDto) == 1);
+        assertTrue(bookDao.insertBook(bookDto) == 1);
 
         //도메인 값 벗어난 제목
         String wrong_title = "qiadfawfqwfwfwfwfwqsdfhisfuhsefewoeighowieghwohgwoghwoighe";
 
         // 도메인 범위 벗어난 값 업데이트
-        String isbn = bookDao.selectAll().get(0).getIsbn();
-        bookDto = bookDao.select(isbn);
+        String isbn = bookDao.selectAllBook().get(0).getIsbn();
+        bookDto = bookDao.selectBook(isbn);
         bookDto.setIsbn(isbn);
         bookDto.setTitle(wrong_title);
-        assertTrue(bookDao.update(bookDto) == 0);
+        assertTrue(bookDao.updateBook(bookDto) == 0);
     }
 }

@@ -9,41 +9,39 @@ import java.util.Map;
 
 public interface BookService {
     // 1. 도서 개수 카운트
-    int getCount() throws Exception;
+    int getCountBook();
 
     // 2. 도서글 쓰기
-    int write(BookDto bookDto) throws Exception;
+    void write(BookDto bookDto);
 
     // 3. 도서글 읽기
-    BookDto read(String isbn) throws Exception;
+    BookDto read(String isbn);
 
     // 4. 도서목록 가져오기
-    List<BookDto> getList() throws Exception;
+    List<BookDto> getList();
 
     // 5. 도서글 수정
-    int modify(BookDto bookDto) throws Exception;
+    int modify(BookDto bookDto);
 
     // 6. 도서글 삭제 - isbn 일치 확인
-    int remove(String isbn) throws Exception;
+    void remove(String isbn, String writer);
 
     // 7. 선택된 페이지 가져오기.
-    List<BookDto> getPage(Map map) throws Exception;
+    List<BookDto> getPage(Map map);
 
-    // 8. 전체 목록 초기화
-    int resetList() throws Exception;
+    // 8. 도서 목록 전체 조회
+    List<BookDto> getAllBookList();
 
-    // 9. 도서 목록 전체 조회
-    List<BookDto> getAllBookList() throws Exception;
+    // 9. 판매량 증가
+    int increaseSaleVol(Map map);
 
-    // 10. 판매량 증가
-    int increaseSaleVol(Map map) throws Exception;
+    // 10. 검색된 페이지 가져오기
+    List<BookDto> getSearchResultPage(BookSearchCondition bsc);
 
-    // 11. 검색된 페이지 가져오기
-    List<BookDto> getSearchResultPage(BookSearchCondition bsc) throws Exception;
+    // 11. 검색된 총 도서 개수 카운트
+    int getSearchResultCnt(BookSearchCondition bsc);
 
-    // 12. 검색된 총 도서 개수 카운트
-    int getSearchResultCnt(BookSearchCondition bsc) throws Exception;
+    // 12. 전체 카테고리 리스트 받아오기
+    List<CategoryDto> getCategoryList();
 
-    // 13. 전체 카테고리 리스트 받아오기
-    List<CategoryDto> getCategoryList() throws Exception;
 }

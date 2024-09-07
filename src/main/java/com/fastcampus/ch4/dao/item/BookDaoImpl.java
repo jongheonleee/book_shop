@@ -21,116 +21,190 @@ public class BookDaoImpl implements BookDao {
     // BookListMapper.xml에 작성한 별명과 같아야됨.
     private static String namespace = "com.fastcampus.ch4.dao.item.BookMapper.";
 
-    // 1. 카운트
+    // book 테이블 카운트
     @Override
-    public int count() throws Exception { //전체 개수 반환
-        return session.selectOne(namespace + "count");
+    public int countBook() { //전체 개수 반환
+        return session.selectOne(namespace + "countBook");
     }
-
-    // 2. 전체 삭제.
+    // book_disc_hist 테이블 카운트
     @Override
-    public int deleteAll() throws Exception{ // 전체 삭제. 삭제된 로우수 반환
-        return session.delete(namespace + "deleteAll");
+    public int countBookDiscHist() { //전체 개수 반환
+        return session.selectOne(namespace + "countBookDiscHist");
     }
 
-    // 3. isbn일치 삭제.
-    public int delete(String isbn) throws Exception { // isbn과 pub_num일치하면 삭제. 삭제된 로우수 반환
-        return session.delete(namespace + "delete", isbn);
-    }
-
-    // 4. BookDto 삽입.
+    // book_image 테이블 카운트
     @Override
-    public int insert(BookDto dto) throws Exception { //BookDto book 테이블에 insert
-        return session.insert(namespace + "insert", dto);
+    public int countBookImage() { //전체 개수 반환
+        return session.selectOne(namespace + "countBookImage");
     }
 
-    // 5. 게시판 전체 조회. List<BookDto> 받아오기
+    // book_contributor 테이블 카운트
     @Override
-    public List<BookDto> selectAll() throws Exception { // 전체 테이블 조회(등록일 내림차순)
-        return session.selectList(namespace + "selectAll");
+    public int countBookContributor() { //전체 개수 반환
+        return session.selectOne(namespace + "countBookContributor");
     }
 
-    // 6. isbn으로 조회. BookDto 받아오기
+    // writing_contributor 테이블 카운트
     @Override
-    public BookDto select(String isbn) throws Exception { // isbn과 일치하는 행 들고오기
-        return session.selectOne(namespace + "select", isbn);
+    public int countWritingContributor() { //전체 개수 반환
+        return session.selectOne(namespace + "countWritingContributor");
     }
 
-    // 7. BookDto로 업데이트.
+    // 도서 테이블 전체 삭제.
     @Override
-    public int update(BookDto dto) throws Exception { // BookDto정보로 isbn이 일치하는 행 update
-        return session.update(namespace + "update", dto);
+    public int deleteAllBook() { // 전체 삭제. 삭제된 로우수 반환
+        return session.delete(namespace + "deleteAllBook");
     }
 
-    // 8. isbn으로 해당 도서의 판매량 증가.
+    // 집필 기여자 테이블 전체 삭제
+    @Override
+    public int deleteAllWritingContributor() { // 전체 삭제. 삭제된 로우수 반환
+        return session.delete(namespace + "deleteAllWritingContributor");
+    }
+
+    // 도서 기여자 테이블 전체 삭제
+    @Override
+    public int deleteAllBookContributor() { // 전체 삭제. 삭제된 로우수 반환
+        return session.delete(namespace + "deleteAllBookContributor");
+    }
+
+    // 도서 이미지 테이블 전체 삭제
+    @Override
+    public int deleteAllBookImage() { // 전체 삭제. 삭제된 로우수 반환
+        return session.delete(namespace + "deleteAllBookImage");
+    }
+
+    // 도서 할인 이력 테이블 전체 삭제
+    @Override
+    public int deleteAllBookDiscHist() {
+        return session.delete(namespace + "deleteAllBookDiscHist");
+    }
+
+    // isbn일치 삭제 - 도서 테이블
+    @Override
+    public int deleteBook(String isbn, String writer) { // isbn과 pub_num일치하면 삭제. 삭제된 로우수 반환
+        Map map = new HashMap();
+        map.put("isbn", isbn);
+        map.put("writer", writer);
+        return session.delete(namespace + "deleteBook", map);
+    }
+
+    // isbn일치 삭제 - 도서 할인 이력 테이블
+    @Override
+    public int deleteBookDiscHist(String isbn, String writer) { // isbn과 pub_num일치하면 삭제. 삭제된 로우수 반환
+        Map map = new HashMap();
+        map.put("isbn", isbn);
+        map.put("writer", writer);
+        return session.delete(namespace + "deleteBookDiscHist", map);
+    }
+
+    @Override
+    public int deleteBookImage(String isbn, String writer) { // isbn과 pub_num일치하면 삭제. 삭제된 로우수 반환
+        Map map = new HashMap();
+        map.put("isbn", isbn);
+        map.put("writer", writer);
+        return session.delete(namespace + "deleteBookImage", map);
+    }
+
+    @Override
+    public int deleteBookContributor(String isbn, String writer) { // isbn과 pub_num일치하면 삭제. 삭제된 로우수 반환
+        Map map = new HashMap();
+        map.put("isbn", isbn);
+        map.put("writer", writer);
+        return session.delete(namespace + "deleteBookContributor", map);
+    }
+
+    @Override
+    public int deleteWritingContributor(String isbn, String writer) { // isbn과 pub_num일치하면 삭제. 삭제된 로우수 반환
+        Map map = new HashMap();
+        map.put("isbn", isbn);
+        map.put("writer", writer);
+        return session.delete(namespace + "deleteWritingContributor", map);
+    }
+
+
+    // BookDto 삽입.
+    @Override
+    public int insertBook(BookDto dto) { //BookDto book 테이블에 insert
+        return session.insert(namespace + "insertBook", dto);
+    }
+
+    // 게시판 전체 조회. List<BookDto> 받아오기
+    @Override
+    public List<BookDto> selectAllBook() { // 전체 테이블 조회(등록일 내림차순)
+        return session.selectList(namespace + "selectAllBook");
+    }
+
+    // isbn으로 조회. BookDto 받아오기
+    @Override
+    public BookDto selectBook(String isbn) { // isbn과 일치하는 행 들고오기
+        return session.selectOne(namespace + "selectBook", isbn);
+    }
+
+    // BookDto로 업데이트.
+    @Override
+    public int updateBook(BookDto dto) { // BookDto정보로 isbn이 일치하는 행 update
+        return session.update(namespace + "updateBook", dto);
+    }
+
+    // isbn으로 해당 도서의 판매량 증가.
     @Override
     public int increaseSaleVol(Map map) {
         return session.update(namespace + "increaseSaleVol", map);
     }
 
-    // 9. 선택된 페이지 가져오기
+    // 선택된 페이지 가져오기
     @Override
-    public List<BookDto> selectPage(Map map) throws Exception {
+    public List<BookDto> selectPage(Map map) {
         return session.selectList(namespace + "selectPage", map);
     }
 
-    // 10. 도서 이미지 테이블 인서트
+    // 도서 이미지 테이블 인서트
     @Override
-    public int insertToBookImage(BookImageDto bookImageDto) throws Exception {
-        return session.insert(namespace + "insertToBookImage", bookImageDto);
+    public int insertBookImage(BookImageDto bookImageDto) {
+        return session.insert(namespace + "insertBookImage", bookImageDto);
     }
 
-    // 11. 집필 기여자 테이블 인서트
+    // 집필 기여자 테이블 인서트
     @Override
-    public int insertToWritingContributor(WritingContributorDto writingContributorDto) throws Exception {
-        return session.insert(namespace + "insertToWritingContributor", writingContributorDto);
+    public int insertWritingContributor(WritingContributorDto writingContributorDto) {
+        return session.insert(namespace + "insertWritingContributor", writingContributorDto);
     }
 
-    // 12. 집필 기여자-도서 관계 테이블 인서트
+    // 집필 기여자-도서 관계 테이블 인서트
     @Override
-    public int insertToBookContributor(Map map) throws Exception {
-        return session.insert(namespace + "insertToBookContributor", map);
+    public int insertBookContributor(Map map) {
+        return session.insert(namespace + "insertBookContributor", map);
     }
 
-    // 13. 해당 isbn의 이미지 시퀀스 최대값 조회
+    // 해당 isbn의 이미지 시퀀스 최대값 조회
     @Override
-    public Integer selectMaxImgSeq(String isbn) throws Exception {
+    public Integer selectMaxImgSeq(String isbn) {
         return session.selectOne(namespace + "selectMaxImgSeq", isbn);
     }
 
-    // 14. 다음 wr_seq값 조회
+    // 다음 wr_seq값 조회
     @Override
-    public Integer selectWrSeq() throws Exception {
+    public Integer selectWrSeq() {
         return session.selectOne(namespace + "selectWrSeq");
     }
 
-    // 15. 다음 trl_seq값 조회
+    // 다음 trl_seq값 조회
     @Override
-    public Integer selectTrlSeq() throws Exception {
+    public Integer selectTrlSeq() {
         return session.selectOne(namespace + "selectTrlSeq");
     }
 
-    // 16. 검색된 전체 도서 개수
+    // 검색된 전체 도서 개수
     @Override
-    public int searchResultCnt(BookSearchCondition bsc) throws Exception {
+    public int searchResultCnt(BookSearchCondition bsc) {
         return session.selectOne(namespace + "searchResultCnt", bsc);
     }
 
-    //17. 검색된 페이지
+    // 검색된 페이지
     @Override
-    public List<BookDto> searchSelectPage(BookSearchCondition bsc) throws Exception {
+    public List<BookDto> searchSelectPage(BookSearchCondition bsc) {
         return session.selectList(namespace + "searchSelectPage", bsc);
     }
 
-    // 18. 집필 기여자 테이블 전체 삭제
-    @Override
-    public int deleteAllFromWritingContributor() throws Exception { // 전체 삭제. 삭제된 로우수 반환
-        return session.delete(namespace + "deleteAllFromWritingContributor");
-    }
-
-    // 18. 도서 기여자 테이블 전체 삭제
-    @Override
-    public int deleteAllFromBookContributor() throws Exception { // 전체 삭제. 삭제된 로우수 반환
-        return session.delete(namespace + "deleteAllFromBookContributor");
-    }
 }

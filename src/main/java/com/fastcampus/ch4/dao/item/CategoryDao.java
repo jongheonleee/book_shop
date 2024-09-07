@@ -5,17 +5,17 @@ import com.fastcampus.ch4.dto.item.CategoryDto;
 import java.util.List;
 
 public interface CategoryDao {
-    int count() throws Exception;
+    int count();
 
     int deleteAll();
 
-    int delete(String cate_num) throws Exception;
+    int delete(String cate_num);
 
-    int insert(CategoryDto dto) throws Exception;
+    int insert(CategoryDto dto);
 
-    List<CategoryDto> selectAll() throws Exception;
+    List<CategoryDto> selectAll();
 
-    CategoryDto select(String cate_num) throws Exception;
+    CategoryDto select(String cate_num);
 
-    int update(CategoryDto dto) throws Exception;
+    int update(CategoryDto dto);
 }

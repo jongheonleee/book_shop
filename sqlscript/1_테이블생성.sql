@@ -748,4 +748,36 @@ CREATE TABLE `payment_history` (
 );
 
 
+ALTER TABLE `order` ADD CONSTRAINT `PK_ORDER` PRIMARY KEY (
+	`ord_seq`
+);
+
+ALTER TABLE `order_prod` ADD CONSTRAINT `PK_ORDER_PROD` PRIMARY KEY (
+	`ord_prod_num`
+);
+
+ALTER TABLE `order_history` ADD CONSTRAINT `PK_ORDER_HISTORY` PRIMARY KEY (
+	`ord_hist_seq`,
+	`ord_seq`
+);
+
+ALTER TABLE `order_prod_status_history` ADD CONSTRAINT `PK_ORDER_PROD_STATUS_HISTORY` PRIMARY KEY (
+	`ord_prod_stat_hist_seq`,
+	`ord_prod_num`
+);
+
+ALTER TABLE `payment` ADD CONSTRAINT `PK_PAYMENT` PRIMARY KEY (
+	`pay_seq`,
+	`ord_seq`
+);
+
+ALTER TABLE `payment_history` ADD CONSTRAINT `PK_PAYMENT_HISTORY` PRIMARY KEY (
+	`pay_hist_seq`,
+	`pay_seq`,
+	`ord_seq`
+);
+
+
+
+
 

@@ -96,24 +96,6 @@ $(function() {
         }
     });
 
-    // 등록 버튼
-    // 폼에 있는 input, textarea태그 값들 전송
-    $('#writeBtn').on("click", () => {
-        const form = $('#form');
-        const cateNum = getCateNum();
-
-        // cate_num을 폼 데이터에 추가
-        $('#form').append(`<input type="hidden" name="cate_num" value="${cateNum}">`);
-
-        if (form.length) {
-            const actionUrl = `/ch4/book/write`;
-            form.attr({
-                action: actionUrl,
-                method: "post"
-            }).submit();
-        }
-    });
-
     // 수정 버튼
     $('modifyBtn').on("click", () => {
         // 1. 읽기 상태이면 수정 상태로 변경

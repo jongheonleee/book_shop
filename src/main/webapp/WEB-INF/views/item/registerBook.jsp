@@ -14,19 +14,16 @@
   <script src="<c:url value='/js/item/registerBook.js'/>" defer></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script>
-    // JSP 변수 값을 전역 변수로 설정
-    var page = '<c:out value="${bsc.page}"/>';
-    var pageSize = '<c:out value="${bsc.pageSize}"/>';
-    var order_criteria = '<c:out value="${bsc.order_criteria}"/>';
-    var order_direction = '<c:out value="${bsc.order_direction}"/>';
-
     let msg = '<c:out value="${msg}"/>';
     if(msg == "WRT_ERR") alert("게시물 등록에 실패했습니다. 다시 시도해 주세요.");
 
-    var cateList = '<c:out value="${cateListJson}"/>';
-    <%--console.log("stringify: ", JSON.stringify(${cateListJson}));--%>
-    <%--let cateList = JSON.parse(JSON.stringify(${cateListJson}));--%>
-    // console.log(cateList);
+    var page = '${bsc.page}';
+    var pageSize = '${bsc.pageSize}';
+    var order_criteria = '${bsc.order_criteria}';
+    var order_direction = '${bsc.order_direction}';
+
+    // cateList를 JSON.parse()를 사용하여 문자열을 JSON 객체로 변환
+    var cateList = JSON.parse('${cateListJson}');
   </script>
 </head>
 <body>
@@ -46,8 +43,6 @@
     <!-- 버튼들을 가로로 정렬 -->
     <div class="button-group">
       <button type="button" id="writeBtn" class="btn">등록</button>
-      <button type="button" id="modifyBtn" class="btn">수정</button>
-      <button type="button" id="removeBtn" class="btn">삭제</button>
       <button type="button" id="listBtn" class="btn">목록</button>
     </div>
 

@@ -17,7 +17,7 @@ public class CategoryDaoImpl implements CategoryDao {
 
 
     @Override
-    public int count() throws Exception { //전체 개수 반환
+    public int count() { //전체 개수 반환
         return session.selectOne(namespace + "count");
     }
 
@@ -27,27 +27,27 @@ public class CategoryDaoImpl implements CategoryDao {
     }
 
     @Override
-    public int delete(String cate_num) throws Exception{ // isbn과 pub_num일치하면 삭제. 성공 1, 실패 0
+    public int delete(String cate_num) { // isbn과 pub_num일치하면 삭제. 성공 1, 실패 0
         return session.delete(namespace + "delete", cate_num);
     }
 
     @Override
-    public int insert(CategoryDto dto) throws Exception { //CategoryDto 테이블에 insert
+    public int insert(CategoryDto dto) { //CategoryDto 테이블에 insert
         return session.insert(namespace + "insert", dto);
     }
 
     @Override
-    public List<CategoryDto> selectAll() throws Exception { // 전체 테이블 조회(등록일 내림차순)
+    public List<CategoryDto> selectAll() { // 전체 테이블 조회(등록일 내림차순)
         return session.selectList(namespace + "selectAll");
     }
 
     @Override
-    public CategoryDto select(String cate_num) throws Exception { // cate_num 일치하는 행 들고오기
+    public CategoryDto select(String cate_num) { // cate_num 일치하는 행 들고오기
         return session.selectOne(namespace + "select", cate_num);
     }
 
     @Override
-    public int update(CategoryDto dto) throws Exception { // CategoryDto정보로 cate_num이 일치하는 행 update
+    public int update(CategoryDto dto) { // CategoryDto정보로 cate_num이 일치하는 행 update
         return session.update(namespace + "update", dto);
     }
 }

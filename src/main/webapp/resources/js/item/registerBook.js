@@ -83,44 +83,10 @@ $(function() {
         location.href = fullUrl;
     });
 
-    // 삭제 버튼
-    $('#removeBtn').on("click", () => {
-        if (!confirm("정말로 삭제하시겠습니까?")) return;
-        const form = $('#form');
-        if (form.length) {
-            const actionUrl = `/ch4/book/remove?page=${page}&pageSize=${pageSize}&order_criteria=${order_criteria}&order_direction=${order_direction}`;
-            form.attr({
-                action: actionUrl,
-                method: "post"
-            }).submit();
-        }
-    });
-
     // 등록 버튼
     // 폼에 있는 input, textarea태그 값들 전송
     $('#writeBtn').on("click", () => {
         const form = $('#form');
-        const cateNum = getCateNum();
-
-        // cate_num을 폼 데이터에 추가
-        $('#form').append(`<input type="hidden" name="cate_num" value="${cateNum}">`);
-
-        if (form.length) {
-            const actionUrl = `/ch4/book/write`;
-            form.attr({
-                action: actionUrl,
-                method: "post"
-            }).submit();
-        }
-    });
-
-    // 수정 버튼
-    $('modifyBtn').on("click", () => {
-        // 1. 읽기 상태이면 수정 상태로 변경
-        const form = $('#form');
-        let isReadOnly = $("input[name=wr_name]")
-        // 2. 수정 상태이면 수정된 내용을 서버로 전송
-
         const cateNum = getCateNum();
 
         // cate_num을 폼 데이터에 추가
@@ -154,7 +120,6 @@ function updateSelect(level) {
     // cateList에서 앞자리가 일치하는 옵션 필터링
     const options = cateList.filter(categoryDto => {
         return categoryDto.lev == level && categoryDto.cate_num.startsWith(selectedValue);
-        console.log(`Checking ${categoryDto.cate_num} with level ${categoryDto.lev}`);
     });
 
     // 새 옵션으로 select 박스를 업데이트
@@ -213,8 +178,6 @@ function getCateNum() {
 
     // 선택된 값들을 합쳐 하나의 문자열로 만듭니다.
     const combinedCateNum = `${level1Value}${level2Value}${level3Value}${level4Value}`;
-
-    console.log('Combined Cate Num:', combinedCateNum); // 디버깅을 위한 로그
 
     return combinedCateNum;
 }

@@ -40,7 +40,6 @@
         <h2>상품 ${mode=="new" ? "등록" : "조회"}</h2>
         <!-- 버튼들을 가로로 정렬 -->
         <div class="button-group">
-            <button type="button" id="writeBtn" class="btn">등록</button>
             <button type="button" id="modifyBtn" class="btn">수정</button>
             <button type="button" id="removeBtn" class="btn">삭제</button>
             <button type="button" id="listBtn" class="btn">목록</button>

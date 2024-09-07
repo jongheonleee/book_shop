@@ -49,6 +49,10 @@ public class LoginController {
       boolean isAuthenticated = memberAuthenticationService.login(id, password, request);
 
       if (isAuthenticated) {
+        // 로그인 성공 시 세션에 사용자 정보를 저장
+        request.getSession().setAttribute("id", id);
+        model.addAttribute("message", "환영합니다, " + id + "님!");
+
         // JWT 토큰 생성
         String token = jwtUtil.generateToken(id);
         System.out.println("로그인 컨트롤러 생성된 토큰:" + token);
@@ -85,8 +89,8 @@ public class LoginController {
   @GetMapping("/logout")
   public String logout(HttpServletRequest request, HttpServletResponse response, Model model) {
     try {
-      // 세션에서 사용자 정보를 삭제(필요시)
-//      request.getSession().invalidate();
+      // 세션에서 사용자 정보를 삭제
+      request.getSession().invalidate();
 
       // JWT 무효화를 위해 클라이언트의 토큰 삭제 요청
       response.setHeader("Authorization", "");

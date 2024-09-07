@@ -632,7 +632,7 @@ CREATE TABLE `order` (
 	`reg_id`	varchar(20)	NOT NULL,
 	`up_date`	datetime	NOT NULL,
 	`up_id`	varchar(20)	NOT NULL,
-	`id`	varchar(30)	NOT NULL
+	`cust_id`	varchar(30)	NOT NULL
 );
 
 -- order_prod
@@ -719,7 +719,8 @@ CREATE TABLE `payment` (
 	`reg_date`	varchar(50)	NOT NULL	COMMENT 'system column',
 	`reg_id`	varchar(30)	NOT NULL	COMMENT 'system column',
 	`up_date`	varchar(50)	NOT NULL	COMMENT 'system column',
-	`up_id`	varchar(30)	NOT NULL	COMMENT 'system column'
+	`up_id`	varchar(30)	NOT NULL	COMMENT 'system column',
+    `cust_id`	varchar(30)	NOT NULL
 );
 
 -- payment_history

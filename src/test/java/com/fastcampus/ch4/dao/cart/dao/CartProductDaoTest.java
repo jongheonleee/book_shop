@@ -1,4 +1,4 @@
-package cart.dao;
+package com.fastcampus.ch4.dao.cart.dao;
 
 import com.fastcampus.ch4.dao.cart.CartDao;
 import com.fastcampus.ch4.dao.cart.CartProductDao;

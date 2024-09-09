@@ -8,12 +8,16 @@
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
+	<!-- Properties 파일 로드 -->
+	<context:property-placeholder location="classpath:/properties/database.properties"/>
+	<context:property-placeholder location="classpath:/properties/jwt.properties"/>
+
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
-		<property name="url" value="jdbc:mysql://localhost:3306/book_shop?useUnicode=true&amp;characterEncoding=utf8"></property>
-		<property name="username" value="root"></property>
-		<property name="password" value="12341234"></property>
+		<property name="url" value="${spring.datasource.url}"></property>
+		<property name="username" value="${spring.datasource.username}"></property>
+		<property name="password" value="${spring.datasource.password}"></property>
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -32,8 +36,6 @@
 	<tx:annotation-driven/>
 	<context:component-scan base-package="com.fastcampus.ch4"/>
 
-
-
 	<!-- JavaMailSender 설정 -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="smtp.naver.com"/>
@@ -48,6 +50,4 @@
 			</props>
 		</property>
 	</bean>
-
-
 </beans>

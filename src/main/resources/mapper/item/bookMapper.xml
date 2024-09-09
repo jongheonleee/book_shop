@@ -3,33 +3,83 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.fastcampus.ch4.dao.item.BookMapper">
-    <!-- 책 전체 개수 카운트  -->
-    <select id="count" resultType="int">
+    <!-- 도서 전체 개수 카운트  -->
+    <select id="countBook" resultType="int">
         SELECT count(*) FROM book
     </select>
 
+    <!-- 도서 할인 이력 개수 카운트  -->
+    <select id="countBookDiscHist" resultType="int">
+        SELECT count(*) FROM book_disc_hist
+    </select>
+
+    <!-- 도서 이미지 전체 개수 카운트  -->
+    <select id="countBookImage" resultType="int">
+        SELECT count(*) FROM book_image
+    </select>
+
+    <!-- book_contributor 전체 개수 카운트  -->
+    <select id="countBookContributor" resultType="int">
+        SELECT count(*) FROM book_contributor
+    </select>
+
+    <!-- writing_contributor 전체 개수 카운트  -->
+    <select id="countWritingContributor" resultType="int">
+        SELECT count(*) FROM writing_contributor
+    </select>
+
     <!-- 도서 테이블 전체 삭제 -->
-    <delete id="deleteAll">
+    <delete id="deleteAllBook">
         DELETE FROM book
     </delete>
 
     <!-- 집필기여자 테이블 전체 삭제 -->
-    <delete id="deleteAllFromWritingContributor">
+    <delete id="deleteAllWritingContributor">
         DELETE FROM writing_contributor
     </delete>
 
     <!-- 도서기여자 테이블 전체 삭제 -->
-    <delete id="deleteAllFromBookContributor">
+    <delete id="deleteAllBookContributor">
         DELETE FROM book_contributor
     </delete>
 
+    <!-- 도서이미지 테이블 전체 삭제 -->
+    <delete id="deleteAllBookImage">
+        DELETE FROM book_image
+    </delete>
+
+    <!-- 도서 할인 이력 테이블 전체 삭제 -->
+    <delete id="deleteAllBookDiscHist">
+        DELETE FROM book_disc_hist
+    </delete>
+
     <!-- isbn 일치하면 삭제-->
-    <delete id="delete" parameterType="String">
-        DELETE FROM book WHERE isbn = #{isbn}
+    <delete id="deleteBook" parameterType="map">
+        DELETE FROM book WHERE isbn = #{isbn} and regi_id = #{writer}
+    </delete>
+
+    <!-- isbn 일치하면 삭제-->
+    <delete id="deleteBookDiscHist" parameterType="map">
+        DELETE FROM book_disc_hist WHERE isbn = #{isbn} and reg_id = #{writer}
+    </delete>
+
+    <!-- isbn 일치하면 삭제-->
+    <delete id="deleteBookImage" parameterType="map">
+        DELETE FROM book_image WHERE isbn = #{isbn} and reg_id = #{writer}
+    </delete>
+
+    <!-- isbn 일치하면 삭제-->
+    <delete id="deleteBookContributor" parameterType="map">
+        DELETE FROM book_contributor WHERE isbn = #{isbn} and reg_id = #{wrter}
+    </delete>
+
+    <!-- isbn 일치하면 삭제-->
+    <delete id="deleteWritingContributor" parameterType="map">
+        DELETE FROM writing_contributor WHERE isbn = #{isbn} and reg_id = #{writer}
     </delete>
 
     <!-- BookDto 삽입 -->
-    <insert id="insert" parameterType="BookDto">
+    <insert id="insertBook" parameterType="BookDto">
         INSERT INTO book
         (isbn, cate_num, title,
          pub_name, pub_date, sale_stat,
@@ -53,13 +103,13 @@
     </insert>
 
     <!--도서 이미지 테이블 인서트 -->
-    <insert id="insertToBookImage" parameterType="BookDto">
+    <insert id="insertBookImage" parameterType="BookImageDto">
         INSERT INTO book_image (isbn, img_seq, img_url,  main_img_chk, img_regi_day, reg_date, reg_id, up_date, up_id)
         VALUES (#{isbn}, #{img_seq}, #{img_url}, #{main_img_chk}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "reg_id",DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "up_id")
     </insert>
 
     <!--집필 기여자 테이블 인서트 -->
-    <insert id="insertToWritingContributor" parameterType="BookDto">
+    <insert id="insertWritingContributor" parameterType="BookDto">
         INSERT INTO writing_contributor (
             cb_num,
             name,
@@ -88,7 +138,7 @@
     </insert>
 
 
-    <insert id="insertToBookContributor" parameterType="map">
+    <insert id="insertBookContributor" parameterType="map">
         INSERT INTO book_contributor (isbn, cb_num, reg_date, reg_id, up_date, up_id)
         VALUES (#{isbn}, #{cb_num}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "reg_id", DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "up_id")
     </insert>
@@ -100,7 +150,7 @@
     </sql>
 
     <!-- 전체 테이블 조회(등록일 내림차순)-->
-    <select id="selectAll" resultType="BookDto">
+    <select id="selectAllBook" resultType="BookDto">
         <include refid="selectFromBook"/>
         ORDER BY reg_date DESC
     </select>
@@ -118,7 +168,7 @@
     </select>
 
     <!-- isbn으로 조회 -->
-    <select id="select" parameterType="String" resultType="BookDto">
+    <select id="selectBook" parameterType="String" resultType="BookDto">
         SELECT
         bi.img_url AS repre_img,
         b.*,  <!-- 도서의 기본 정보 -->
@@ -154,7 +204,7 @@
     </select>
 
     <!-- 수정 -->
-    <update id="update" parameterType="BookDto">
+    <update id="updateBook" parameterType="BookDto">
         UPDATE book
         SET
             isbn = #{isbn}, cate_num = #{cate_num}, title = #{title},
@@ -268,6 +318,7 @@
         book b
         LEFT JOIN
         book_image bi_main ON b.isbn = bi_main.isbn AND bi_main.main_img_chk = 'Y'  <!-- 대표 이미지 -->
+        WHERE b.sale_stat != '판매중지'
         <include refid="orderByCondition"/>
         LIMIT #{offset}, #{pageSize} <!-- 페이지네이션 -->
     </select>
@@ -321,7 +372,7 @@
         book b
         LEFT JOIN
         book_image bi_main ON b.isbn = bi_main.isbn AND bi_main.main_img_chk = 'Y'  <!-- 대표 이미지 -->
-        WHERE true
+        WHERE b.sale_stat != '판매중지'
             <include refid="searchCondition"/>
             <include refid="orderByCondition"/>
         LIMIT #{offset}, #{pageSize} <!-- 페이지네이션 -->
@@ -378,7 +429,7 @@
             book b
             LEFT JOIN
             book_image bi_main ON b.isbn = bi_main.isbn AND bi_main.main_img_chk = 'Y'  <!-- 대표 이미지 -->
-            WHERE true
+            WHERE b.sale_stat != '판매중지'
                 <include refid="searchCondition"/>
         ) AS Temp
     </select>

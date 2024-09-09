@@ -22,8 +22,10 @@ function initializeFilter() {
 }
 
 // 글쓰기 페이지로 이동하는 함수
-function goToWritePage() {
-    window.location.href = "/ch4/book/write";
+function goToRegisterPage() {
+    const url = "/ch4/book/register";
+    const fullUrl = `${url}?page=${page}&pageSize=${pageSize}&order_criteria=${order_criteria}&order_direction=${order_direction}`;
+    location.href = fullUrl;
 }
 
 // 책 종류 필터를 적용하여 책 정보를 표시하는 함수
@@ -164,3 +166,4 @@ function setSaleVolumes() {
         }
     });
 }
+

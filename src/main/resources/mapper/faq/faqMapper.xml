@@ -50,14 +50,14 @@
     <!-- 게시글 전체 선택 -->
     <select id="selectAll" resultType="FaqDto">
         <include refid="selectWithCatgName"/>
-        order by f.faq_catg_code ASC, f.reg_date DESC
+        Temporder by f.faq_catg_code ASC, f.reg_date DESC
     </select>
 
     <!-- 노출되는 게시글 전체 선택 -->
     <select id="selectDisplay" resultType="FaqDto">
         <include refid="selectWithCatgName"/>
         where dsply_chk = 'Y'
-        order by f.faq_catg_code ASC, f.reg_date DESC
+        Temporder by f.faq_catg_code ASC, f.reg_date DESC
     </select>
 
     <!-- 하나의 게시글 선택 -->
@@ -100,14 +100,14 @@
                 and title like concat('%', #{keyword}, '%')
             </otherwise>
         </choose>
-        order by f.faq_catg_code ASC, f.reg_date DESC
+        Temporder by f.faq_catg_code ASC, f.reg_date DESC
     </select>
 
     <!-- 선택한 카테고리에 따라 목록 읽기 -->
     <select id="selectByCatg" parameterType="string" resultType="FaqDto">
         <include refid="selectWithCatgName"/>
         where f.dsply_chk = 'Y' and f.faq_catg_code like concat(#{faq_catg_code}, '%')
-        order by f.faq_catg_code ASC, f.reg_date DESC
+        Temporder by f.faq_catg_code ASC, f.reg_date DESC
     </select>
 
     <!-- 조회수 1 증가 -->

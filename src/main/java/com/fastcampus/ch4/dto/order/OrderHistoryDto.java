@@ -1,37 +1,56 @@
 package com.fastcampus.ch4.dto.order;
 
-import java.util.Date;
+import java.sql.Timestamp;
+import java.util.Objects;
 
-public class OrderDto {
+public class OrderHistoryDto {
     // pk (auto increment)
+    private Integer ord_hist_seq; // 주문 변경 이력 번호
     private Integer ord_seq; // 주문 번호
 
     // NOTNULL
-    private Integer ord_stat; // 주문 상태
-    private Integer deli_stat; // 배송 상태
-    private Integer pay_stat; // 결제 상태
+    private String chg_start_date; // 변경 시작 일자
+    private String chg_end_date; // 변경 종료 일자
+    private String chg_reason; // 변경 사유
 
     // 속성
+    private Integer ord_stat; // 주문 상태
+    private Integer deli_stat;
+    private Integer pay_stat;
     private Integer delivery_fee = 0; // 배송비
     private Integer total_prod_pric = 0; // 총 상품 금액
     private Integer total_disc_pric = 0; // 총 할인 금액
     private Integer total_ord_pric = 0; // 총 주문 금액
-    private String crated_at; // 주문 생성 일자
+    private String created_at; // 주문 생성 일자
     private String updated_at; // 주문 변경 일자
 
-    // fk
-    private String cust_id; // 유저 id
-
     // 시스템 컬럼
-    private Date reg_date; // 최초 등록 일시
+    private Timestamp reg_date; // 최초 등록 일시
     private String reg_id; // 최초 등록 id
-    private Date up_date; // 최근 수정 일시
+    private Timestamp up_date; // 최근 수정 일시
     private String up_id; // 최근 수정 id
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OrderHistoryDto)) return false;
+        OrderHistoryDto that = (OrderHistoryDto) o;
+        return Objects.equals(ord_hist_seq, that.ord_hist_seq) && Objects.equals(ord_seq, that.ord_seq) && Objects.equals(chg_start_date, that.chg_start_date) && Objects.equals(chg_end_date, that.chg_end_date) && Objects.equals(chg_reason, that.chg_reason) && Objects.equals(ord_stat, that.ord_stat) && Objects.equals(deli_stat, that.deli_stat) && Objects.equals(pay_stat, that.pay_stat) && Objects.equals(delivery_fee, that.delivery_fee) && Objects.equals(total_prod_pric, that.total_prod_pric) && Objects.equals(total_disc_pric, that.total_disc_pric) && Objects.equals(total_ord_pric, that.total_ord_pric);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ord_hist_seq, ord_seq, chg_start_date, chg_end_date, chg_reason, ord_stat, deli_stat, pay_stat, delivery_fee, total_prod_pric, total_disc_pric, total_ord_pric);
+    }
+
+    @Override
     public String toString() {
-        return "OrderDto{" +
-                "ord_seq=" + ord_seq +
+        return "OrderHistoryDto{" +
+                "ord_hist_seq=" + ord_hist_seq +
+                ", ord_seq=" + ord_seq +
+                ", chg_start_date='" + chg_start_date + '\'' +
+                ", chg_end_date='" + chg_end_date + '\'' +
+                ", chg_reason='" + chg_reason + '\'' +
                 ", ord_stat=" + ord_stat +
                 ", deli_stat=" + deli_stat +
                 ", pay_stat=" + pay_stat +
@@ -39,14 +58,21 @@ public class OrderDto {
                 ", total_prod_pric=" + total_prod_pric +
                 ", total_disc_pric=" + total_disc_pric +
                 ", total_ord_pric=" + total_ord_pric +
-                ", crated_at='" + crated_at + '\'' +
+                ", created_at='" + created_at + '\'' +
                 ", updated_at='" + updated_at + '\'' +
-                ", cust_id='" + cust_id + '\'' +
                 ", reg_date=" + reg_date +
                 ", reg_id='" + reg_id + '\'' +
                 ", up_date=" + up_date +
                 ", up_id='" + up_id + '\'' +
                 '}';
+    }
+
+    public Integer getOrd_hist_seq() {
+        return ord_hist_seq;
+    }
+
+    public void setOrd_hist_seq(Integer ord_hist_seq) {
+        this.ord_hist_seq = ord_hist_seq;
     }
 
     public Integer getOrd_seq() {
@@ -55,6 +81,30 @@ public class OrderDto {
 
     public void setOrd_seq(Integer ord_seq) {
         this.ord_seq = ord_seq;
+    }
+
+    public String getChg_start_date() {
+        return chg_start_date;
+    }
+
+    public void setChg_start_date(String chg_start_date) {
+        this.chg_start_date = chg_start_date;
+    }
+
+    public String getChg_end_date() {
+        return chg_end_date;
+    }
+
+    public void setChg_end_date(String chg_end_date) {
+        this.chg_end_date = chg_end_date;
+    }
+
+    public String getChg_reason() {
+        return chg_reason;
+    }
+
+    public void setChg_reason(String chg_reason) {
+        this.chg_reason = chg_reason;
     }
 
     public Integer getOrd_stat() {
@@ -113,12 +163,12 @@ public class OrderDto {
         this.total_ord_pric = total_ord_pric;
     }
 
-    public String getCrated_at() {
-        return crated_at;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setCrated_at(String crated_at) {
-        this.crated_at = crated_at;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
     public String getUpdated_at() {
@@ -129,19 +179,11 @@ public class OrderDto {
         this.updated_at = updated_at;
     }
 
-    public String getCust_id() {
-        return cust_id;
-    }
-
-    public void setCust_id(String cust_id) {
-        this.cust_id = cust_id;
-    }
-
-    public Date getReg_date() {
+    public Timestamp getReg_date() {
         return reg_date;
     }
 
-    public void setReg_date(Date reg_date) {
+    public void setReg_date(Timestamp reg_date) {
         this.reg_date = reg_date;
     }
 
@@ -153,11 +195,11 @@ public class OrderDto {
         this.reg_id = reg_id;
     }
 
-    public Date getUp_date() {
+    public Timestamp getUp_date() {
         return up_date;
     }
 
-    public void setUp_date(Date up_date) {
+    public void setUp_date(Timestamp up_date) {
         this.up_date = up_date;
     }
 

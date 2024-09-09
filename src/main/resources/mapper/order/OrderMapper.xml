@@ -1,47 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.fastcampus.ch4.dao.OrderMapper">
-    <!--
-    insert 시 pk 들고오는 방법
-    1. autoincrement 지원 DBMS 이고 pk 가 autoincrement 일 때 : useGeneratedKeys, keyProperty
-    2. autoincrement 미지원 DBMS 이거나 pk 가 autoincrement 가 아닐 때 : selectKey
-    -->
-    <insert id="insertAndReturnId" parameterType="OrderDto" useGeneratedKeys="true" keyProperty="ord_seq">
-        INSERT INTO
-            book_shop.order
-        (
-            userId,
-            ord_stat,
+<mapper namespace="com.fastcampus.ch4.dao.order.OrderMapper">
+    <insert id="insertOrder" parameterType="OrderDto" useGeneratedKeys="true" keyProperty="ord_seq">
+        INSERT INTO book_shop.order
+            (ord_stat,
             deli_stat,
             pay_stat,
             delivery_fee,
             total_prod_pric,
-            total_bene_pric,
+            total_disc_pric,
             total_ord_pric,
+            created_at,
+            updated_at,
             reg_date,
             reg_id,
             up_date,
-            up_id
-        )
-        VALUES
-        (
-            #{userId},
-            #{ord_stat},
-            #{deli_stat},
-            #{pay_stat},
-            #{delivery_fee},
-            #{total_prod_pric},
-            #{total_bene_pric},
-            #{total_ord_pric},
-            DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),
-            #{reg_id},
-            DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),
-            #{up_id}
-        )
+            up_id,
+            cust_id)
+        VALUES (#{ord_stat},
+                #{deli_stat},
+                #{pay_stat},
+                #{delivery_fee},
+                #{total_prod_pric},
+                #{total_disc_pric},
+                #{total_ord_pric},
+                NOW(),
+                NOW(),
+                NOW(),
+                #{reg_id},
+                NOW(),
+                #{up_id},
+                #{cust_id});
     </insert>
 
-    <select id="selectById" parameterType="int" resultType="OrderDto">
+    <select id="selectOrderListByCondition" parameterType="map" resultType="OrderDto">
         SELECT
             ord_seq,
             ord_stat,
@@ -49,111 +42,67 @@
             pay_stat,
             delivery_fee,
             total_prod_pric,
-            total_bene_pric,
+            total_disc_pric,
             total_ord_pric,
+            created_at,
+            updated_at,
             reg_date,
             reg_id,
             up_date,
             up_id,
-            userId
-        FROM
-            book_shop.order
-        WHERE
-            ord_seq = #{ord_seq};
+            cust_id
+        FROM book_shop.`order`
+        <where>
+            <if test="ord_seq != null">
+                ord_seq = #{ord_seq}
+            </if>
+            <if test="cust_id != null">
+                AND cust_id = #{cust_id}
+            </if>
+        </where>
     </select>
 
-    <select id="selectAll" parameterType="map" resultType="OrderDto">
-        SELECT
-            ord_seq,
-            deli_stat,
-            pay_stat,
-            delivery_fee,
-            total_prod_pric,
-            total_bene_pric,
-            total_ord_pric,
-            reg_date,
-            reg_id,
-            up_date,
-            up_id,
-            userId,
-            ord_stat
-        FROM
-            book_shop.order
-        ORDER BY
-            <choose>
-                <when test="orderCondition == 'ord_seq_DESC'">ord_seq DESC</when>
-                <when test="orderCondition == 'ord_seq_ASC'">ord_seq ASC</when>
-                <otherwise>
-                    ord_seq DESC
-                </otherwise>
-            </choose>
-    </select>
-
-    <select id="selectListByCondition" parameterType="map" resultType="OrderDto">
-        SELECT
-            ord_seq,
-            ord_stat,
-            deli_stat,
-            pay_stat,
-            userId,
-            delivery_fee,
-            total_prod_pric,
-            total_bene_pric,
-            total_ord_pric,
-            reg_date,
-            reg_id,
-            up_date,
-            up_id
-        FROM
-            book_shop.order
-        WHERE
-            userId = #{userId}
-            <if test="ord_stat != null">
-                AND ord_stat = ${ord_stat}
-            </if>
-            <if test="deli_stat != null">
-                AND deli_stat = ${deli_stat}
-            </if>
-            <if test="pay_stat != null">
-                AND pay_stat = ${pay_stat}
-            </if>
-    </select>
-
-    <delete id="deleteById" parameterType="int">
-        DELETE
-        FROM
-            book_shop.order
-        WHERE
-            ord_seq = #{ord_seq}
-    </delete>
-
-    <delete id="deleteAll">
-        DELETE
-        FROM
-            book_shop.order
-    </delete>
-
-    <update id="update" parameterType="OrderDto">
-        UPDATE
-            book_shop.order
+    <update id="updateOrderStatus" parameterType="map">
+        UPDATE book_shop.`order`
         SET
             ord_stat = #{ord_stat},
             deli_stat = #{deli_stat},
             pay_stat = #{pay_stat},
-            delivery_fee = #{delivery_fee},
-            total_prod_pric = #{total_prod_pric},
-            total_bene_pric = #{total_bene_pric},
-            total_ord_pric = #{total_ord_pric},
-            up_date = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),
-            up_id = #{up_id}
+            updated_at = NOW(),
+            up_id = #{up_id},
+            up_date = NOW()
         WHERE
             ord_seq = #{ord_seq}
     </update>
 
-    <select id="countAll" resultType="int">
-        SELECT
-            count(*)
+    <update id="updateOrderPriceInfo" parameterType="map">
+        UPDATE book_shop.`order`
+        SET
+            delivery_fee = #{delivery_fee},
+            total_disc_pric = #{total_disc_pric},
+            total_ord_pric = #{total_ord_pric},
+            total_prod_pric = #{total_prod_pric},
+            updated_at = NOW(),
+            up_id = #{up_id},
+            up_date = NOW()
+        WHERE
+            ord_seq = #{ord_seq}
+    </update>
+
+    <delete id="deleteOrder" parameterType="map">
+        DELETE
         FROM
-            book_shop.order
-    </select>
+            book_shop.`order`
+        <where>
+            <if test="ord_seq != null">
+                ord_seq = #{ord_seq}
+            </if>
+            <if test="cust_id != null">
+                AND cust_id = #{cust_id}
+            </if>
+            <if test="ord_seq == null and cust_id == null ">
+                1 = 2
+            </if>
+        </where>
+    </delete>
 </mapper>

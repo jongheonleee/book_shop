@@ -580,7 +580,7 @@ VALUES (1, 'Y', '2024-08-16 18:47:06', 'member1', '2024-08-16 18:47:06', 'member
 UNLOCK TABLES;
 
 --
--- cart & order
+-- cart & Temporder
 --
 
 -- cart
@@ -618,10 +618,10 @@ CREATE TABLE `cart_prod`
 -- order
 DROP TABLE IF EXISTS book_shop.order;
 CREATE TABLE `order` (
-	`ord_seq`	int(15)	NOT NULL	COMMENT 'auto_increment',
-	`ord_stat`	varchar(255)	NOT NULL	COMMENT 'common code table',
-	`deli_stat`	varchar(255)	NOT NULL	COMMENT 'common code table',
-	`pay_stat`	varchar(255)	NOT NULL	COMMENT 'common code table',
+	`ord_seq`	int(15)	NOT NULL auto_increment primary key COMMENT 'auto_increment',
+	`ord_stat`	int(15)	NOT NULL	COMMENT 'common code table',
+	`deli_stat`	int(15)	NOT NULL	COMMENT 'common code table',
+	`pay_stat`	int(15)	NOT NULL	COMMENT 'common code table',
 	`delivery_fee`	int(15)	NULL,
 	`total_prod_pric`	int(15)	NULL,
 	`total_disc_pric`	int(15)	NULL,
@@ -635,16 +635,18 @@ CREATE TABLE `order` (
 	`cust_id`	varchar(30)	NOT NULL
 );
 
+
 -- order_prod
-DROP TABLE IF EXISTS book_shop.order_prod;
+DROP TABLE IF EXISTS book_shop.`order_prod`;
 CREATE TABLE `order_prod` (
-	`ord_prod_num`	int(15)	NOT NULL,
-	`ord_num`	varchar(100)	NOT NULL,
+	`ord_prod_seq`	int(15)	NOT NULL auto_increment primary key,
+	`ord_seq`	int(15)	NOT NULL,
 	`isbn`	varchar(30)	NOT NULL,
 	`prod_type_code`	varchar(255)	NOT NULL	COMMENT 'common code table',
-	`ord_stat`	varchar(255)	NOT NULL	COMMENT 'common code table',
-	`deli_stat`	varchar(255)	NOT NULL	COMMENT 'common code table',
-	`pay_stat`	varchar(255)	NOT NULL	COMMENT 'common code table',
+	`ord_stat`	int(15)	NOT NULL	COMMENT 'common code table',
+	`deli_stat`	int(15)	NOT NULL	COMMENT 'common code table',
+	`pay_stat`	int(15)	NOT NULL	COMMENT 'common code table',
+    `cust_id`	varchar(30)	NOT NULL,
 	`book_title`	varchar(30)	NULL,
 	`item_quan`	int(15)	NULL,
 	`point_perc`	double(5,2)	NULL,
@@ -654,19 +656,19 @@ CREATE TABLE `order_prod` (
 	`disc_pric`	double	NULL,
 	`sale_pric`	int(15)	NULL,
 	`ord_pric`	int(15)	NULL,
-	`img_seq`	int(10)	NULL,
+	`repre_img`	varchar(2500)	NULL,
+	`updated_at`	varchar(50)	NULL,
+	`created_at`	varchar(50)	NULL,
 	`reg_date`	datetime	NOT NULL,
 	`reg_id`	varchar(20)	NOT NULL,
 	`up_date`	datetime	NOT NULL,
-	`up_id`	varchar(20)	NOT NULL,
-	`updated_at`	varchar(50)	NULL,
-	`created_at`	varchar(50)	NULL
+	`up_id`	varchar(20)	NOT NULL
 );
 
 -- order_history
 DROP TABLE IF EXISTS book_shop.order_history;
 CREATE TABLE `order_history` (
-	`ord_hist_seq`	int(15)	NOT NULL,
+	`ord_hist_seq`	int(15)	NOT NULL auto_increment primary key ,
 	`ord_seq`	int(15)	NOT NULL	COMMENT 'auto_increment',
 	`chg_start_date`	varchar(50)	NOT NULL,
 	`chg_end_date`	varchar(50)	NOT NULL,
@@ -689,8 +691,8 @@ CREATE TABLE `order_history` (
 -- order_prod_status_history
 DROP TABLE IF EXISTS book_shop.order_prod_status_history;
 CREATE TABLE `order_prod_status_history` (
-	`ord_prod_stat_hist_seq`	int(15)	NOT NULL,
-	`ord_prod_num`	int(15)	NOT NULL,
+	`ord_prod_stat_hist_seq`	int(15)	NOT NULL auto_increment primary key ,
+	`ord_prod_seq`	int(15)	NOT NULL,
 	`chg_start_date`	varchar(50)	NOT NULL,
 	`chg_end_date`	varchar(50)	NOT NULL,
 	`ord_stat`	int(15)	NULL	COMMENT 'common code table',
@@ -705,7 +707,7 @@ CREATE TABLE `order_prod_status_history` (
 -- payment
 DROP TABLE IF EXISTS book_shop.payment;
 CREATE TABLE `payment` (
-	`pay_seq`	int(15)	NOT NULL,
+	`pay_seq`	int(15)	NOT NULL auto_increment primary key ,
 	`ord_seq`	int(15)	NOT NULL	COMMENT 'auto_increment',
 	`pay_stat`	int(15)	NOT NULL	COMMENT 'common code table',
 	`pay_key`	varchar(255)	NOT NULL	COMMENT 'toss data',
@@ -726,7 +728,7 @@ CREATE TABLE `payment` (
 -- payment_history
 DROP TABLE IF EXISTS book_shop.payment_history;
 CREATE TABLE `payment_history` (
-	`pay_hist_seq`	int(15)	NOT NULL,
+	`pay_hist_seq`	int(15)	NOT NULL auto_increment primary key ,
 	`pay_seq`	int(15)	NOT NULL,
 	`ord_seq`	int(15)	NOT NULL	COMMENT 'auto_increment',
 	`chg_start_date`	varchar(50)	NOT NULL,
@@ -749,35 +751,27 @@ CREATE TABLE `payment_history` (
 );
 
 
-ALTER TABLE `order` ADD CONSTRAINT `PK_ORDER` PRIMARY KEY (
-	`ord_seq`
-);
-
-ALTER TABLE `order_prod` ADD CONSTRAINT `PK_ORDER_PROD` PRIMARY KEY (
-	`ord_prod_num`
-);
-
-ALTER TABLE `order_history` ADD CONSTRAINT `PK_ORDER_HISTORY` PRIMARY KEY (
-	`ord_hist_seq`,
-	`ord_seq`
-);
-
-ALTER TABLE `order_prod_status_history` ADD CONSTRAINT `PK_ORDER_PROD_STATUS_HISTORY` PRIMARY KEY (
-	`ord_prod_stat_hist_seq`,
-	`ord_prod_num`
-);
-
-ALTER TABLE `payment` ADD CONSTRAINT `PK_PAYMENT` PRIMARY KEY (
-	`pay_seq`,
-	`ord_seq`
-);
-
-ALTER TABLE `payment_history` ADD CONSTRAINT `PK_PAYMENT_HISTORY` PRIMARY KEY (
-	`pay_hist_seq`,
-	`pay_seq`,
-	`ord_seq`
-);
-
+# ALTER TABLE `order_history` ADD CONSTRAINT `PK_ORDER_HISTORY` PRIMARY KEY (
+# 	`ord_hist_seq`,
+# 	`ord_seq`
+# );
+#
+# ALTER TABLE `order_prod_status_history` ADD CONSTRAINT `PK_ORDER_PROD_STATUS_HISTORY` PRIMARY KEY (
+# 	`ord_prod_stat_hist_seq`,
+# 	`ord_prod_seq`
+# );
+#
+# ALTER TABLE `payment` ADD CONSTRAINT `PK_PAYMENT` PRIMARY KEY (
+# 	`pay_seq`,
+# 	`ord_seq`
+# );
+#
+# ALTER TABLE `payment_history` ADD CONSTRAINT `PK_PAYMENT_HISTORY` PRIMARY KEY (
+# 	`pay_hist_seq`,
+# 	`pay_seq`,
+# 	`ord_seq`
+# );
+#
 
 
 

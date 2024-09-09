@@ -1,7 +1,5 @@
 package com.fastcampus.ch4.service.order.factory;
 
-import com.fastcampus.ch4.dto.order.OrderDto;
-import com.fastcampus.ch4.dto.order.OrderProductDto;
 import com.fastcampus.ch4.dto.order.temp.TempBookDto;
 import com.fastcampus.ch4.model.order.BookType;
 
@@ -11,7 +9,7 @@ public class OrderProductDtoFactory {
     static final String PRINTED = BookType.PRINTED.getCode();
     static final String EBOOK = BookType.EBOOK.getCode();
 
-    static public OrderProductDto create(OrderDto orderDto, TempBookDto bookDto, String prodTypeCode, Integer itemQuantity) {
+    static public TempOrderProductDto create(TempOrderDto orderDto, TempBookDto bookDto, String prodTypeCode, Integer itemQuantity) {
         String isbn = bookDto.getIsbn();
         String orderStatus = BASIC_ORDER_STATUS.getCode();
         String deliveryStatus = BASIC_DELIVERY_STATUS.getCode();
@@ -43,7 +41,7 @@ public class OrderProductDtoFactory {
         String userId = orderDto.getUserId();
         Integer orderSeq = orderDto.getOrd_seq();
 
-        return new OrderProductDto.Builder()
+        return new TempOrderProductDto.Builder()
                 .ord_seq(orderSeq)
                 .isbn(isbn)
                 .prod_type_code(PRINTED)

@@ -1,13 +1,10 @@
 package com.fastcampus.ch4.service.order.factory;
 
-import com.fastcampus.ch4.dto.order.OrderDto;
 import com.fastcampus.ch4.model.order.DeliveryStatus;
 import com.fastcampus.ch4.model.order.OrderStatus;
 import com.fastcampus.ch4.model.order.OrderConstants;
 import com.fastcampus.ch4.model.order.PaymentStatus;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
 
 @Component
 public class OrderDtoFactory {
@@ -21,12 +18,12 @@ public class OrderDtoFactory {
     2. @Override 가능
      */
 
-    public OrderDto create(String userId) {
+    public TempOrderDto create(String userId) {
         return create(userId, OrderConstants.BASIC_ORDER_STATUS, OrderConstants.BASIC_DELIVERY_STATUS, OrderConstants.BASIC_PAYMENT_STATUS);
     }
 
-    public OrderDto create(String userId, OrderStatus orderStatus, DeliveryStatus deliveryStatus, PaymentStatus paymentStatus) {
-        OrderDto orderDto = new OrderDto();
+    public TempOrderDto create(String userId, OrderStatus orderStatus, DeliveryStatus deliveryStatus, PaymentStatus paymentStatus) {
+        TempOrderDto orderDto = new TempOrderDto();
 
         // NOT NULL
         orderDto.setUserId(userId);

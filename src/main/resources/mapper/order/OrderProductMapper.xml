@@ -1,186 +1,173 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.fastcampus.ch4.dao.OrderProductMapper">
-    <insert id="insertAndReturnSeq" parameterType="OrderProductDto" useGeneratedKeys="true" keyProperty="ord_prod_seq" >
-        INSERT INTO
-            book_shop.order_prod
-        (
-            ord_seq,
-            isbn,
-            prod_type_code,
-            ord_stat,
-            deli_stat,
-            pay_stat,
-            item_quan,
-            point_perc,
-            point_pric,
-            basic_pric,
-            bene_perc,
-            bene_pric,
-            sale_pric,
-            ord_pric,
-            reg_date,
-            reg_id,
-            up_date,
-            up_id
-        )
-        VALUES
-            (
-                #{ord_seq},
+<mapper namespace="com.fastcampus.ch4.dao.order.OrderProductMapper">
+    <insert id="insertOrderProduct" parameterType="OrderProductDto" useGeneratedKeys="true" keyProperty="ord_prod_seq">
+        INSERT INTO book_shop.order_prod
+        (ord_seq,
+         isbn,
+         prod_type_code,
+         ord_stat,
+         deli_stat,
+         pay_stat,
+         cust_id,
+         book_title,
+         item_quan,
+         point_perc,
+         point_pric,
+         basic_pric,
+         disc_perc,
+         disc_pric,
+         sale_pric,
+         ord_pric,
+         repre_img,
+         reg_date,
+         reg_id,
+         up_date,
+         up_id,
+         updated_at,
+         created_at)
+        VALUES (#{ord_seq},
                 #{isbn},
                 #{prod_type_code},
                 #{ord_stat},
                 #{deli_stat},
                 #{pay_stat},
+                #{cust_id},
+                #{book_title},
                 #{item_quan},
                 #{point_perc},
                 #{point_pric},
                 #{basic_pric},
-                #{bene_perc},
-                #{bene_pric},
+                #{disc_perc},
+                #{disc_pric},
                 #{sale_pric},
                 #{ord_pric},
+                #{repre_img},
                 NOW(),
                 #{reg_id},
                 NOW(),
-                #{up_id}
-            )
+                #{up_id},
+                NOW(),
+                NOW())
     </insert>
 
-    <select id="count" resultType="int">
+    <select id="selectListOrderProductByCondition" parameterType="map" resultType="OrderProductDto">
         SELECT
-            COUNT(*)
-        FROM
-            book_shop.order_prod
+        ord_prod_seq,
+        ord_seq,
+        isbn,
+        prod_type_code,
+        ord_stat,
+        deli_stat,
+        pay_stat,
+        cust_id,
+        book_title,
+        item_quan,
+        point_perc,
+        point_pric,
+        basic_pric,
+        disc_perc,
+        disc_pric,
+        sale_pric,
+        ord_pric,
+        repre_img,
+        reg_date,
+        reg_id,
+        up_date,
+        up_id,
+        updated_at,
+        created_at
+        FROM book_shop.order_prod
+        <where>
+            <if test="ord_prod_seq != null">
+                ord_prod_seq = #{ord_prod_seq}
+            </if>
+            <if test="ord_seq != null">
+                AND ord_seq = #{ord_seq}
+            </if>
+            <if test="ord_stat != null">
+                AND ord_stat = #{ord_stat}
+            </if>
+            <if test="deli_stat != null">
+                AND deli_stat = #{deli_stat}
+            </if>
+            <if test="pay_stat != null">
+                AND pay_stat = #{pay_stat}
+            </if>
+            <if test="cust_id != null">
+                AND cust_id = #{cust_id}
+            </if>
+        </where>
     </select>
 
-    <select id="selectBySeq" parameterType="int" resultType="OrderProductDto">
-        SELECT
-            ord_prod_seq,
-            ord_seq,
-            isbn,
-            prod_type_code,
-            ord_stat,
-            deli_stat,
-            pay_stat,
-            item_quan,
-            point_perc,
-            point_pric,
-            basic_pric,
-            bene_perc,
-            bene_pric,
-            sale_pric,
-            ord_pric,
-            reg_date,
-            reg_id,
-            up_date,
-            up_id
-        FROM
-            book_shop.order_prod
-        WHERE
-            ord_prod_seq = #{ord_prod_seq}
-    </select>
-
-
-    <select id="selectAll" resultType="OrderProductDto">
-        SELECT
-            ord_prod_seq,
-            ord_seq,
-            isbn,
-            prod_type_code,
-            ord_stat,
-            deli_stat,
-            pay_stat,
-            item_quan,
-            point_perc,
-            point_pric,
-            basic_pric,
-            bene_perc,
-            bene_pric,
-            sale_pric,
-            ord_pric,
-            reg_date,
-            reg_id,
-            up_date,
-            up_id
-        FROM
-            book_shop.order_prod
-    </select>
-
-    <select id="selectListByCondition" parameterType="map" resultType="OrderProductDto">
-        SELECT
-            ord_prod_seq,
-            ordProd.ord_seq,
-            isbn,
-            prod_type_code,
-            ordProd.ord_stat,
-            ordProd.deli_stat,
-            ordProd.pay_stat,
-            ord.userId,
-            item_quan,
-            point_perc,
-            point_pric,
-            basic_pric,
-            bene_perc,
-            bene_pric,
-            sale_pric,
-            ord_pric,
-            ordProd.reg_date,
-            ordProd.reg_id,
-            ordProd.up_date,
-            ordProd.up_id
-        FROM
-            book_shop.order_prod ordProd
-                JOIN
-            book_shop.order ord
-            ON
-                ordProd.ord_seq = ord.ord_seq
-                <if test="userId != null">
-                    AND ord.userId = #{userId}
-                </if>
-                <if test="ord_seq != null">
-                    AND ordProd.ord_seq = #{ord_seq}
-                </if>
-    </select>
-
-    <update id="update" parameterType="OrderProductDto">
+    <update id="updateOrderProduct" parameterType="object">
         UPDATE
-            book_shop.order_prod
-        SET
-            ord_seq = #{ord_seq},
-            isbn = #{isbn},
-            prod_type_code = #{prod_type_code},
-            ord_stat = #{ord_stat},
-            deli_stat = #{deli_stat},
-            pay_stat = #{pay_stat},
-            item_quan = #{item_quan},
-            point_perc = #{point_perc},
-            point_pric = #{point_pric},
-            basic_pric = #{basic_pric},
-            bene_perc = #{bene_perc},
-            bene_pric = #{bene_pric},
-            sale_pric = #{sale_pric},
-            ord_pric = #{ord_pric},
-            reg_date = now(),
-            reg_id = #{reg_id},
-            up_date = now(),
-            up_id = #{up_id}
+        book_shop.order_prod
+        <set>
+            up_date = NOW(),
+            up_id = #{up_id},
+            updated_at = NOW(),
+            <if test="ord_stat != null">
+                ord_stat = #{ord_stat},
+            </if>
+            <if test="deli_stat != null">
+                deli_stat = #{deli_stat},
+            </if>
+            <if test="pay_stat != null">
+                pay_stat = #{pay_stat},
+            </if>
+            <if test="book_title != null">
+                book_title = #{book_title},
+            </if>
+            <if test="item_quan != null">
+                item_quan = #{item_quan},
+            </if>
+            <if test="point_perc != null">
+                point_perc = #{point_perc},
+            </if>
+            <if test="point_pric != null">
+                point_pric = #{point_pric},
+            </if>
+            <if test="basic_pric != null">
+                basic_pric = #{basic_pric},
+            </if>
+            <if test="disc_perc != null">
+                disc_perc = #{disc_perc},
+            </if>
+            <if test="disc_pric != null">
+                disc_pric = #{disc_pric},
+            </if>
+            <if test="sale_pric != null">
+                sale_pric = #{sale_pric},
+            </if>
+            <if test="ord_pric != null">
+                ord_pric = #{ord_pric},
+            </if>
+            <if test="repre_img != null">
+                repre_img = #{repre_img},
+            </if>
+        </set>
         WHERE
             ord_prod_seq = #{ord_prod_seq}
     </update>
-
-    <delete id="deleteBySeq" parameterType="int">
+    
+    <delete id="deleteOrderProductByCondition" parameterType="map">
         DELETE
-        FROM
-            book_shop.order_prod
-        WHERE
-            ord_prod_seq = #{ord_prod_seq}
-    </delete>
-
-    <delete id="deleteAll">
-        DELETE
-        FROM
-            book_shop.order_prod
+        FROM book_shop.order_prod
+        <choose>
+            <when test="ord_seq != null and ord_prod_seq == null and cust_id != null">
+                WHERE ord_seq = #{ord_seq}
+            </when>
+            <when test="ord_seq == null and ord_prod_seq != null and cust_id == null">
+                WHERE ord_prod_seq = #{ord_prod_seq}
+            </when>
+            <when test="ord_seq == null and ord_prod_seq == null and cust_id != null">
+                WHERE cust_id = #{cust_id}
+            </when>
+            <otherwise>
+                WHERE 1 = 2
+            </otherwise>
+        </choose>
     </delete>
 </mapper>

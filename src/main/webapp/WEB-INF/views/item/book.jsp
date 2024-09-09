@@ -55,6 +55,14 @@
                        oninput="updateImagePreview()">
             </div>
             <div class="product-details">
+                <!-- 판매 상태 선택 -->
+                <p>
+                    <strong>판매 상태:</strong>
+                    <select id="sale_stat" name="sale_stat" <c:if test="${mode != 'new'}">disabled="disabled"</c:if>>
+                        <option value="판매중" <c:if test="${bookDto.sale_stat == '판매중'}">selected</c:if>>판매중</option>
+                        <option value="판매중지" <c:if test="${bookDto.sale_stat == '판매중지'}">selected</c:if>>판매중지</option>
+                    </select>
+                </p>
                 <p><strong>책 제목: </strong><input type="text" name="title" value="<c:out value="${bookDto.title}"/>"
                                                  <c:if test="${mode != 'new'}">readonly="readonly"</c:if>></p>
                 <p><strong>카테고리:</strong> <input type="text" name="whol_layr_name" value="<c:out value="${bookDto.whol_layr_name}"/>"

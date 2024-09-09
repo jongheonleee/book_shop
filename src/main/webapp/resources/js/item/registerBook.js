@@ -85,7 +85,7 @@ $(function() {
 
     // 등록 버튼
     // 폼에 있는 input, textarea태그 값들 전송
-    $('#writeBtn').on("click", () => {
+    $('#registerBtn').on("click", () => {
         const form = $('#form');
         const cateNum = getCateNum();
 
@@ -93,7 +93,7 @@ $(function() {
         $('#form').append(`<input type="hidden" name="cate_num" value="${cateNum}">`);
 
         if (form.length) {
-            const actionUrl = `/ch4/book/write`;
+            const actionUrl = `/ch4/book/register`;
             form.attr({
                 action: actionUrl,
                 method: "post"

@@ -29,6 +29,12 @@ public interface BookDao {
     int deleteBookContributor(String isbn, String writer);
     int deleteWritingContributor(String isbn, String writer);
 
+    int deleteBookForAdmin(String isbn);
+    int deleteBookImageForAdmin(String isbn);
+    int deleteBookDiscHistForAdmin(String isbn);
+    int deleteBookContributorForAdmin(String isbn);
+    int deleteWritingContributorForAdmin(String isbn);
+
     int insertBook(BookDto dto);
 
     List<BookDto> selectAllBook();

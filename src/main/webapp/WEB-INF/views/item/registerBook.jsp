@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -38,11 +37,11 @@
 </div>
 
 <main>
-  <form action="" id="form">
+  <form id="form" action="">
     <h2>상품 ${mode=="new" ? "등록" : "조회"}</h2>
     <!-- 버튼들을 가로로 정렬 -->
     <div class="button-group">
-      <button type="button" id="writeBtn" class="btn">등록</button>
+      <button type="button" id="registerBtn" class="btn">등록</button>
       <button type="button" id="listBtn" class="btn">목록</button>
     </div>
 
@@ -55,7 +54,16 @@
                placeholder="이미지 URL을 입력하세요"
                oninput="updateImagePreview()">
       </div>
+
       <div class="product-details">
+          <!-- 판매 상태 선택 -->
+          <p>
+              <strong>판매 상태:</strong>
+              <select id="sale_stat" name="sale_stat">
+                  <option value="판매중" <c:if test="${bookDto.sale_stat == '판매중'}">selected</c:if>>판매중</option>
+                  <option value="판매중지" <c:if test="${bookDto.sale_stat == '판매중지'}">selected</c:if>>판매중지</option>
+              </select>
+          </p>
         <p><strong>책 제목: </strong><input type="text" name="title" value="<c:out value="${bookDto.title}"/>"
                                          <c:if test="${mode != 'new'}">readonly="readonly"</c:if>></p>
         <div class="select-container">

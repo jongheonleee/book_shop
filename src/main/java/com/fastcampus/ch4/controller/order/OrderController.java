@@ -26,13 +26,13 @@ public class OrderController {
     @PostMapping(value = "/order")
     public String order(OrderCreateDto orderCreateDto, Model model, HttpServletRequest request) {
 
+        // user id 셋팅
         String user_id = (String) request.getSession().getAttribute("id");
-
         orderCreateDto.setCust_id(user_id);
-        System.out.println("orderCreateDto = " + orderCreateDto);
-        orderCreateDto.getOrderItemDtoList().forEach(System.out::println);
 
+        // 주문 정보 조회 (DB 조회만)
         OrderViewDto orderViewDto = orderService.getOrderData(orderCreateDto);
+
         model.addAttribute("orderDto", orderViewDto.getOrderDto());
         model.addAttribute("orderItemList", orderViewDto.getOrderProductDtoList());
 

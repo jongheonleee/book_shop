@@ -6,7 +6,7 @@ import com.fastcampus.ch4.dto.item.BookDto;
 import com.fastcampus.ch4.dto.order.OrderDto;
 import com.fastcampus.ch4.dto.order.OrderProductDto;
 import com.fastcampus.ch4.dto.order.OrderProductStatusHistoryDto;
-import com.fastcampus.ch4.utils.GenerateTime;
+import com.fastcampus.ch4.util.GenerateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

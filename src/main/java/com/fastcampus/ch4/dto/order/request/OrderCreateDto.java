@@ -15,6 +15,15 @@ public class OrderCreateDto {
         return orderCreateDto;
     }
 
+    @Override
+    public String toString() {
+        return "OrderCreateDto{" +
+                "delivery_fee=" + delivery_fee +
+                ", cust_id='" + cust_id + '\'' +
+                ", orderItemDtoList=" + orderItemDtoList +
+                '}';
+    }
+
     public Integer getDelivery_fee() {
         return delivery_fee;
     }

@@ -9,17 +9,18 @@
     <link rel="stylesheet" href="<c:url value='/css/cart.css'/>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
-    <script src="<c:url value='/js/cart.js'/>"></script>
 </head>
 <body>
 <header id="menu">
     <ul>
         <li id="logo">fastcampus</li>
         <li><a href="<c:url value='/'/>">Home</a></li>
-        <%-- <li><a href="<c:url value='/board/list'/>">Board</a></li> --%>
-        <%-- <li><a href="<c:url value='${loginOutLink}'/>">${loginOut}</a></li> --%>
-        <%-- <li><a href="<c:url value='/register/add'/>">Sign in</a></li> --%>
-        <li><a href=""><i class="fas fa-cart-plus"></i></a></li>
+        <li><a href="<c:url value='/qa/list'/>">QA</a></li>
+        <li><a href="<c:url value='/book/list'/>">Board</a></li>
+        <li><a href="<c:url value='/cscenter/faq/list/00'/>">FAQ</a></li>
+        <li><a href="<c:url value='${loginOutLink}'/>">${loginOut}</a></li>
+        <li><a href="<c:url value='/signup'/>">Sign up</a></li>
+        <li><a href="<c:url value='/cart/list'/>"><i class="fas fa-cart-plus"></i></a></li>
         <li><a href=""><i class="fa fa-search"></i></a></li>
     </ul>
 </header>
@@ -117,6 +118,23 @@
     </c:choose>
 </div>
 
+<script type="text/javascript">
+    // JSP에서 cartItemList를 JavaScript 변수로 할당
+    var cartItemList = [];
+
+    <c:forEach var="item" items="${itemList}">
+        cartItemList.push({
+            cartSeq: "${item.cart_seq}",
+            isbn: "${item.isbn}",
+            prodTypeCode: "${item.prod_type_code}",
+            title: "${item.title}",
+            salePrice: "${item.salePrice}",
+            basicPrice: "${item.basicPrice}",
+            itemQuan: "${item.item_quan}"
+        });
+    </c:forEach>
+</script>
+<script src="<c:url value='/js/cart.js'/>"></script>
 
 </body>
 </html>

@@ -3,7 +3,7 @@ package com.fastcampus.ch4.dao.order;
 import com.fastcampus.ch4.dao.global.CodeDao;
 import com.fastcampus.ch4.dto.order.OrderDto;
 import com.fastcampus.ch4.dto.order.OrderHistoryDto;
-import com.fastcampus.ch4.utils.GenerateTime;
+import com.fastcampus.ch4.util.GenerateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -5,6 +5,15 @@ public class OrderItemDto {
     private String isbn;
     private String prod_type_code;
 
+    @Override
+    public String toString() {
+        return "OrderItemDto{" +
+                "item_quan=" + item_quan +
+                ", isbn='" + isbn + '\'' +
+                ", prod_type_code='" + prod_type_code + '\'' +
+                '}';
+    }
+
     public Integer getItem_quan() {
         return item_quan;
     }

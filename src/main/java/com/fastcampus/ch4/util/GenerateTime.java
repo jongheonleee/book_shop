@@ -1,4 +1,4 @@
-package com.fastcampus.ch4.utils;
+package com.fastcampus.ch4.util;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;

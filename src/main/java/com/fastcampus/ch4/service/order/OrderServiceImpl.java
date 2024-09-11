@@ -15,7 +15,7 @@ import com.fastcampus.ch4.dto.order.response.OrderCountDto;
 import com.fastcampus.ch4.dto.order.response.OrderViewDto;
 import com.fastcampus.ch4.service.global.CodeService;
 import com.fastcampus.ch4.service.item.BookService;
-import com.fastcampus.ch4.utils.GenerateTime;
+import com.fastcampus.ch4.util.GenerateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

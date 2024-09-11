@@ -1,6 +1,7 @@
 package com.fastcampus.ch4.dao.order;
 
 import com.fastcampus.ch4.dao.global.CodeDao;
+import com.fastcampus.ch4.domain.order.OrderProductSearchCondition;
 import com.fastcampus.ch4.dto.item.BookDto;
 import com.fastcampus.ch4.dto.order.OrderDto;
 import com.fastcampus.ch4.dto.order.OrderProductDto;
@@ -347,7 +348,14 @@ public class OrderProductStatusHistoryDaoImplTest {
         // 4-1. OrderProductDto 조회
         Map<String, Object> selectMap = new HashMap<>();
         selectMap.put("ord_prod_seq", orderProductDto.getOrd_prod_seq());
-        List<OrderProductDto> orderProductDtoList = orderProductDao.selectOrderProductByCondition(selectMap);
+        OrderProductSearchCondition searchCondition = OrderProductSearchCondition.from(
+                null,
+                null,
+                null,
+                null,
+                null,
+                UPDATE_USER_ID);
+        List<OrderProductDto> orderProductDtoList = orderProductDao.selectOrderProductByCondition(searchCondition);
 
         // 4-2. orderProductDao.updateOrderProduct(orderProductDto) 실행
         OrderProductDto orderProductDtoUpdate = orderProductDtoList.get(0);
@@ -376,7 +384,14 @@ public class OrderProductStatusHistoryDaoImplTest {
         // 4-6. 주문 상품 상태 변경 확인
         Map<String, Object> selectMapUpdate = new HashMap<>();
         selectMapUpdate.put("ord_prod_seq", orderProductDtoUpdate.getOrd_prod_seq());
-        List<OrderProductDto> orderProductDtoListUpdate = orderProductDao.selectOrderProductByCondition(selectMapUpdate);
+        OrderProductSearchCondition searchConditionUpdate = OrderProductSearchCondition.from(
+                orderProductDtoUpdate.getOrd_prod_seq(),
+                null,
+                null,
+                null,
+                null,
+                null);
+        List<OrderProductDto> orderProductDtoListUpdate = orderProductDao.selectOrderProductByCondition(searchConditionUpdate);
         assertFalse(orderProductDtoListUpdate.isEmpty());
         OrderProductDto orderProductDtoResult = orderProductDtoListUpdate.get(0);
         assertTrue(orderProductDtoUpdate.equals(orderProductDtoResult));

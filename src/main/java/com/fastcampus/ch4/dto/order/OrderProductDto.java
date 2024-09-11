@@ -1,5 +1,12 @@
 package com.fastcampus.ch4.dto.order;
 
+import com.fastcampus.ch4.domain.item.BookType;
+import com.fastcampus.ch4.domain.order.DeliveryStatus;
+import com.fastcampus.ch4.domain.order.OrderStatus;
+import com.fastcampus.ch4.domain.payment.PaymentStatus;
+import com.fastcampus.ch4.dto.item.BookDto;
+import com.fastcampus.ch4.dto.order.request.OrderItemDto;
+
 import java.util.Date;
 import java.util.Objects;
 
@@ -17,6 +24,14 @@ public class OrderProductDto {
     private Integer deli_stat; // 배송 상태
     private Integer pay_stat; // 결제 상태
     private String cust_id; // 고객 id
+
+    // 공통 코드 속성
+    private String ord_stat_code; // 주문 상태 코드
+    private String ord_stat_name; // 주문 상태 코드 이름
+    private String deli_stat_code; // 배송 상태 코드
+    private String deli_stat_name; // 배송 상태 코드 이름
+    private String pay_stat_code; // 결제 상태 코드
+    private String pay_stat_name; // 결제 상태 코드 이름
 
     // NULL
     private String book_title; // 도서 제목
@@ -38,6 +53,63 @@ public class OrderProductDto {
     private Date up_date; // 최근 수정 일시
     private String up_id; // 최근 수정 id
 
+    public static OrderProductDto from(OrderItemDto orderItemDto, BookDto bookDto, String userId, Integer ord_stat_id, Integer deli_stat_id, Integer pay_stat_id) {
+        OrderProductDto orderProductDto = new OrderProductDto();
+        orderProductDto.setIsbn(bookDto.getIsbn());
+        orderProductDto.setProd_type_code(orderItemDto.getProd_type_code());
+
+//        orderProductDto.setOrd_stat_code(OrderStatus.ORDER_WAIT.getCode());
+//        orderProductDto.setDeli_stat_code(DeliveryStatus.DELIVERY_WAIT.getCode());
+//        orderProductDto.setPay_stat_code(PaymentStatus.PAYMENT_WAIT.getCode());
+
+        orderProductDto.setOrd_stat(ord_stat_id);
+        orderProductDto.setDeli_stat(deli_stat_id);
+        orderProductDto.setPay_stat(pay_stat_id);
+
+        orderProductDto.setBook_title(bookDto.getTitle());
+        orderProductDto.setItem_quan(orderItemDto.getItem_quan());
+        orderProductDto.setRepre_img(bookDto.getRepre_img());
+        orderProductDto.setCust_id(userId);
+        orderProductDto.setReg_id(userId);
+        orderProductDto.setUp_id(userId);
+
+        if (BookType.PAPER.getCode().equals(orderItemDto.getProd_type_code())) {
+            int basicPrice = bookDto.getPapr_pric();
+            double pointPercent = bookDto.getPapr_point() / 100;
+            int pointPrice = (int) (basicPrice * pointPercent);
+            double discountPercent = bookDto.getPapr_disc() / 100;
+            int discountPrice = (int) (basicPrice * discountPercent);
+            int salePrice = basicPrice - discountPrice;
+            int orderPrice = salePrice * orderItemDto.getItem_quan();
+
+            orderProductDto.setPoint_perc(pointPercent);
+            orderProductDto.setPoint_pric(pointPrice);
+            orderProductDto.setBasic_pric(basicPrice);
+            orderProductDto.setDisc_perc(discountPercent);
+            orderProductDto.setDisc_pric(discountPrice);
+            orderProductDto.setSale_pric(salePrice);
+            orderProductDto.setOrd_pric(orderPrice);
+        } else {
+            int basicPrice = (int) bookDto.getE_pric();
+            double pointPercent = bookDto.getE_point() / 100;
+            int pointPrice = (int) (basicPrice * pointPercent);
+            double discountPercent = bookDto.getE_disc() / 100;
+            int discountPrice = (int) (basicPrice * discountPercent);
+            int salePrice = basicPrice - discountPrice;
+            int orderPrice = salePrice * orderItemDto.getItem_quan();
+
+            orderProductDto.setPoint_perc(pointPercent);
+            orderProductDto.setPoint_pric(pointPrice);
+            orderProductDto.setBasic_pric(basicPrice);
+            orderProductDto.setDisc_perc(discountPercent);
+            orderProductDto.setDisc_pric(discountPrice);
+            orderProductDto.setSale_pric(salePrice);
+            orderProductDto.setOrd_pric(orderPrice);
+        }
+
+        return orderProductDto;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -49,6 +121,42 @@ public class OrderProductDto {
     @Override
     public int hashCode() {
         return Objects.hash(ord_prod_seq, ord_seq, isbn, prod_type_code, ord_stat, deli_stat, pay_stat, cust_id, book_title, item_quan, point_perc, point_pric, basic_pric, disc_perc, disc_pric, sale_pric, ord_pric, repre_img);
+    }
+
+    @Override
+    public String toString() {
+        return "OrderProductDto{" +
+                "ord_prod_seq=" + ord_prod_seq +
+                ", ord_seq=" + ord_seq +
+                ", isbn='" + isbn + '\'' +
+                ", prod_type_code='" + prod_type_code + '\'' +
+                ", ord_stat=" + ord_stat +
+                ", deli_stat=" + deli_stat +
+                ", pay_stat=" + pay_stat +
+                ", cust_id='" + cust_id + '\'' +
+                ", ord_stat_code='" + ord_stat_code + '\'' +
+                ", ord_stat_name='" + ord_stat_name + '\'' +
+                ", deli_stat_code='" + deli_stat_code + '\'' +
+                ", deli_stat_name='" + deli_stat_name + '\'' +
+                ", pay_stat_code='" + pay_stat_code + '\'' +
+                ", pay_stat_name='" + pay_stat_name + '\'' +
+                ", book_title='" + book_title + '\'' +
+                ", item_quan=" + item_quan +
+                ", point_perc=" + point_perc +
+                ", point_pric=" + point_pric +
+                ", basic_pric=" + basic_pric +
+                ", disc_perc=" + disc_perc +
+                ", disc_pric=" + disc_pric +
+                ", sale_pric=" + sale_pric +
+                ", ord_pric=" + ord_pric +
+                ", repre_img='" + repre_img + '\'' +
+                ", created_at='" + created_at + '\'' +
+                ", updated_at='" + updated_at + '\'' +
+                ", reg_date=" + reg_date +
+                ", reg_id='" + reg_id + '\'' +
+                ", up_date=" + up_date +
+                ", up_id='" + up_id + '\'' +
+                '}';
     }
 
     public Integer getOrd_prod_seq() {
@@ -105,6 +213,54 @@ public class OrderProductDto {
 
     public void setPay_stat(Integer pay_stat) {
         this.pay_stat = pay_stat;
+    }
+
+    public String getOrd_stat_code() {
+        return ord_stat_code;
+    }
+
+    public void setOrd_stat_code(String ord_stat_code) {
+        this.ord_stat_code = ord_stat_code;
+    }
+
+    public String getOrd_stat_name() {
+        return ord_stat_name;
+    }
+
+    public void setOrd_stat_name(String ord_stat_name) {
+        this.ord_stat_name = ord_stat_name;
+    }
+
+    public String getDeli_stat_code() {
+        return deli_stat_code;
+    }
+
+    public void setDeli_stat_code(String deli_stat_code) {
+        this.deli_stat_code = deli_stat_code;
+    }
+
+    public String getDeli_stat_name() {
+        return deli_stat_name;
+    }
+
+    public void setDeli_stat_name(String deli_stat_name) {
+        this.deli_stat_name = deli_stat_name;
+    }
+
+    public String getPay_stat_code() {
+        return pay_stat_code;
+    }
+
+    public void setPay_stat_code(String pay_stat_code) {
+        this.pay_stat_code = pay_stat_code;
+    }
+
+    public String getPay_stat_name() {
+        return pay_stat_name;
+    }
+
+    public void setPay_stat_name(String pay_stat_name) {
+        this.pay_stat_name = pay_stat_name;
     }
 
     public String getCust_id() {

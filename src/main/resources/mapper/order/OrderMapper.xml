@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fastcampus.ch4.dao.order.OrderMapper">
+    <sql id="findCodeByCode">
+        SELECT code.code_id
+        FROM book_shop.code code
+        WHERE code.code = #{code_name}
+    </sql>
+
     <insert id="insertOrder" parameterType="OrderDto" useGeneratedKeys="true" keyProperty="ord_seq">
         INSERT INTO book_shop.order
             (ord_stat,
@@ -34,24 +40,36 @@
                 #{cust_id});
     </insert>
 
-    <select id="selectOrderListByCondition" parameterType="map" resultType="OrderDto">
+    <select id="selectOrderByCondition" parameterType="map" resultType="OrderDto">
         SELECT
-            ord_seq,
-            ord_stat,
-            deli_stat,
-            pay_stat,
-            delivery_fee,
-            total_prod_pric,
-            total_disc_pric,
-            total_ord_pric,
-            created_at,
-            updated_at,
-            reg_date,
-            reg_id,
-            up_date,
-            up_id,
-            cust_id
-        FROM book_shop.`order`
+        orderT.ord_seq,
+        status_order.code_id AS ord_stat,
+        status_order.code AS ord_stat_code,
+        status_order.code_name AS ord_stat_name,
+        status_delivery.code_id AS deli_stat,
+        status_delivery.code AS deli_stat_code,
+        status_delivery.code_name AS deli_stat_name,
+        status_payment.code_id AS pay_stat,
+        status_payment.code AS pay_stat_code,
+        status_payment.code_name AS pay_stat_name,
+        orderT.delivery_fee,
+        orderT.total_prod_pric,
+        orderT.total_disc_pric,
+        orderT.total_ord_pric,
+        orderT.created_at,
+        orderT.updated_at,
+        orderT.reg_date,
+        orderT.reg_id,
+        orderT.up_date,
+        orderT.up_id,
+        orderT.cust_id
+        FROM book_shop.`order` orderT
+        INNER JOIN
+        book_shop.code status_order ON status_order.code_id = orderT.ord_stat
+        INNER JOIN
+        book_shop.code status_delivery ON status_delivery.code_id = orderT.deli_stat
+        INNER JOIN
+        book_shop.code status_payment ON status_payment.code_id = orderT.pay_stat
         <where>
             <if test="ord_seq != null">
                 ord_seq = #{ord_seq}
@@ -62,15 +80,137 @@
         </where>
     </select>
 
+    <select id="selectStatByCondition" parameterType="map" resultType="OrderDto">
+        SELECT
+        orderT.ord_seq,
+        ord_statT.code_id AS ord_stat,
+        ord_statT.code AS ord_stat_code,
+        ord_statT.code_name AS ord_stat_name,
+        deli_statT.code_id AS deli_stat,
+        deli_statT.code AS deli_stat_code,
+        deli_statT.code_name AS deli_stat_name,
+        pay_statT.code_id AS pay_stat,
+        pay_statT.code AS pay_stat_code,
+        pay_statT.code_name AS pay_stat_name,
+        orderT.delivery_fee,
+        orderT.total_prod_pric,
+        orderT.total_disc_pric,
+        orderT.total_ord_pric,
+        orderT.created_at,
+        orderT.updated_at,
+        orderT.reg_date,
+        orderT.reg_id,
+        orderT.up_date,
+        orderT.up_id,
+        orderT.cust_id
+        FROM
+        book_shop.`order` orderT
+        INNER JOIN
+        book_shop.code ord_statT ON ord_statT.code_id = orderT.ord_stat
+        INNER JOIN
+        book_shop.code deli_statT ON deli_statT.code_id = orderT.deli_stat
+        INNER JOIN
+        book_shop.code pay_statT ON pay_statT.code_id = orderT.pay_stat
+        <where>
+            <if test="ord_seq != null">
+                orderT.ord_seq = #{ord_seq}
+            </if>
+            <if test="cust_id != null">
+                AND orderT.cust_id = #{cust_id}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOrderPage" parameterType="OrderSearchCondition" resultType="OrderDto">
+        SELECT orderT.ord_seq,
+        ord_statT.code_id AS ord_stat,
+        ord_statT.code AS ord_stat_code,
+        ord_statT.code_name AS ord_stat_name,
+        deli_statT.code_id AS deli_stat,
+        deli_statT.code AS deli_stat_code,
+        deli_statT.code_name AS deli_stat_name,
+        pay_statT.code_id AS pay_stat,
+        pay_statT.code AS pay_stat_code,
+        pay_statT.code_name AS pay_stat_name,
+        orderT.delivery_fee,
+        orderT.total_prod_pric,
+        orderT.total_disc_pric,
+        orderT.total_ord_pric,
+        orderT.created_at,
+        orderT.updated_at,
+        orderT.reg_date,
+        orderT.reg_id,
+        orderT.up_date,
+        orderT.up_id,
+        orderT.cust_id
+        FROM book_shop.`order` orderT
+        INNER JOIN
+        book_shop.code ord_statT ON ord_statT.code_id = orderT.ord_stat
+        INNER JOIN
+        book_shop.code deli_statT ON deli_statT.code_id = orderT.deli_stat
+        INNER JOIN
+        book_shop.code pay_statT ON pay_statT.code_id = orderT.pay_stat
+        <where>
+            orderT.cust_id = #{cust_id}
+            <if test="book_title != null">
+                AND orderT.book_title LIKE concat('%', #{book_title} '%')
+            </if>
+            <if test="ord_seq != null">
+                AND orderT.ord_seq LIKE concat('%', #{ord_seq} '%')
+            </if>
+            <if test="order_status != null">
+                AND (
+                ord_statT.ord_stat = #{order_status}
+                OR deli_statT.deli_stat = #{order_status}
+                OR pay_statT.pay_stat = #{order_status}
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOrderCount" parameterType="OrderCountCondition" resultType="int">
+        SELECT
+        COUNT(*)
+        FROM
+        book_shop.`order`
+        <where>
+            cust_id = #{cust_id}
+            <if test="ord_stat != null">
+                AND ord_stat = #{ord_stat}
+            </if>
+            <if test="deli_stat != null">
+                AND deli_stat = #{deli_stat}
+            </if>
+            <if test="pay_stat != null">
+                AND pay_stat = #{pay_stat}
+            </if>
+        </where>
+
+    </select>
+
     <update id="updateOrderStatus" parameterType="map">
         UPDATE book_shop.`order`
         SET
-            ord_stat = #{ord_stat},
-            deli_stat = #{deli_stat},
-            pay_stat = #{pay_stat},
+            ord_stat = (SELECT ordCode.code_id FROM book_shop.code ordCode WHERE code = #{ord_stat_code}),
+            deli_stat = (SELECT deliCode.code_id FROM book_shop.code deliCode WHERE code = #{deli_stat_code}),
+            pay_stat = (SELECT payCode.code_id FROM book_shop.code payCode WHERE code = #{pay_stat_code}),
             updated_at = NOW(),
             up_id = #{up_id},
             up_date = NOW()
+        WHERE
+            ord_seq = #{ord_seq}
+    </update>
+
+    <update id="updateStatus" parameterType="map">
+        UPDATE book_shop.`order`
+        <set>
+            updated_at = NOW(),
+            up_id = #{up_id},
+            up_date = NOW(),
+            ord_stat = #{ord_stat_id},
+            deli_stat = #{deli_stat_id},
+            pay_stat = #{pay_stat_id},
+        </set>
         WHERE
             ord_seq = #{ord_seq}
     </update>

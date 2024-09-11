@@ -62,9 +62,10 @@
             up_date,
             up_id
         FROM book_shop.order_history
-        WHERE
-        ord_hist_seq = #{ord_hist_seq}
         <where>
+            <if test="ord_hist_seq != null">
+                ord_hist_seq = #{ord_hist_seq}
+            </if>
             <if test="ord_seq != null">
                 AND ord_seq = #{ord_seq}
             </if>
@@ -78,6 +79,7 @@
                 AND <![CDATA[ chg_end_date > NOW() ]]>
             </if>
         </where>
+        ORDER BY ord_hist_seq DESC;
     </select>
 
     <update id="updateOrderHistory" parameterType="OrderHistoryDto">

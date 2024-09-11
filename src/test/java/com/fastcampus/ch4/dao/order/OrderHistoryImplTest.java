@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +101,7 @@ public class OrderHistoryImplTest {
         // 1. Order 조회 (TEST_USER_ID)
         Map<String, Object> initialCondition = new HashMap<>();
         initialCondition.put("cust_id", TEST_USER_ID);
-        List<OrderDto> orderDtoList = orderDao.selectOrderListByCondition(initialCondition);
+        List<OrderDto> orderDtoList = orderDao.selectOrderByCondition(initialCondition);
 
         for (OrderDto orderDto : orderDtoList) {
             // 2. 조회한 Order 에 따른 OrderHistory 조회

@@ -31,6 +31,9 @@
     <typeAlias alias="OrderHistoryDto" type="com.fastcampus.ch4.dto.order.OrderHistoryDto"/>
     <typeAlias alias="OrderProductDto" type="com.fastcampus.ch4.dto.order.OrderProductDto" />
     <typeAlias alias="OrderProductStatusHistoryDto" type="com.fastcampus.ch4.dto.order.OrderProductStatusHistoryDto" />
+    <typeAlias alias="OrderSearchCondition" type="com.fastcampus.ch4.domain.order.OrderSearchCondition"/>
+    <typeAlias alias="OrderProductSearchCondition" type="com.fastcampus.ch4.domain.order.OrderProductSearchCondition"/>
+    <typeAlias alias="OrderCountCondition" type="com.fastcampus.ch4.domain.order.OrderCountCondition"/>
 
     <!--  cart  -->
     <typeAlias alias="CartDto" type="com.fastcampus.ch4.dto.cart.CartDto" />

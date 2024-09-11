@@ -23,6 +23,21 @@ public class OrderProductStatusHistoryDto {
     private Date up_date; // 최근 수정 일시
     private String up_id; // 최근 수정 id
 
+    public static OrderProductStatusHistoryDto from(String startTime, String endTime, OrderProductDto orderProductDto) {
+        OrderProductStatusHistoryDto orderProductStatusHistoryDto = new OrderProductStatusHistoryDto();
+        orderProductStatusHistoryDto.setOrd_prod_seq(orderProductDto.getOrd_prod_seq());
+        orderProductStatusHistoryDto.setOrd_prod_seq(orderProductDto.getOrd_prod_seq());
+        orderProductStatusHistoryDto.setChg_start_date(startTime);
+        orderProductStatusHistoryDto.setChg_end_date(endTime);
+        orderProductStatusHistoryDto.setOrd_stat(orderProductDto.getOrd_stat());
+        orderProductStatusHistoryDto.setDeli_stat(orderProductDto.getDeli_stat());
+        orderProductStatusHistoryDto.setPay_stat(orderProductDto.getPay_stat());
+        orderProductStatusHistoryDto.setReg_id(orderProductDto.getReg_id());
+        orderProductStatusHistoryDto.setUp_id(orderProductDto.getUp_id());
+        return orderProductStatusHistoryDto;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

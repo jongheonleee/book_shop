@@ -1,5 +1,6 @@
 package com.fastcampus.ch4.dao.order;
 
+import com.fastcampus.ch4.domain.order.OrderProductSearchCondition;
 import com.fastcampus.ch4.dto.order.OrderProductDto;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,13 @@ public class OrderProductDaoImpl implements OrderProductDao {
 
     @Override
     public int insertOrderProduct(OrderProductDto orderProductDto) {
-        return sqlSession.insert(namespace + "insertOrderProduct", orderProductDto);
+//        return sqlSession.insert(namespace + "insertOrderProductStat", orderProductDto);
+        return sqlSession.insert(namespace + "insert", orderProductDto);
     }
 
     @Override
-    public List<OrderProductDto> selectOrderProductByCondition(Map map) {
-        return sqlSession.selectList(namespace + "selectListOrderProductByCondition", map);
+    public List<OrderProductDto> selectOrderProductByCondition(OrderProductSearchCondition searchCondition) {
+        return sqlSession.selectList(namespace + "selectListOrderProductByCondition", searchCondition);
     }
 
     @Override

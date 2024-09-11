@@ -1,6 +1,7 @@
 package com.fastcampus.ch4.dao.order;
 
 import com.fastcampus.ch4.dao.global.CodeDao;
+import com.fastcampus.ch4.domain.order.OrderProductSearchCondition;
 import com.fastcampus.ch4.dto.item.BookDto;
 import com.fastcampus.ch4.dto.order.OrderDto;
 import com.fastcampus.ch4.dto.order.OrderProductDto;
@@ -231,7 +232,14 @@ public class OrderProductDaoImplTest {
         // 3. 주문 상품 비교
         // 3-1. OrderProductDto 조회
         Map<String, Object> selectMap = Map.of("ord_prod_seq", orderProductDto.getOrd_prod_seq());
-        List<OrderProductDto> orderProductDtoList = orderProductDao.selectOrderProductByCondition(selectMap);
+        OrderProductSearchCondition searchCondition = OrderProductSearchCondition.from(
+                orderProductDto.getOrd_prod_seq(),
+                null,
+                null,
+                null,
+                null,
+                null);
+        List<OrderProductDto> orderProductDtoList = orderProductDao.selectOrderProductByCondition(searchCondition);
         assertFalse(orderProductDtoList.isEmpty());
 
         // 3-2. OrderProductDto 비교
@@ -290,8 +298,14 @@ public class OrderProductDaoImplTest {
             assertEquals(SUCCESS_CODE, ordProdInsertResult);
 
             // 2-5. OrderProductDto 조회
-            Map<String, Object> selectMap = Map.of("ord_prod_seq", orderProductDto.getOrd_prod_seq());
-            List<OrderProductDto> orderProductDtoList = orderProductDao.selectOrderProductByCondition(selectMap);
+            OrderProductSearchCondition searchCondition = OrderProductSearchCondition.from(
+                    orderProductDto.getOrd_prod_seq(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null);
+            List<OrderProductDto> orderProductDtoList = orderProductDao.selectOrderProductByCondition(searchCondition);
             assertFalse(orderProductDtoList.isEmpty());
 
             // 2-6. OrderProductDto 비교
@@ -301,8 +315,14 @@ public class OrderProductDaoImplTest {
 
         // 3. 주문 상품 확인
         // 3-1. OrderProductDto 조회 (ord_seq 로 조회)
-        Map<String, Object> selectMap = Map.of("ord_seq", orderDto.getOrd_seq());
-        List<OrderProductDto> orderProductDtoList = orderProductDao.selectOrderProductByCondition(selectMap);
+        OrderProductSearchCondition searchCondition = OrderProductSearchCondition.from(
+                null,
+                orderDto.getOrd_seq(),
+                null,
+                null,
+                null,
+                null);
+        List<OrderProductDto> orderProductDtoList = orderProductDao.selectOrderProductByCondition(searchCondition);
         assertFalse(orderProductDtoList.isEmpty());
 
         // 3-2. 삽입한 개수 비교
@@ -358,8 +378,14 @@ public class OrderProductDaoImplTest {
 
         // 3. 주문 상품 수정
         // 3-1. OrderProductDto 조회
-        Map<String, Object> selectMap = Map.of("ord_prod_seq", orderProductDto.getOrd_prod_seq());
-        List<OrderProductDto> orderProductDtoList = orderProductDao.selectOrderProductByCondition(selectMap);
+        OrderProductSearchCondition searchCondition = OrderProductSearchCondition.from(
+                orderProductDto.getOrd_prod_seq(),
+                null,
+                null,
+                null,
+                null,
+                null);
+        List<OrderProductDto> orderProductDtoList = orderProductDao.selectOrderProductByCondition(searchCondition);
         assertFalse(orderProductDtoList.isEmpty());
 
         // 3-2. OrderProductDto 수정
@@ -380,7 +406,7 @@ public class OrderProductDaoImplTest {
         assertEquals(SUCCESS_CODE, ordProdUpdateResult);
 
         // 3-3. OrderProductDto 수정 확인 (2-2 에서 생성한 OrderProductDto 와 비교)
-        List<OrderProductDto> updatedOrderProductDtoList = orderProductDao.selectOrderProductByCondition(selectMap);
+        List<OrderProductDto> updatedOrderProductDtoList = orderProductDao.selectOrderProductByCondition(searchCondition);
         assertFalse(updatedOrderProductDtoList.isEmpty());
         OrderProductDto updatedOrderProductDto = updatedOrderProductDtoList.get(0);
         assertEquals(selectedOrderProductDto.getOrd_prod_seq(), updatedOrderProductDto.getOrd_prod_seq());
@@ -436,7 +462,14 @@ public class OrderProductDaoImplTest {
         // 3. 주문 상품 삭제
         // 3-1. OrderProductDto 조회
         Map<String, Object> selectMap = Map.of("ord_prod_seq", orderProductDto.getOrd_prod_seq());
-        List<OrderProductDto> orderProductDtoList = orderProductDao.selectOrderProductByCondition(selectMap);
+        OrderProductSearchCondition searchCondition = OrderProductSearchCondition.from(
+                orderProductDto.getOrd_prod_seq(),
+                null,
+                null,
+                null,
+                null,
+                null);
+        List<OrderProductDto> orderProductDtoList = orderProductDao.selectOrderProductByCondition(searchCondition);
         assertFalse(orderProductDtoList.isEmpty());
 
         // 3-2. OrderProductDto 삭제
@@ -444,7 +477,7 @@ public class OrderProductDaoImplTest {
         assertEquals(SUCCESS_CODE, ordProdDeleteResult);
 
         // 3-3. OrderProductDto 삭제 확인
-        List<OrderProductDto> deletedOrderProductDtoList = orderProductDao.selectOrderProductByCondition(selectMap);
+        List<OrderProductDto> deletedOrderProductDtoList = orderProductDao.selectOrderProductByCondition(searchCondition);
         assertTrue(deletedOrderProductDtoList.isEmpty());
     }
 }

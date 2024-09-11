@@ -1,8 +1,15 @@
 package com.fastcampus.ch4.dao.order;
 
-import com.fastcampus.ch4.dao.global.CodeDao;
+import com.fastcampus.ch4.domain.order.DeliveryStatus;
+import com.fastcampus.ch4.domain.order.OrderSearchCondition;
+import com.fastcampus.ch4.domain.order.OrderStatus;
+import com.fastcampus.ch4.domain.payment.PaymentStatus;
+import com.fastcampus.ch4.dto.global.CodeDto;
 import com.fastcampus.ch4.dto.order.OrderDto;
+import com.fastcampus.ch4.dto.order.request.OrderStatusUpdateDto;
+import com.fastcampus.ch4.service.global.CodeService;
 import org.junit.Test;
+import org.junit.jupiter.api.Order;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -34,8 +41,9 @@ import static org.junit.Assert.*;
 public class OrderDaoImplTest {
     @Autowired
     OrderDao orderDao;
+
     @Autowired
-    CodeDao codeDao;
+    CodeService codeService;
 
     final int SUCCESS_CODE = 1; // Query Execute Success
     final int FAIL_CODE = 0; // Query Execute Fail
@@ -50,6 +58,14 @@ public class OrderDaoImplTest {
     final String DELI_CODE = "deli-stat-01";
     final String PAY_CODE = "pay-stat-01";
 
+//    final CodeDto ORD_STATUS_DTO = codeService.findByCode(ORD_CODE);
+//    final CodeDto DELI_STATUS_DTO = codeService.findByCode(DELI_CODE);
+//    final CodeDto PAY_STATUS_DTO = codeService.findByCode(PAY_CODE);
+//
+//    final Integer ORD_CODE_ID = ORD_STATUS_DTO.getCode_id();
+//    final Integer DELI_CODE_ID = DELI_STATUS_DTO.getCode_id();
+//    final Integer PAY_CODE_ID = PAY_STATUS_DTO.getCode_id();
+
     /*
     이름 : orderDtoCreate
     역할 : OrderDto 클래스의 인스턴스를 생성하여 초기화해 주는 메서드
@@ -58,11 +74,15 @@ public class OrderDaoImplTest {
     반환값 : OrderDto 클래스의 인스턴스
      */
     public OrderDto createOrderDto(String custId) {
+        CodeDto ordCodeDto = codeService.findByCode(ORD_CODE);
+        CodeDto deliCodeDto = codeService.findByCode(DELI_CODE);
+        CodeDto payCodeDto = codeService.findByCode(PAY_CODE);
+
         OrderDto orderDto = new OrderDto();
         orderDto.setCust_id(custId);
-        orderDto.setOrd_stat(getStatus(ORD_CODE));
-        orderDto.setDeli_stat(getStatus(DELI_CODE));
-        orderDto.setPay_stat(getStatus(PAY_CODE));
+        orderDto.setOrd_stat(ordCodeDto.getCode_id());
+        orderDto.setDeli_stat(deliCodeDto.getCode_id());
+        orderDto.setPay_stat(payCodeDto.getCode_id());
         orderDto.setReg_id(custId);
         orderDto.setUp_id(custId);
         return orderDto;
@@ -70,7 +90,7 @@ public class OrderDaoImplTest {
 
     // 코드를 받아서 코드 id 를 반환하는 메서드
     public Integer getStatus(String code) {
-        return codeDao.selectByCode(code).getCode_id();
+        return codeService.findByCode(code).getCode_id();
     }
 
     /**
@@ -80,18 +100,18 @@ public class OrderDaoImplTest {
      * === 실패해야하는 케이스
      * 1. 고객 id 가 null 인 orderDto 가 insert 되는 경우
      * 2. 최초 주문 생성 시 금액(배송비, 총 상품금액, 총 할인금액, 총 주문금액)이 0이 아닌 orderDto 가 insert 요청될 때
-     *
+     * <p>
      * 3. SQLIntegrityConstraintViolationException : 데이터베이스 무결성 위반
      * 4. DuplicateKeyException : 기본 키 중복 등으로 인한 insert 실패
      */
     @Test
-    public void 단일주문생성하기 () throws Exception {
+    public void 단일주문생성하기() throws Exception {
         // 1. 주문 삭제 (CREATE_USER_ID)
         Map<String, Object> deleteCondition = new HashMap<>();
         deleteCondition.put("cust_id", CREATE_USER_ID);
         orderDao.deleteOrderByCondition(deleteCondition);
 
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(deleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(deleteCondition);
         assertEquals(0, deletedList.size());
 
         // 1. dto 생성하기
@@ -104,7 +124,7 @@ public class OrderDaoImplTest {
         // 3. 주문이 제대로 생성되어있는지 검증하기
         Map<String, Object> selectCondition = new HashMap<>();
         selectCondition.put("ord_seq", orderDto.getOrd_seq());
-        List<OrderDto> selectedList = orderDao.selectOrderListByCondition(selectCondition);
+        List<OrderDto> selectedList = orderDao.selectOrderByCondition(selectCondition);
         assertNotNull(selectedList);
 
         OrderDto selectedOrderDto = selectedList.get(0);
@@ -148,11 +168,11 @@ public class OrderDaoImplTest {
         deleteCondition.put("cust_id", CREATE_USER_ID);
         orderDao.deleteOrderByCondition(deleteCondition);
         // 1-2. 삭제 후 개수 확인
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(deleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(deleteCondition);
         assertEquals(0, deletedList.size());
 
         // 1-3. 전체 개수 확인
-        List<OrderDto> allList = orderDao.selectOrderListByCondition(new HashMap<>());
+        List<OrderDto> allList = orderDao.selectOrderByCondition(new HashMap<>());
         int beforeCount = allList.size();
 
         for (int i = 0; i < repeatCount; i++) {
@@ -167,7 +187,7 @@ public class OrderDaoImplTest {
             // 4. 주문이 제대로 생성되어있는지 검증하기
             Map<String, Object> selectCondtion = new HashMap<>();
             selectCondtion.put("ord_seq", orderDto.getOrd_seq());
-            List<OrderDto> selectedList = orderDao.selectOrderListByCondition(selectCondtion);
+            List<OrderDto> selectedList = orderDao.selectOrderByCondition(selectCondtion);
             assertNotNull(selectedList);
 
             OrderDto selectedOrderDto = selectedList.get(0);
@@ -189,7 +209,7 @@ public class OrderDaoImplTest {
         }
 
         // 6. 생성 개수 비교
-        List<OrderDto> allListAfter = orderDao.selectOrderListByCondition(new HashMap<>());
+        List<OrderDto> allListAfter = orderDao.selectOrderByCondition(new HashMap<>());
         assertEquals(beforeCount + repeatCount, allListAfter.size());
     }
 
@@ -211,7 +231,7 @@ public class OrderDaoImplTest {
         deleteCondition.put("cust_id", CREATE_USER_ID);
         orderDao.deleteOrderByCondition(deleteCondition);
 
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(deleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(deleteCondition);
         assertEquals(0, deletedList.size());
 
         // 2. 주문 Dto 생성
@@ -253,7 +273,7 @@ public class OrderDaoImplTest {
         orderDao.deleteOrderByCondition(deleteCondition);
 
         // 1-2. 삭제 확인
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(deleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(deleteCondition);
         assertEquals(0, deletedList.size());
 
         // 2. 주문 Dto 생성
@@ -266,7 +286,7 @@ public class OrderDaoImplTest {
         // 4. 주문 단건 조회
         Map<String, Object> selectCondition = new HashMap<>();
         selectCondition.put("ord_seq", orderDto.getOrd_seq());
-        List<OrderDto> selectedList = orderDao.selectOrderListByCondition(selectCondition);
+        List<OrderDto> selectedList = orderDao.selectOrderByCondition(selectCondition);
         assertNotNull(selectedList);
 
         // 5. 주문 단건 조회 확인
@@ -303,7 +323,7 @@ public class OrderDaoImplTest {
         orderDao.deleteOrderByCondition(deleteCondition);
 
         // 1-2. 삭제 확인
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(deleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(deleteCondition);
         assertEquals(0, deletedList.size());
 
         for (int i = 0; i < repeatCount; i++) {
@@ -318,7 +338,7 @@ public class OrderDaoImplTest {
         // 4. 주문 다중 조회
         Map<String, Object> selectCondition = new HashMap<>();
         selectCondition.put("cust_id", SELECT_USER_ID);
-        List<OrderDto> selectedList = orderDao.selectOrderListByCondition(selectCondition);
+        List<OrderDto> selectedList = orderDao.selectOrderByCondition(selectCondition);
         assertFalse(selectedList.isEmpty());
 
         // 5. 주문 다중 조회 확인
@@ -353,7 +373,7 @@ public class OrderDaoImplTest {
         orderDao.deleteOrderByCondition(deleteCondition);
 
         // 1-2. 삭제 확인
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(deleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(deleteCondition);
         assertEquals(0, deletedList.size());
 
         // 2. 주문 Dto 생성
@@ -367,7 +387,7 @@ public class OrderDaoImplTest {
         Map<String, Object> selectCondition = new HashMap<>();
         Integer NON_EXIST_SEQ = orderDto.getOrd_seq() + 1;
         selectCondition.put("ord_seq", NON_EXIST_SEQ);
-        List<OrderDto> selectedList = orderDao.selectOrderListByCondition(selectCondition);
+        List<OrderDto> selectedList = orderDao.selectOrderByCondition(selectCondition);
         assertTrue(selectedList.isEmpty());
     }
 
@@ -390,40 +410,55 @@ public class OrderDaoImplTest {
      */
     @Test
     public void 주문_주문상태변경() {
-        String updatedOrdCode = "ord-stat-02";
-
         // 1. 주문 삭제 (UPDATE_USER_ID)
         Map<String, Object> deleteCondition = new HashMap<>();
         deleteCondition.put("cust_id", UPDATE_USER_ID);
         orderDao.deleteOrderByCondition(deleteCondition);
 
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(deleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(deleteCondition);
         assertEquals(0, deletedList.size());
 
         // 2. 주문 Dto 생성
-        OrderDto orderDto = createOrderDto(UPDATE_USER_ID);
+        OrderDto insertOrderDto = createOrderDto(UPDATE_USER_ID);
 
         // 3. 주문 insert
-        int result = orderDao.insertOrder(orderDto);
+        int result = orderDao.insertOrder(insertOrderDto);
         assertEquals(SUCCESS_CODE, result);
 
+        // 조회
+
+        List<OrderDto> orderDtoList = orderDao.selectOrderByCondition(deleteCondition);
+        OrderDto orderDto = orderDtoList.get(0);
+
         // 4. 주문 상태 변경
-        Map<String, Object> updateCondition = new HashMap<>();
-        updateCondition.put("ord_seq", orderDto.getOrd_seq());
-        updateCondition.put("ord_stat", getStatus(updatedOrdCode));
-        updateCondition.put("deli_stat", orderDto.getDeli_stat());
-        updateCondition.put("pay_stat", orderDto.getPay_stat());
-        updateCondition.put("up_id", UPDATE_USER_ID);
-        int updateResult = orderDao.updateOrderStatus(updateCondition);
+        OrderStatus changedOrderStatus = OrderStatus.ORDER_DONE;
+        DeliveryStatus changedDeliveryStatus = DeliveryStatus.DELIVERY_DONE;
+        PaymentStatus changedPaymentStatus = PaymentStatus.PAYMENT_DONE;
+        Integer updatedOrdCodeId = getStatus(changedOrderStatus.getCode());
+        Integer updatedDeliCodeId = getStatus(changedDeliveryStatus.getCode());
+        Integer updatedPayCodeId = getStatus(changedPaymentStatus.getCode());
+
+        OrderStatusUpdateDto updateConditionDto = OrderStatusUpdateDto.from(
+                orderDto.getOrd_seq(),
+                UPDATE_USER_ID,
+                updatedOrdCodeId,
+                updatedDeliCodeId,
+                updatedPayCodeId
+        );
+        int updateResult = orderDao.updateStatus(updateConditionDto);
+
         assertEquals(SUCCESS_CODE, updateResult);
 
         // 4-2. 주문 상태 변경 확인
-        List<OrderDto> selectedList = orderDao.selectOrderListByCondition(updateCondition);
+        Map<String, Object> selectCondition = new HashMap<>();
+        selectCondition.put("ord_seq", orderDto.getOrd_seq());
+        List<OrderDto> selectedList = orderDao.selectOrderByCondition(selectCondition);
         assertNotNull(selectedList);
+        System.out.println("selectedList.size() = " + selectedList.size());
 
         OrderDto selectedOrderDto = selectedList.get(0);
         Integer selectedOrderStatus = selectedOrderDto.getOrd_stat();
-        assertEquals(getStatus(updatedOrdCode), selectedOrderStatus);
+        assertEquals(getStatus(changedOrderStatus.getCode()), selectedOrderStatus);
     }
 
     /*
@@ -441,7 +476,7 @@ public class OrderDaoImplTest {
         - 주문 insert 확인
     4. 주문 상태 변경
         - 주문 상태를 null 로 변경
-        - 주문 상태 변경 실패 확인
+        - 주문 가능..
      */
     @Test(expected = DataIntegrityViolationException.class)
     public void 주문_주문상태변경싱패_주문상태Null() {
@@ -450,7 +485,7 @@ public class OrderDaoImplTest {
         deleteCondition.put("cust_id", UPDATE_USER_ID);
         orderDao.deleteOrderByCondition(deleteCondition);
 
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(deleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(deleteCondition);
         assertEquals(0, deletedList.size());
 
         // 2. 주문 Dto 생성
@@ -461,13 +496,14 @@ public class OrderDaoImplTest {
         assertEquals(SUCCESS_CODE, result);
 
         // 4. 주문 상태 변경
-        Map<String, Object> updateCondition = new HashMap<>();
-        updateCondition.put("ord_seq", orderDto.getOrd_seq());
-        updateCondition.put("ord_stat", null);
-        updateCondition.put("deli_stat", orderDto.getDeli_stat());
-        updateCondition.put("pay_stat", orderDto.getPay_stat());
-        updateCondition.put("up_id", UPDATE_USER_ID);
-        int updateResult = orderDao.updateOrderStatus(updateCondition);
+        OrderStatusUpdateDto updateConditionDto = OrderStatusUpdateDto.from(
+                orderDto.getOrd_seq(),
+                UPDATE_USER_ID,
+                null,
+                orderDto.getDeli_stat(),
+                orderDto.getPay_stat()
+        );
+        int updateResult = orderDao.updateStatus(updateConditionDto);
         assertEquals(0, updateResult);
 
         // 4-2. 주문 상태 변경 확인
@@ -500,7 +536,7 @@ public class OrderDaoImplTest {
         deleteCondition.put("cust_id", UPDATE_USER_ID);
         orderDao.deleteOrderByCondition(deleteCondition);
 
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(deleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(deleteCondition);
         assertEquals(0, deletedList.size());
 
         // 2. 주문 Dto 생성
@@ -511,22 +547,38 @@ public class OrderDaoImplTest {
         assertEquals(SUCCESS_CODE, result);
 
         // 4. 주문 배송 상태 변경
+        DeliveryStatus changedDeliveryStatus = DeliveryStatus.DELIVERY_DONE;
+        Integer updatedDeliCodeId = getStatus(updatedDeliCode);
+
         Map<String, Object> updateCondition = new HashMap<>();
         updateCondition.put("ord_seq", orderDto.getOrd_seq());
+
+        updateCondition.put("ord_stat_code", orderDto.getOrd_stat_code());
+        updateCondition.put("deli_stat_code", changedDeliveryStatus.getCode());
+        updateCondition.put("pay_stat_code", orderDto.getPay_stat_code());
+
         updateCondition.put("ord_stat", orderDto.getOrd_stat());
-        updateCondition.put("deli_stat", getStatus(updatedDeliCode));
+        updateCondition.put("deli_stat", updatedDeliCodeId);
         updateCondition.put("pay_stat", orderDto.getPay_stat());
         updateCondition.put("up_id", UPDATE_USER_ID);
-        int updateResult = orderDao.updateOrderStatus(updateCondition);
+
+        OrderStatusUpdateDto updateConditionDto = OrderStatusUpdateDto.from(
+                orderDto.getOrd_seq(),
+                UPDATE_USER_ID,
+                orderDto.getOrd_stat(),
+                updatedDeliCodeId,
+                orderDto.getPay_stat()
+        );
+        int updateResult = orderDao.updateStatus(updateConditionDto);
         assertEquals(SUCCESS_CODE, updateResult);
 
         // 4-2. 주문 배송 상태 변경 확인
-        List<OrderDto> selectedList = orderDao.selectOrderListByCondition(updateCondition);
+        List<OrderDto> selectedList = orderDao.selectOrderByCondition(updateCondition);
         assertNotNull(selectedList);
 
         OrderDto selectedOrderDto = selectedList.get(0);
         Integer selectedDeliveryStatus = selectedOrderDto.getDeli_stat();
-        assertEquals(getStatus(updatedDeliCode), selectedDeliveryStatus);
+        assertEquals(updatedDeliCodeId, selectedDeliveryStatus);
     }
 
 
@@ -554,7 +606,7 @@ public class OrderDaoImplTest {
         deleteCondition.put("cust_id", UPDATE_USER_ID);
         orderDao.deleteOrderByCondition(deleteCondition);
 
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(deleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(deleteCondition);
         assertEquals(0, deletedList.size());
 
         // 2. 주문 Dto 생성
@@ -565,13 +617,15 @@ public class OrderDaoImplTest {
         assertEquals(SUCCESS_CODE, result);
 
         // 4. 주문 배송 상태 변경
-        Map<String, Object> updateCondition = new HashMap<>();
-        updateCondition.put("ord_seq", orderDto.getOrd_seq());
-        updateCondition.put("ord_stat", orderDto.getOrd_stat());
-        updateCondition.put("deli_stat", null);
-        updateCondition.put("pay_stat", orderDto.getPay_stat());
-        updateCondition.put("up_id", UPDATE_USER_ID);
-        int updateResult = orderDao.updateOrderStatus(updateCondition);
+        OrderStatusUpdateDto updateConditionDto = OrderStatusUpdateDto.from(
+                orderDto.getOrd_seq(),
+                UPDATE_USER_ID,
+                orderDto.getOrd_stat(),
+                null,
+                orderDto.getPay_stat()
+        );
+        int updateResult = orderDao.updateStatus(updateConditionDto);
+
         assertEquals(0, updateResult);
 
         // 4-2. 주문 배송 상태 변경 확인
@@ -604,7 +658,7 @@ public class OrderDaoImplTest {
         deleteCondition.put("cust_id", UPDATE_USER_ID);
         orderDao.deleteOrderByCondition(deleteCondition);
 
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(deleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(deleteCondition);
         assertEquals(0, deletedList.size());
 
         // 2. 주문 Dto 생성
@@ -615,22 +669,35 @@ public class OrderDaoImplTest {
         assertEquals(SUCCESS_CODE, result);
 
         // 4. 주문 결제 상태 변경
+        PaymentStatus updatedPaymentStatus = PaymentStatus.PAYMENT_DONE;
+        Integer updatedPayCodeId = getStatus(updatedPaymentStatus.getCode());
+
         Map<String, Object> updateCondition = new HashMap<>();
         updateCondition.put("ord_seq", orderDto.getOrd_seq());
-        updateCondition.put("ord_stat", orderDto.getOrd_stat());
-        updateCondition.put("deli_stat", orderDto.getDeli_stat());
-        updateCondition.put("pay_stat", getStatus(updatedPayCode));
+        updateCondition.put("ord_stat_code", orderDto.getOrd_stat_code());
+        updateCondition.put("deli_stat_code", orderDto.getDeli_stat_code());
+        updateCondition.put("pay_stat_code", updatedPaymentStatus.getCode());
         updateCondition.put("up_id", UPDATE_USER_ID);
-        int updateResult = orderDao.updateOrderStatus(updateCondition);
+
+        OrderStatusUpdateDto updateConditionDto = OrderStatusUpdateDto.from(
+                orderDto.getOrd_seq(),
+                UPDATE_USER_ID,
+                orderDto.getOrd_stat(),
+                orderDto.getDeli_stat(),
+                updatedPayCodeId
+        );
+
+
+        int updateResult = orderDao.updateStatus(updateConditionDto);
         assertEquals(SUCCESS_CODE, updateResult);
 
         // 4-2. 주문 결제 상태 변경 확인
-        List<OrderDto> selectedList = orderDao.selectOrderListByCondition(updateCondition);
+        List<OrderDto> selectedList = orderDao.selectOrderByCondition(updateCondition);
         assertNotNull(selectedList);
 
         OrderDto selectedOrderDto = selectedList.get(0);
         Integer selectedPaymentStatus = selectedOrderDto.getPay_stat();
-        assertEquals(getStatus(updatedPayCode), selectedPaymentStatus);
+        assertEquals(getStatus(updatedPaymentStatus.getCode()), selectedPaymentStatus);
     }
 
     /*
@@ -657,7 +724,7 @@ public class OrderDaoImplTest {
         deleteCondition.put("cust_id", UPDATE_USER_ID);
         orderDao.deleteOrderByCondition(deleteCondition);
 
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(deleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(deleteCondition);
         assertEquals(0, deletedList.size());
 
         // 2. 주문 Dto 생성
@@ -668,13 +735,15 @@ public class OrderDaoImplTest {
         assertEquals(SUCCESS_CODE, result);
 
         // 4. 주문 결제 상태 변경
-        Map<String, Object> updateCondition = new HashMap<>();
-        updateCondition.put("ord_seq", orderDto.getOrd_seq());
-        updateCondition.put("ord_stat", orderDto.getOrd_stat());
-        updateCondition.put("deli_stat", orderDto.getDeli_stat());
-        updateCondition.put("pay_stat", null);
-        updateCondition.put("up_id", UPDATE_USER_ID);
-        int updateResult = orderDao.updateOrderStatus(updateCondition);
+
+        OrderStatusUpdateDto updateConditionDto = OrderStatusUpdateDto.from(
+                orderDto.getOrd_seq(),
+                UPDATE_USER_ID,
+                orderDto.getOrd_stat(),
+                orderDto.getDeli_stat(),
+                null
+        );
+        int updateResult = orderDao.updateStatus(updateConditionDto);
         assertEquals(0, updateResult);
 
         // 4-2. 주문 결제 상태 변경 확인
@@ -713,7 +782,7 @@ public class OrderDaoImplTest {
         orderDao.deleteOrderByCondition(deleteCondition);
 
         // 삭제 확인
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(deleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(deleteCondition);
         assertEquals(0, deletedList.size());
 
         // 2. 주문 Dto 생성
@@ -739,11 +808,11 @@ public class OrderDaoImplTest {
         // update 확인
         Map<String, Object> selectCondition = new HashMap<>();
         selectCondition.put("ord_seq", orderDto.getOrd_seq());
-        List<OrderDto> selectedList = orderDao.selectOrderListByCondition(selectCondition);
+        List<OrderDto> selectedList = orderDao.selectOrderByCondition(selectCondition);
         assertNotNull(selectedList);
 
         // 5. 변경 사항 확인
-        OrderDto updatedOrderDto =  selectedList.get(0);
+        OrderDto updatedOrderDto = selectedList.get(0);
         assertEquals(updated_delivery_fee, updatedOrderDto.getDelivery_fee());
         assertEquals(updated_total_disc_pric, updatedOrderDto.getTotal_disc_pric());
         assertEquals(updated_total_ord_pric, updatedOrderDto.getTotal_ord_pric());
@@ -784,7 +853,7 @@ public class OrderDaoImplTest {
         orderDao.deleteOrderByCondition(initDeleteCondition);
 
         // 삭제 확인
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(initDeleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(initDeleteCondition);
         assertEquals(0, deletedList.size());
 
         // 2. 주문 Dto 생성
@@ -816,7 +885,7 @@ public class OrderDaoImplTest {
         // update 확인
         Map<String, Object> selectCondition = new HashMap<>();
         selectCondition.put("ord_seq", orderDto.getOrd_seq());
-        List<OrderDto> selectedList = orderDao.selectOrderListByCondition(selectCondition);
+        List<OrderDto> selectedList = orderDao.selectOrderByCondition(selectCondition);
         assertTrue(selectedList.isEmpty());
     }
 
@@ -848,7 +917,7 @@ public class OrderDaoImplTest {
         orderDao.deleteOrderByCondition(initDeleteCondition);
 
         // 삭제 확인
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(initDeleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(initDeleteCondition);
         assertEquals(0, deletedList.size());
 
         // 2. 주문 Dto 생성
@@ -861,14 +930,14 @@ public class OrderDaoImplTest {
         // 3-2. 주문 insert 확인
         Map<String, Object> selectCondition = new HashMap<>();
         selectCondition.put("ord_seq", orderDto.getOrd_seq());
-        List<OrderDto> selectedList = orderDao.selectOrderListByCondition(selectCondition);
+        List<OrderDto> selectedList = orderDao.selectOrderByCondition(selectCondition);
         assertNotNull(selectedList);
 
         // 3-3. 주문 Dto 정보 저장
         OrderDto selectedOrderDto = selectedList.get(0);
 
         // 3-4. 주문 개수 저장
-        List<OrderDto> allList = orderDao.selectOrderListByCondition(new HashMap<>());
+        List<OrderDto> allList = orderDao.selectOrderByCondition(new HashMap<>());
         int beforeCount = allList.size();
 
         // 4. 주문 삭제
@@ -878,7 +947,7 @@ public class OrderDaoImplTest {
         assertEquals(SUCCESS_CODE, deleteResult);
 
         // 5. 삭제 결과 확인
-        List<OrderDto> afterList = orderDao.selectOrderListByCondition(new HashMap<>());
+        List<OrderDto> afterList = orderDao.selectOrderByCondition(new HashMap<>());
         assertEquals(beforeCount - 1, afterList.size());
     }
 
@@ -909,7 +978,7 @@ public class OrderDaoImplTest {
         orderDao.deleteOrderByCondition(deleteCondition);
 
         // 삭제 확인
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(deleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(deleteCondition);
         assertEquals(0, deletedList.size());
 
         // 2. 주문 Dto 생성
@@ -926,11 +995,11 @@ public class OrderDaoImplTest {
         // 3-2. 주문 insert 확인
         Map<String, Object> selectCondition = new HashMap<>();
         selectCondition.put("cust_id", DELETE_USER_ID);
-        List<OrderDto> selectedList = orderDao.selectOrderListByCondition(selectCondition);
+        List<OrderDto> selectedList = orderDao.selectOrderByCondition(selectCondition);
         assertEquals(selectedList.size(), repeatCount);
 
         // 3-3. 주문 개수 저장
-        List<OrderDto> allList = orderDao.selectOrderListByCondition(new HashMap<>());
+        List<OrderDto> allList = orderDao.selectOrderByCondition(new HashMap<>());
         int beforeCount = allList.size();
 
         // 4. 주문 삭제
@@ -938,7 +1007,7 @@ public class OrderDaoImplTest {
         assertEquals(repeatCount, deleteResult);
 
         // 5. 삭제 결과 확인
-        List<OrderDto> afterList = orderDao.selectOrderListByCondition(new HashMap<>());
+        List<OrderDto> afterList = orderDao.selectOrderByCondition(new HashMap<>());
         assertEquals(beforeCount - repeatCount, afterList.size());
     }
 
@@ -962,14 +1031,14 @@ public class OrderDaoImplTest {
         - 주문 개수 확인
      */
     @Test
-    public void 주문_삭제실패_삭제조건없는경우 () {
+    public void 주문_삭제실패_삭제조건없는경우() {
         // 1. 주문 삭제 (DELETE_USER_ID)
         Map<String, Object> initDeleteCondition = new HashMap<>();
         initDeleteCondition.put("cust_id", DELETE_USER_ID);
         orderDao.deleteOrderByCondition(initDeleteCondition);
 
         // 삭제 확인
-        List<OrderDto> deletedList = orderDao.selectOrderListByCondition(initDeleteCondition);
+        List<OrderDto> deletedList = orderDao.selectOrderByCondition(initDeleteCondition);
         assertEquals(0, deletedList.size());
 
         // 2. 주문 Dto 생성
@@ -982,11 +1051,11 @@ public class OrderDaoImplTest {
         // 3-2. 주문 insert 확인
         Map<String, Object> selectCondition = new HashMap<>();
         selectCondition.put("ord_seq", orderDto.getOrd_seq());
-        List<OrderDto> selectedList = orderDao.selectOrderListByCondition(selectCondition);
+        List<OrderDto> selectedList = orderDao.selectOrderByCondition(selectCondition);
         assertFalse(selectedList.isEmpty());
 
         // 3-3. 주문 개수 저장
-        List<OrderDto> allList = orderDao.selectOrderListByCondition(new HashMap<>());
+        List<OrderDto> allList = orderDao.selectOrderByCondition(new HashMap<>());
         int beforeCount = allList.size();
 
         // 4. 주문 삭제 (조건없음)
@@ -994,7 +1063,7 @@ public class OrderDaoImplTest {
         assertEquals(0, deleteResult);
 
         // 5. 삭제 결과 확인
-        List<OrderDto> afterList = orderDao.selectOrderListByCondition(new HashMap<>());
+        List<OrderDto> afterList = orderDao.selectOrderByCondition(new HashMap<>());
         assertEquals(beforeCount, afterList.size());
     }
 }

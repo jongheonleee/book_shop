@@ -1,5 +1,7 @@
 package com.fastcampus.ch4.dto.global;
 
+import java.util.Objects;
+
 public class CodeDto {
 
     private int code_id;
@@ -13,6 +15,19 @@ public class CodeDto {
     private String reg_id;
     private String up_date;
     private String up_id;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CodeDto)) return false;
+        CodeDto codeDto = (CodeDto) o;
+        return code_id == codeDto.code_id && ord == codeDto.ord && chk_use == codeDto.chk_use && Objects.equals(cate_num, codeDto.cate_num) && Objects.equals(code, codeDto.code) && Objects.equals(code_name, codeDto.code_name) && Objects.equals(comt, codeDto.comt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code_id, cate_num, code, code_name, ord, chk_use, comt);
+    }
 
     public int getCode_id() {
         return code_id;

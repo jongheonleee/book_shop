@@ -1,12 +1,11 @@
-package com.fastcampus.ch4.dto.order;
+package com.fastcampus.ch4.dto.order.response;
 
-import com.fastcampus.ch4.domain.order.DeliveryStatus;
-import com.fastcampus.ch4.domain.order.OrderStatus;
-import com.fastcampus.ch4.domain.payment.PaymentStatus;
+import com.fastcampus.ch4.dto.order.OrderProductDto;
 
-import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
-public class OrderDto {
+public class ResponseOrderDto {
     // pk (auto increment)
     private Integer ord_seq; // 주문 번호
 
@@ -34,56 +33,20 @@ public class OrderDto {
     // fk
     private String cust_id; // 유저 id
 
-    // 시스템 컬럼
-    private Date reg_date; // 최초 등록 일시
-    private String reg_id; // 최초 등록 id
-    private Date up_date; // 최근 수정 일시
-    private String up_id; // 최근 수정 id
-
-    public static OrderDto from(String userId, int totalProductPrice, int totalDiscountPrice, int totalOrderPrice, int deliveryFee) {
-        OrderDto orderDto = new OrderDto();
-
-        orderDto.setTotal_prod_pric(totalProductPrice);
-        orderDto.setTotal_disc_pric(totalDiscountPrice);
-        orderDto.setTotal_ord_pric(totalOrderPrice);
-        orderDto.setDelivery_fee(deliveryFee);
-
-        orderDto.setCust_id(userId);
-        orderDto.setReg_id(userId);
-        orderDto.setUp_id(userId);
-
-        return orderDto;
-    }
-
-    // overload
-    public static OrderDto from(String userId, int totalProductPrice, int totalDiscountPrice, int totalOrderPrice, int deliveryFee, Integer ord_stat_id, Integer deli_stat_id, Integer pay_stat_id) {
-        OrderDto orderDto = OrderDto.from(userId, totalProductPrice, totalDiscountPrice, totalOrderPrice, deliveryFee);
-        orderDto.setOrd_stat(ord_stat_id);
-        orderDto.setDeli_stat(deli_stat_id);
-        orderDto.setPay_stat(pay_stat_id);
-        return orderDto;
-    }
-
+    // OrderProductDto List
+    private List<OrderProductDto> orderProductDtoList;
 
     @Override
-    public String toString() {
-        return "OrderDto{" +
-                "ord_seq=" + ord_seq +
-                ", ord_stat=" + ord_stat +
-                ", deli_stat=" + deli_stat +
-                ", pay_stat=" + pay_stat +
-                ", delivery_fee=" + delivery_fee +
-                ", total_prod_pric=" + total_prod_pric +
-                ", total_disc_pric=" + total_disc_pric +
-                ", total_ord_pric=" + total_ord_pric +
-                ", crated_at='" + crated_at + '\'' +
-                ", updated_at='" + updated_at + '\'' +
-                ", cust_id='" + cust_id + '\'' +
-                ", reg_date=" + reg_date +
-                ", reg_id='" + reg_id + '\'' +
-                ", up_date=" + up_date +
-                ", up_id='" + up_id + '\'' +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ResponseOrderDto)) return false;
+        ResponseOrderDto that = (ResponseOrderDto) o;
+        return Objects.equals(ord_seq, that.ord_seq) && Objects.equals(ord_stat, that.ord_stat) && Objects.equals(deli_stat, that.deli_stat) && Objects.equals(pay_stat, that.pay_stat) && Objects.equals(ord_stat_code, that.ord_stat_code) && Objects.equals(ord_stat_name, that.ord_stat_name) && Objects.equals(deli_stat_code, that.deli_stat_code) && Objects.equals(deli_stat_name, that.deli_stat_name) && Objects.equals(pay_stat_code, that.pay_stat_code) && Objects.equals(pay_stat_name, that.pay_stat_name) && Objects.equals(delivery_fee, that.delivery_fee) && Objects.equals(total_prod_pric, that.total_prod_pric) && Objects.equals(total_disc_pric, that.total_disc_pric) && Objects.equals(total_ord_pric, that.total_ord_pric) && Objects.equals(orderProductDtoList, that.orderProductDtoList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ord_seq, ord_stat, deli_stat, pay_stat, ord_stat_code, ord_stat_name, deli_stat_code, deli_stat_name, pay_stat_code, pay_stat_name, delivery_fee, total_prod_pric, total_disc_pric, total_ord_pric, orderProductDtoList);
     }
 
     public Integer getOrd_seq() {
@@ -222,35 +185,11 @@ public class OrderDto {
         this.cust_id = cust_id;
     }
 
-    public Date getReg_date() {
-        return reg_date;
+    public List<OrderProductDto> getOrderProductDtoList() {
+        return orderProductDtoList;
     }
 
-    public void setReg_date(Date reg_date) {
-        this.reg_date = reg_date;
-    }
-
-    public String getReg_id() {
-        return reg_id;
-    }
-
-    public void setReg_id(String reg_id) {
-        this.reg_id = reg_id;
-    }
-
-    public Date getUp_date() {
-        return up_date;
-    }
-
-    public void setUp_date(Date up_date) {
-        this.up_date = up_date;
-    }
-
-    public String getUp_id() {
-        return up_id;
-    }
-
-    public void setUp_id(String up_id) {
-        this.up_id = up_id;
+    public void setOrderProductDtoList(List<OrderProductDto> orderProductDtoList) {
+        this.orderProductDtoList = orderProductDtoList;
     }
 }

@@ -1,6 +1,9 @@
 package com.fastcampus.ch4.dao.order;
 
+import com.fastcampus.ch4.domain.order.OrderCountCondition;
+import com.fastcampus.ch4.domain.order.OrderSearchCondition;
 import com.fastcampus.ch4.dto.order.OrderDto;
+import com.fastcampus.ch4.dto.order.request.OrderStatusUpdateDto;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -35,11 +38,22 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public int insertOrder(OrderDto orderDto) {
         return sqlSession.insert(namespace + "insertOrder", orderDto);
+//        return sqlSession.insert(namespace + "insertOrderStat", orderDto);
     }
 
     @Override
-    public List<OrderDto> selectOrderListByCondition(Map map) {
-        return sqlSession.selectList(namespace + "selectOrderListByCondition", map);
+    public List<OrderDto> selectOrderByCondition(Map map) {
+        return sqlSession.selectList(namespace + "selectOrderByCondition", map);
+    }
+
+    @Override
+    public List<OrderDto> selectOrderPage(OrderSearchCondition orderSearchCondition){
+        return sqlSession.selectList(namespace + "selectOrderPage", orderSearchCondition);
+    }
+
+    @Override
+    public int selectOrderCount(OrderCountCondition condition) {
+        return sqlSession.selectOne(namespace + "selectOrderCount", condition);
     }
 
     public int updateOrder(OrderDto orderDto) {
@@ -47,8 +61,8 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public int updateOrderStatus (Map map) {
-        return sqlSession.update(namespace + "updateOrderStatus", map);
+    public int updateStatus(OrderStatusUpdateDto orderStatusUpdateDto) {
+        return sqlSession.update(namespace + "updateStatus", orderStatusUpdateDto);
     }
 
     @Override

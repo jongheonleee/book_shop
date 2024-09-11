@@ -3,6 +3,7 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/sqlscript/12_insert_common_code_orderAndPayment.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/sqlscript/1_테이블생성.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sqlscript/5_InsertDummyBookImages.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/mapper/cart/CartMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/mapper/cart/CartProductMapper.xml" dialect="MySQL" />
     <file url="PROJECT" dialect="MySQL" />

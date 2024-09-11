@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fastcampus.ch4.dao.order.OrderProductMapper">
-    <insert id="insertOrderProduct" parameterType="OrderProductDto" useGeneratedKeys="true" keyProperty="ord_prod_seq">
+    <insert id="insert" parameterType="OrderProductDto" useGeneratedKeys="true" keyProperty="ord_prod_seq">
         INSERT INTO book_shop.order_prod
         (ord_seq,
          isbn,
@@ -52,33 +52,92 @@
                 NOW())
     </insert>
 
-    <select id="selectListOrderProductByCondition" parameterType="map" resultType="OrderProductDto">
+    <insert id="insertOrderProductStat" parameterType="OrderProductDto" useGeneratedKeys="true" keyProperty="ord_prod_seq">
+        INSERT INTO book_shop.order_prod
+        (ord_seq,
+         isbn,
+         prod_type_code,
+         ord_stat,
+         deli_stat,
+         pay_stat,
+         cust_id,
+         book_title,
+         item_quan,
+         point_perc,
+         point_pric,
+         basic_pric,
+         disc_perc,
+         disc_pric,
+         sale_pric,
+         ord_pric,
+         repre_img,
+         reg_date,
+         reg_id,
+         up_date,
+         up_id,
+         updated_at,
+         created_at)
+        VALUES (#{ord_seq},
+                #{isbn},
+                #{prod_type_code},
+                (SELECT code_id FROM book_shop.code code WHERE code.code = #{ord_stat_code}),
+                (SELECT code_id FROM book_shop.code code WHERE code.code = #{deli_stat_code}),
+                (SELECT code_id FROM book_shop.code code WHERE code.code = #{pay_stat_code}),
+                #{cust_id},
+                #{book_title},
+                #{item_quan},
+                #{point_perc},
+                #{point_pric},
+                #{basic_pric},
+                #{disc_perc},
+                #{disc_pric},
+                #{sale_pric},
+                #{ord_pric},
+                #{repre_img},
+                NOW(),
+                #{reg_id},
+                NOW(),
+                #{up_id},
+                NOW(),
+                NOW())
+    </insert>
+
+    <select id="selectListOrderProductByCondition" parameterType="OrderProductSearchCondition" resultType="OrderProductDto">
         SELECT
-        ord_prod_seq,
-        ord_seq,
-        isbn,
-        prod_type_code,
-        ord_stat,
-        deli_stat,
-        pay_stat,
-        cust_id,
-        book_title,
-        item_quan,
-        point_perc,
-        point_pric,
-        basic_pric,
-        disc_perc,
-        disc_pric,
-        sale_pric,
-        ord_pric,
-        repre_img,
-        reg_date,
-        reg_id,
-        up_date,
-        up_id,
-        updated_at,
-        created_at
-        FROM book_shop.order_prod
+        ordProdT.ord_prod_seq,
+        ordProdT.ord_seq,
+        ordProdT.isbn,
+        ordProdT.prod_type_code,
+        ord_stat.code_id AS ord_stat,
+        ord_stat.code AS ord_stat_code,
+        ord_stat.code_name AS ord_stat_name,
+        deli_stat.code_id AS deli_stat,
+        deli_stat.code AS deli_stat_code,
+        deli_stat.code_name AS deli_stat_name,
+        pay_stat.code_id AS pay_stat,
+        pay_stat.code AS pay_stat_code,
+        pay_stat.code_name AS pay_stat_name,
+        ordProdT.cust_id,
+        ordProdT.book_title,
+        ordProdT.item_quan,
+        ordProdT.point_perc,
+        ordProdT.point_pric,
+        ordProdT.basic_pric,
+        ordProdT.disc_perc,
+        ordProdT.disc_pric,
+        ordProdT.sale_pric,
+        ordProdT.ord_pric,
+        ordProdT.repre_img,
+        ordProdT.reg_date,
+        ordProdT.reg_id,
+        ordProdT.up_date,
+        ordProdT.up_id,
+        ordProdT.updated_at,
+        ordProdT.created_at
+        FROM book_shop.order_prod ordProdT
+        INNER JOIN book_shop.code ord_stat ON ord_stat.code_id = ordProdT.ord_stat
+        INNER JOIN book_shop.code deli_stat ON deli_stat.code_id = ordProdT.deli_stat
+        INNER JOIN book_shop.code pay_stat ON pay_stat.code_id = ordProdT.pay_stat
         <where>
             <if test="ord_prod_seq != null">
                 ord_prod_seq = #{ord_prod_seq}

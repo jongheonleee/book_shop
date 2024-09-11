@@ -2,6 +2,7 @@ package com.fastcampus.ch4.dto.member;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class LoginHistoryDto {
 
@@ -93,4 +94,24 @@ public class LoginHistoryDto {
             ", id='" + id + '\'' +
             '}';
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    LoginHistoryDto that = (LoginHistoryDto) o;
+    return Objects.equals(lognTime, that.lognTime) &&
+            Objects.equals(ipAddr, that.ipAddr) &&
+            Objects.equals(regDate, that.regDate) &&
+            Objects.equals(regId, that.regId) &&
+            Objects.equals(upDate, that.upDate) &&
+            Objects.equals(upId, that.upId) &&
+            Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(lognTime, ipAddr, regDate, regId, upDate, upId, id);
+  }
+
 }

@@ -115,10 +115,10 @@
     <!-- 로그인 폼 -->
     <form action="${pageContext.request.contextPath}/member/login" method="post">
         <label for="id">아이디</label>
-        <input type="text" id="id" name="id" required pattern="[A-Za-z0-9]{5,20}" title="아이디는 5자 이상 20자 이하, 영문자와 숫자만 가능합니다.">
+        <input type="text" id="id" name="id" required>
 
         <label for="password">비밀번호</label>
-        <input type="password" id="password" name="pswd" required pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}" title="비밀번호는 8자 이상 20자 이하로, 대문자, 소문자, 숫자, 특수문자가 각각 최소 1개 포함되어야 합니다.">
+        <input type="password" id="password" name="pswd" required>
 
         <div class="checkbox-group">
             <input type="checkbox" id="rememberMe" name="rememberMe">

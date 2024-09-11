@@ -137,11 +137,11 @@
     <!-- 회원 가입 폼 -->
     <form action="${pageContext.request.contextPath}/signup" method="post" onsubmit="return validateForm()">
         <label for="id">아이디</label>
-        <input type="text" id="id" name="id" required pattern="[A-Za-z0-9]{5,20}" title="아이디는 5자 이상 20자 이하, 영문자와 숫자만 가능합니다.">
+        <input type="text" id="id" name="id" required>
         <div class="validation-info">아이디는 5자 이상 20자 이하로, 영문자와 숫자만 사용할 수 있습니다.</div>
 
         <label for="password">비밀번호</label>
-        <input type="password" id="password" name="pswd" required pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}" title="비밀번호는 8자 이상 20자 이하로, 대문자, 소문자, 숫자, 특수문자가 각각 최소 1개 포함되어야 합니다.">
+        <input type="password" id="password" name="pswd" required>
         <div class="validation-info">비밀번호는 8자 이상 20자 이하로, 대문자, 소문자, 숫자, 특수문자를 각각 최소 1개 포함해야 합니다.</div>
 
         <label for="passwordConfirm">비밀번호 확인</label>

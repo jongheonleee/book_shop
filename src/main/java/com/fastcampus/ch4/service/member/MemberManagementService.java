@@ -1,6 +1,7 @@
 package com.fastcampus.ch4.service.member;
 
 import com.fastcampus.ch4.dto.member.MemberDto;
+import com.fastcampus.ch4.dto.member.ShippingAddressDto;
 import com.fastcampus.ch4.dto.member.TermAgreeDto;
 import com.fastcampus.ch4.dto.member.TermDto;
 
@@ -19,19 +20,21 @@ public interface MemberManagementService {
   boolean isIdAvailable(String id);
   boolean isIdDuplicate(String id);
 
-  // 약관 동의 이력 저장
-  void saveTermAgree(List<TermAgreeDto> termAgreeDtos);
+//  // 약관 동의 이력 저장
+//  void saveTermAgree(List<TermAgreeDto> termAgreeDtos);
 
   // 모든 약관 가져오기
-  List<TermDto> getAllTerms();
+
 
   // 현재 사용자 정보 가져오기
   MemberDto getCurrentUser(HttpServletRequest request);
 
   // 사용자 프로필 업데이트
-  boolean updateUserProfile(HttpServletRequest request, MemberDto updatedUser);
+  boolean updateUserProfile(HttpServletRequest request, MemberDto updatedUser, ShippingAddressDto addressDto);
 
   // 비밀번호 재설정 관련 메서드 추가
   void updatePassword(String id, String newPassword);
   boolean isTokenValid(String token);
+  void updateEmail(String userId, String newEmail);
+  void updatePhoneNumber(String userId, String newPhoneNumber);
 }

@@ -1,108 +1,194 @@
-//주소 추가 기능 테스트 안함
-
 //package com.fastcampus.ch4.service.member;
 //
-//import com.fastcampus.ch4.dao.member.TermAgreeDao;
-//import com.fastcampus.ch4.dao.member.TermDao;
 //import com.fastcampus.ch4.dto.member.MemberDto;
+//import com.fastcampus.ch4.dto.member.TermAgreeDto;
 //import com.fastcampus.ch4.dto.member.TermDto;
+//import com.fastcampus.ch4.service.member.SignUpServiceImpl;
+//import com.fastcampus.ch4.service.member.MemberManagementService;
+//import com.fastcampus.ch4.dao.member.TermAgreeDao;
+//import com.fastcampus.ch4.service.member.TermService;
+//import com.fastcampus.ch4.service.member.ShippingAddressService;
+//import com.fastcampus.ch4.dto.member.ShippingAddressDto;
 //import org.junit.Before;
 //import org.junit.Test;
+//import org.junit.runner.RunWith;
+//import org.mockito.ArgumentCaptor;
 //import org.mockito.InjectMocks;
 //import org.mockito.Mock;
 //import org.mockito.MockitoAnnotations;
+//import org.springframework.test.context.ContextConfiguration;
+//import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
 //import java.util.List;
 //
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.Mockito.*;
+//import static org.junit.Assert.assertEquals;
+//import static org.mockito.Mockito.verify;
+//import static org.mockito.Mockito.when;
 //
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/spring/root-context.xml" })
 //public class SignUpServiceImplTest {
 //
-//  @InjectMocks
-//  private SignUpServiceImpl signUpService;
+//    @Mock
+//    private MemberManagementService memberManagementService;
 //
-//  @Mock
-//  private MemberManagementService memberManagementService;
+//    @Mock
+//    private TermAgreeDao termAgreeDao;
 //
-//  @Mock
-//  private TermDao termDao;
+//    @Mock
+//    private TermService termService;
 //
-//  @Mock
-//  private TermAgreeDao termAgreeDao;
+//    @Mock
+//    private ShippingAddressService shippingAddressService;
 //
-//  @Mock
-//  private TermService termService;
+//    @InjectMocks
+//    private SignUpServiceImpl signUpService;
 //
-//  private MemberDto mockMember;
-//  private List<TermDto> mockTerms;
+//    @Before
+//    public void setUp() {
+//        MockitoAnnotations.initMocks(this);
+//    }
 //
-//  @Before
-//  public void setUp() {
-//    MockitoAnnotations.openMocks(this);
+//    @Test
+//    public void testProcessSignup_WithOptionalTerm3Agreed() {
+//        // Given
+//        MemberDto member = new MemberDto();
+//        member.setId("testUser");
 //
-//    // Mock member
-//    mockMember = new MemberDto();
-//    mockMember.setId("testMember");
+//        List<Integer> requiredTerms = List.of(1, 2);
+//        List<Integer> optionalTerms = List.of(3); // User agreed to term with ID 3
+//        String address = "123 Test St";
 //
-//    // Mock terms (필수 약관 1개, 선택 약관 2개)
-//    mockTerms = List.of(
-//            new TermDto(1, "필수 약관 1", "이것은 필수 약관입니다.", "Y"),
-//            new TermDto(2, "선택 약관 1", "이것은 선택 약관입니다.", "N"),
-//            new TermDto(3, "선택 약관 2", "이것은 선택 약관입니다.", "N")
-//    );
+//        when(termService.getAllTerms()).thenReturn(List.of(
+//                new TermDto(1, "Term 1", "Content 1", "Y", null, null, null, null),
+//                new TermDto(2, "Term 2", "Content 2", "Y", null, null, null, null),
+//                new TermDto(3, "Term 3", "Content 3", "N", null, null, null, null),
+//                new TermDto(4, "Term 4", "Content 4", "N", null, null, null, null)
+//        ));
 //
-//    when(termService.getAllTerms()).thenReturn(mockTerms);
-//  }
+//        // When
+//        signUpService.processSignup(member, requiredTerms, optionalTerms, address);
 //
-//  @Test
-//  public void testProcessSignup_WithOptionalTerms() {
-//    // Given: 필수 약관 동의 및 선택 약관 동의/비동의
-//    List<Integer> requiredTerms = List.of(1); // 필수 약관 동의
-//    List<Integer> optionalTerms = List.of(2); // 선택 약관 1 동의, 선택 약관 2는 동의 안함
+//        // Capture the arguments passed to insertTermAgreements
+//        ArgumentCaptor<List<TermAgreeDto>> captor = ArgumentCaptor.forClass(List.class);
+//        verify(termAgreeDao).insertTermAgreements(captor.capture());
 //
-//    // When: 회원 가입 프로세스 실행
-//    signUpService.processSignup(mockMember, requiredTerms, optionalTerms);
+//        List<TermAgreeDto> capturedDtos = captor.getValue();
 //
-//    // Then: 회원 정보가 저장되었는지 확인
-//    verify(memberManagementService, times(1)).addMember(any(MemberDto.class));
+//        // Then
+//        assertEquals(4, capturedDtos.size()); // 총 4개의 약관 (필수 2개, 선택 2개)
+//        assertEquals("Y", findTermAgreeById(capturedDtos, 3).getTermAgree());
+//        assertEquals("N", findTermAgreeById(capturedDtos, 4).getTermAgree());
+//        assertEquals("N", findTermAgreeById(capturedDtos, 1).getTermAgree()); // 선택 약관에 대해서만 비동의 처리
+//        assertEquals("N", findTermAgreeById(capturedDtos, 2).getTermAgree()); // 선택 약관에 대해서만 비동의 처리
+//    }
 //
-//    // Then: 선택 약관 동의 정보가 저장되었는지 확인
-//    verify(termAgreeDao, times(1)).insertTermAgreements(argThat(termAgreeDtos -> {
-//      // 선택 약관의 동의 여부를 확인
-//      long agreedCount = termAgreeDtos.stream()
-//              .filter(dto -> dto.getTermId() == 2 && dto.getTermAgree().equals("Y"))
-//              .count();
-//      long notAgreedCount = termAgreeDtos.stream()
-//              .filter(dto -> dto.getTermId() == 3 && dto.getTermAgree().equals("N"))
-//              .count();
+//    @Test
+//    public void testProcessSignup_WithOptionalTerm4Agreed() {
+//        // Given
+//        MemberDto member = new MemberDto();
+//        member.setId("testUser");
 //
-//      // 선택 약관 1은 동의(Y), 선택 약관 2는 비동의(N)
-//      return agreedCount == 1 && notAgreedCount == 1;
-//    }));
-//  }
+//        List<Integer> requiredTerms = List.of(1, 2);
+//        List<Integer> optionalTerms = List.of(4); // User agreed to term with ID 4
+//        String address = "123 Test St";
 //
-//  @Test
-//  public void testProcessSignup_WithoutOptionalTerms() {
-//    // Given: 필수 약관만 동의, 선택 약관은 모두 비동의
-//    List<Integer> requiredTerms = List.of(1); // 필수 약관 동의
-//    List<Integer> optionalTerms = List.of();  // 선택 약관에 동의하지 않음
+//        when(termService.getAllTerms()).thenReturn(List.of(
+//                new TermDto(1, "Term 1", "Content 1", "Y", null, null, null, null),
+//                new TermDto(2, "Term 2", "Content 2", "Y", null, null, null, null),
+//                new TermDto(3, "Term 3", "Content 3", "N", null, null, null, null),
+//                new TermDto(4, "Term 4", "Content 4", "N", null, null, null, null)
+//        ));
 //
-//    // When: 회원 가입 프로세스 실행
-//    signUpService.processSignup(mockMember, requiredTerms, optionalTerms);
+//        // When
+//        signUpService.processSignup(member, requiredTerms, optionalTerms, address);
 //
-//    // Then: 회원 정보가 저장되었는지 확인
-//    verify(memberManagementService, times(1)).addMember(any(MemberDto.class));
+//        // Capture the arguments passed to insertTermAgreements
+//        ArgumentCaptor<List<TermAgreeDto>> captor = ArgumentCaptor.forClass(List.class);
+//        verify(termAgreeDao).insertTermAgreements(captor.capture());
 //
-//    // Then: 선택 약관 동의 정보가 저장되었는지 확인
-//    verify(termAgreeDao, times(1)).insertTermAgreements(argThat(termAgreeDtos -> {
-//      // 모든 선택 약관이 비동의(N) 상태인지 확인
-//      long notAgreedCount = termAgreeDtos.stream()
-//              .filter(dto -> dto.getTermAgree().equals("N"))
-//              .count();
+//        List<TermAgreeDto> capturedDtos = captor.getValue();
 //
-//      // 선택 약관 2개에 대해 모두 비동의(N)
-//      return notAgreedCount == 3;
-//    }));
-//  }
+//        // Then
+//        assertEquals(4, capturedDtos.size());
+//        assertEquals("N", findTermAgreeById(capturedDtos, 3).getTermAgree());
+//        assertEquals("Y", findTermAgreeById(capturedDtos, 4).getTermAgree());
+//        assertEquals("N", findTermAgreeById(capturedDtos, 1).getTermAgree());
+//        assertEquals("N", findTermAgreeById(capturedDtos, 2).getTermAgree());
+//    }
+//
+//    @Test
+//    public void testProcessSignup_WithNoOptionalTermsAgreed() {
+//        // Given
+//        MemberDto member = new MemberDto();
+//        member.setId("testUser");
+//
+//        List<Integer> requiredTerms = List.of(1, 2);
+//        List<Integer> optionalTerms = List.of(); // No optional terms agreed
+//        String address = "123 Test St";
+//
+//        when(termService.getAllTerms()).thenReturn(List.of(
+//                new TermDto(1, "Term 1", "Content 1", "Y", null, null, null, null),
+//                new TermDto(2, "Term 2", "Content 2", "Y", null, null, null, null),
+//                new TermDto(3, "Term 3", "Content 3", "N", null, null, null, null),
+//                new TermDto(4, "Term 4", "Content 4", "N", null, null, null, null)
+//        ));
+//
+//        // When
+//        signUpService.processSignup(member, requiredTerms, optionalTerms, address);
+//
+//        // Capture the arguments passed to insertTermAgreements
+//        ArgumentCaptor<List<TermAgreeDto>> captor = ArgumentCaptor.forClass(List.class);
+//        verify(termAgreeDao).insertTermAgreements(captor.capture());
+//
+//        List<TermAgreeDto> capturedDtos = captor.getValue();
+//
+//        // Then
+//        assertEquals(4, capturedDtos.size());
+//        assertEquals("N", findTermAgreeById(capturedDtos, 3).getTermAgree());
+//        assertEquals("N", findTermAgreeById(capturedDtos, 4).getTermAgree());
+//        assertEquals("N", findTermAgreeById(capturedDtos, 1).getTermAgree());
+//        assertEquals("N", findTermAgreeById(capturedDtos, 2).getTermAgree());
+//    }
+//
+//    @Test
+//    public void testProcessSignup_WithAllOptionalTermsAgreed() {
+//        // Given
+//        MemberDto member = new MemberDto();
+//        member.setId("testUser");
+//
+//        List<Integer> requiredTerms = List.of(1, 2);
+//        List<Integer> optionalTerms = List.of(3, 4); // All optional terms agreed
+//        String address = "123 Test St";
+//
+//        when(termService.getAllTerms()).thenReturn(List.of(
+//                new TermDto(1, "Term 1", "Content 1", "Y", null, null, null, null),
+//                new TermDto(2, "Term 2", "Content 2", "Y", null, null, null, null),
+//                new TermDto(3, "Term 3", "Content 3", "N", null, null, null, null),
+//                new TermDto(4, "Term 4", "Content 4", "N", null, null, null, null)
+//        ));
+//
+//        // When
+//        signUpService.processSignup(member, requiredTerms, optionalTerms, address);
+//
+//        // Capture the arguments passed to insertTermAgreements
+//        ArgumentCaptor<List<TermAgreeDto>> captor = ArgumentCaptor.forClass(List.class);
+//        verify(termAgreeDao).insertTermAgreements(captor.capture());
+//
+//        List<TermAgreeDto> capturedDtos = captor.getValue();
+//
+//        // Then
+//        assertEquals(4, capturedDtos.size());
+//        assertEquals("Y", findTermAgreeById(capturedDtos, 3).getTermAgree());
+//        assertEquals("Y", findTermAgreeById(capturedDtos, 4).getTermAgree());
+//        assertEquals("N", findTermAgreeById(capturedDtos, 1).getTermAgree());
+//        assertEquals("N", findTermAgreeById(capturedDtos, 2).getTermAgree());
+//    }
+//
+//    private TermAgreeDto findTermAgreeById(List<TermAgreeDto> dtos, int termId) {
+//        return dtos.stream()
+//                .filter(dto -> dto.getTermId() == termId)
+//                .findFirst()
+//                .orElseThrow(() -> new IllegalArgumentException("Term ID not found: " + termId));
+//    }
 //}

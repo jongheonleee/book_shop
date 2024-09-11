@@ -58,16 +58,34 @@ $(function() {
         const selectedProductType = $('input[name="product_type"]:checked').val();
         const isbnValue = $('input[name="isbn"]').val();
         // 주문파트와 연결할 때 URL만 바꾸면됨
-        const baseUrl = action === 'purchase' ? "<c:url value='/book/list'/>" : "/ch4/cart/add";
+        const baseUrl = action === 'purchase' ? "/ch4/order/order" : "/ch4/cart/add";
         // const fullUrl = `${baseUrl}?product_type=${selectedProductType}&isbn=${isbnValue}`;
         const fullUrl = `${baseUrl}`;
 
         const form = $('#form');
         if (form.length) {
-            form.attr({
-                action : fullUrl,
-                method : "post"
-            }).submit();
+            // 장바구니
+            if (action === 'cart') {
+                form.attr({
+                    action : fullUrl,
+                    method : "post"
+                }).submit();
+            }
+
+            // 구매하기 -> 주문/결제 페이지
+            if (action === 'purchase') {
+                const purchaseRequestBody = {
+                    'delivery_fee': 0,
+                    'orderItemDtoList': [
+                        {
+                            isbn: $('input[name="isbn"]').val(),
+                            'prod_type_code': $('input[name=\'product_type\']').val(),
+                            'item_quan': 1
+                        }
+                    ]
+                }
+                submitForm(purchaseRequestBody)
+            }
         }
     };
 
@@ -199,4 +217,47 @@ function getCateNum() {
     console.log('Combined Cate Num:', combinedCateNum); // 디버깅을 위한 로그
 
     return combinedCateNum;
+}
+
+// requestBody 데이터를 form으로 전송하는 함수
+function submitForm(requestBody) {
+    // 새로운 form element를 생성
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/ch4/order/order'; // 서버에서 처리할 URL
+
+    // delivery_fee 필드를 form에 추가
+    const deliveryFeeInput = document.createElement('input');
+    deliveryFeeInput.type = 'hidden';
+    deliveryFeeInput.name = 'delivery_fee';
+    deliveryFeeInput.value = requestBody.delivery_fee;
+    form.appendChild(deliveryFeeInput);
+
+    // orderItemDtoList의 각 항목을 form에 추가
+    requestBody.orderItemDtoList.forEach((item, index) => {
+        // isbn 필드
+        const isbnInput = document.createElement('input');
+        isbnInput.type = 'hidden';
+        isbnInput.name = `orderItemDtoList[${index}].isbn`;
+        isbnInput.value = item.isbn;
+        form.appendChild(isbnInput);
+
+        // prodCodeType 필드
+        const prodCodeInput = document.createElement('input');
+        prodCodeInput.type = 'hidden';
+        prodCodeInput.name = `orderItemDtoList[${index}].prod_type_code`;
+        prodCodeInput.value = item.prod_type_code;
+        form.appendChild(prodCodeInput);
+
+        // quantity 필드
+        const quantityInput = document.createElement('input');
+        quantityInput.type = 'hidden';
+        quantityInput.name = `orderItemDtoList[${index}].item_quan`;
+        quantityInput.value = item.item_quan;
+        form.appendChild(quantityInput);
+    });
+
+    // form을 body에 추가하고 전송
+    document.body.appendChild(form);
+    form.submit();
 }

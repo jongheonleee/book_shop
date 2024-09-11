@@ -58,7 +58,7 @@ $(function() {
         const selectedProductType = $('input[name="product_type"]:checked').val();
         const isbnValue = $('input[name="isbn"]').val();
         // 주문파트와 연결할 때 URL만 바꾸면됨
-        const baseUrl = action === 'purchase' ? "/ch4/order/order" : "/ch4/cart/add";
+        const baseUrl = action === 'purchase' ? "/ch4/order/orderView" : "/ch4/cart/add";
         // const fullUrl = `${baseUrl}?product_type=${selectedProductType}&isbn=${isbnValue}`;
         const fullUrl = `${baseUrl}`;
 

@@ -47,7 +47,7 @@ $(document).ready(function () {
         // 새로운 form element를 생성
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = '/ch4/order/order'; // 서버에서 처리할 URL
+        form.action = '/ch4/order/orderView'; // 서버에서 처리할 URL
 
         // delivery_fee 필드를 form에 추가
         const deliveryFeeInput = document.createElement('input');

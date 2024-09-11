@@ -7,6 +7,7 @@
     <title>Order</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
+    <script src="https://js.tosspayments.com/v2/standard"></script>
     <link rel="stylesheet" href="<c:url value='/css/menu.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/order.css'/>">
 </head>
@@ -66,9 +67,102 @@
             <span class="label">최종 결제 금액</span>
             <span class="amount">${orderDto.total_ord_pric}원</span>
         </div>
-        <a href="#" class="btn-pay">결제하기</a>
     </div>
 </div>
+<div class="order-container">
+    <div class="order-summary">
+        <!-- 결제 UI -->
+        <div id="payment-method"></div>
+        <!-- 이용약관 UI -->
+        <div id="agreement"></div>
+        <button id="payment-button" class="btn-pay">결제하기</button>
+    </div>
+</div>
+<script type="text/javascript">
+    // JSP에서 cartItemList를 JavaScript 변수로 할당
+    var orderProductList = [];
 
+    <c:forEach var="item" items="${orderItemList}">
+        orderProductList.push({
+            isbn: "${item.isbn}",
+            prodTypeCode: "${item.prod_type_code}",
+            itemQuan: "${item.item_quan}"
+        });
+    </c:forEach>
+</script>
+<script src="<c:url value='/js/order.js'/>"></script>
+<script>
+    main();
+
+    async function main() {
+        const button = document.getElementById("payment-button");
+        // ------  결제위젯 초기화 ------
+        const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+        const tossPayments = TossPayments(clientKey);
+        // 회원 결제
+        const customerKey = "mCEp_QbYxElNaPblVNaOy";
+        const widgets = tossPayments.widgets({
+            customerKey,
+        });
+
+        // ------ 주문의 결제 금액 설정 ------
+        await widgets.setAmount({
+            currency: "KRW",
+            value: ${orderDto.total_ord_pric},
+        });
+
+        await Promise.all([
+            // ------  결제 UI 렌더링 ------
+            widgets.renderPaymentMethods({
+                selector: "#payment-method",
+                variantKey: "DEFAULT",
+            }),
+            // ------  이용약관 UI 렌더링 ------
+            widgets.renderAgreement({ selector: "#agreement", variantKey: "AGREEMENT" }),
+        ]);
+
+        // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
+        button.addEventListener("click", async function () {
+            orderViewDto = await requestCreateOrder()
+                .then((res) => {
+                    return res.json();
+                });
+
+            // TODO : 주문 번호 최소 6자 이상으로 인해 앞에 "orderId" 를 추가
+            await widgets.requestPayment({
+                orderId: "orderId" + orderViewDto['orderDto']['ord_seq'],
+                orderName: orderViewDto['orderProductDtoList'][0]['book_title'] + " 외 " + (orderViewDto['orderProductDtoList'].length - 1) +"건",
+                successUrl: window.location.origin + "/success.html",
+                failUrl: window.location.origin + "/fail.html",
+                customerEmail: "test@gmail.com",
+                customerName: orderViewDto['orderDto']['cust_id'],
+                customerMobilePhone: "01012345678",
+            });
+        });
+    }
+
+    async function requestCreateOrder() {
+        const orderItemList = orderProductList.map(orderItem => {
+            return {
+                isbn: orderItem.isbn,
+                'prod_type_code': orderItem.prodTypeCode,
+                'item_quan': orderItem.itemQuan
+            };
+        });
+
+        const requestBody = {
+            'delivery_fee': 0,
+            'orderItemDtoList': orderItemList
+        };
+
+        return fetch('/ch4/order/order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+        });
+    }
+</script>
 </body>
 </html>

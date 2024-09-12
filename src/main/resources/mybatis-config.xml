@@ -32,11 +32,18 @@
 
     <!-- order  -->
     <typeAlias alias="OrderDto" type="com.fastcampus.ch4.dto.order.OrderDto"/>
-    <typeAlias alias="OrderProductDto" type="com.fastcampus.ch4.dto.order.OrderProductDto"/>
-    <typeAlias alias="TempBookDto" type="com.fastcampus.ch4.dto.order.temp.TempBookDto" />
+    <typeAlias alias="OrderHistoryDto" type="com.fastcampus.ch4.dto.order.OrderHistoryDto"/>
+    <typeAlias alias="OrderProductDto" type="com.fastcampus.ch4.dto.order.OrderProductDto" />
+    <typeAlias alias="OrderProductStatusHistoryDto" type="com.fastcampus.ch4.dto.order.OrderProductStatusHistoryDto" />
+    <typeAlias alias="OrderSearchCondition" type="com.fastcampus.ch4.domain.order.OrderSearchCondition"/>
+    <typeAlias alias="OrderProductSearchCondition" type="com.fastcampus.ch4.domain.order.OrderProductSearchCondition"/>
+    <typeAlias alias="OrderCountCondition" type="com.fastcampus.ch4.domain.order.OrderCountCondition"/>
+
+    <!--  cart  -->
     <typeAlias alias="CartDto" type="com.fastcampus.ch4.dto.cart.CartDto" />
     <typeAlias alias="CartProductDto" type="com.fastcampus.ch4.dto.cart.CartProductDto" />
     <typeAlias alias="CartProductDetailDto" type="com.fastcampus.ch4.dto.cart.CartProductDetailDto" />
+
     <!-- qa  -->
     <typeAlias alias="QaDto" type="com.fastcampus.ch4.dto.qa.QaDto"/>
     <typeAlias alias="SearchCondition" type="com.fastcampus.ch4.domain.qa.SearchCondition"/>

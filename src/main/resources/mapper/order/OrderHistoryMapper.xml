@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcampus.ch4.dao.order.OrderHistoryMapper">
+    <insert id="insertOrderHistory" parameterType="OrderHistoryDto" useGeneratedKeys="true" keyProperty="ord_hist_seq">
+        INSERT INTO book_shop.order_history
+            (ord_seq,
+            chg_start_date,
+            chg_end_date,
+            chg_reason,
+            ord_stat,
+            deli_stat,
+            pay_stat,
+            delivery_fee,
+            total_prod_pric,
+            total_disc_pric,
+            total_ord_pric,
+            created_at,
+            updated_at,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id)
+        VALUES (#{ord_seq},
+                #{chg_start_date},
+                #{chg_end_date},
+                #{chg_reason},
+                #{ord_stat},
+                #{deli_stat},
+                #{pay_stat},
+                #{delivery_fee},
+                #{total_prod_pric},
+                #{total_disc_pric},
+                #{total_ord_pric},
+                NOW(),
+                NOW(),
+                NOW(),
+                #{reg_id},
+                NOW(),
+                #{up_id})
+    </insert>
+
+    <!-- TODO : DATE 함수로 변경하지 않고 날짜 비교할 수 있도록 변경하기 -->
+    <select id="selectOrderHistoryByCondition" parameterType="map" resultType="OrderHistoryDto">
+        SELECT
+            ord_hist_seq,
+            ord_seq,
+            chg_start_date,
+            chg_end_date,
+            chg_reason,
+            ord_stat,
+            deli_stat,
+            pay_stat,
+            delivery_fee,
+            total_prod_pric,
+            total_disc_pric,
+            total_ord_pric,
+            created_at,
+            updated_at,
+            reg_date,
+            reg_id,
+            up_date,
+            up_id
+        FROM book_shop.order_history
+        <where>
+            <if test="ord_hist_seq != null">
+                ord_hist_seq = #{ord_hist_seq}
+            </if>
+            <if test="ord_seq != null">
+                AND ord_seq = #{ord_seq}
+            </if>
+            <if test="chg_start_date != null and chg_end_date == null">
+                AND <![CDATA[ chg_start_date < date(#{chg_start_date}) ]]>
+            </if>
+            <if test="chg_start_date != null and chg_end_date != null">
+                AND NOW() BETWEEN date(#{chg_start_date} AND date(#{chg_end_date}
+            </if>
+            <if test="chg_start_date == null and chg_end_date != null">
+                AND <![CDATA[ chg_end_date > NOW() ]]>
+            </if>
+        </where>
+        ORDER BY ord_hist_seq DESC;
+    </select>
+
+    <update id="updateOrderHistory" parameterType="OrderHistoryDto">
+        UPDATE book_shop.order_history
+        <set>
+            updated_at = NOW(),
+            up_date = NOW(),
+            up_id = #{up_id},
+            <if test="chg_start_date != null">
+                chg_start_date = #{chg_start_date},
+            </if>
+            <if test="chg_end_date != null">
+                chg_end_date = #{chg_end_date},
+            </if>
+            <if test="chg_reason != null">
+                chg_reason = #{chg_reason},
+            </if>
+            <if test="ord_stat != null">
+                ord_stat = #{ord_stat},
+            </if>
+            <if test="deli_stat != null">
+                deli_stat = #{deli_stat},
+            </if>
+            <if test="pay_stat != null">
+                pay_stat = #{pay_stat},
+            </if>
+            <if test="delivery_fee != null">
+                delivery_fee = #{delivery_fee},
+            </if>
+            <if test="total_prod_pric != null">
+                total_prod_pric = #{total_prod_pric},
+            </if>
+            <if test="total_disc_pric != null">
+                total_disc_pric = #{total_disc_pric},
+            </if>
+            <if test="total_ord_pric != null">
+                total_ord_pric = #{total_ord_pric},
+            </if>
+        </set>
+        <where>
+            ord_hist_seq = #{ord_hist_seq}
+        </where>
+    </update>
+
+    <delete id="deleteOrderHistoryByCondition" parameterType="map">
+        DELETE
+        FROM book_shop.order_history
+        <where>
+            <if test="ord_hist_seq != null">
+                ord_hist_seq = #{ord_hist_seq}
+            </if>
+            <if test="ord_seq != null">
+                ord_seq = #{ord_seq}
+            </if>
+            <if test="ord_hist_seq == null and ord_seq == null">
+                1 = 2
+            </if>
+        </where>
+    </delete>
+
+</mapper>

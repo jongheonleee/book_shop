@@ -31,6 +31,11 @@ public class CodeDaoImp implements CodeDao {
     }
 
     @Override
+    public CodeDto selectByCodeName(String codeName) {
+        return session.selectOne(namespace + "selectByCodeName", codeName);
+    }
+
+    @Override
     public int deleteAll() {
         return session.delete(namespace + "deleteAll");
     }

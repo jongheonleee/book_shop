@@ -1,68 +1,81 @@
 package com.fastcampus.ch4.dao.order;
 
+import com.fastcampus.ch4.domain.order.OrderCountCondition;
+import com.fastcampus.ch4.domain.order.OrderSearchCondition;
 import com.fastcampus.ch4.dto.order.OrderDto;
+import com.fastcampus.ch4.dto.order.request.OrderStatusUpdateDto;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+/*
+필요 기능
+1. 생성
+2. 조회
+    - 기간에 다른 조회
+    - 상태에 따른 조회
+    - 상품명 조회
+    - OrderProduct 와 같이 조회
+3. 변경
+    - 주문 상태 변경
+    - 배송 상태 변경
+    - 결제 상태 변경
+    - 금액 변경 (총 상품 금액, 총 할인 금액, 총 주문 금액)
+4. 삭제
+
+ */
 
 @Repository
 public class OrderDaoImpl implements OrderDao {
     @Autowired
     SqlSession sqlSession;
 
-    String namespace = "com.fastcampus.ch4.dao.OrderMapper.";
+    private static final String namespace = "com.fastcampus.ch4.dao.order.OrderMapper.";
 
     @Override
-    public Integer insertAndReturnSeq(OrderDto orderDto) throws Exception {
-        sqlSession.insert(namespace + "insertAndReturnId", orderDto);
-        return orderDto.getOrd_seq();
+    public int insertOrder(OrderDto orderDto) {
+        return sqlSession.insert(namespace + "insertOrder", orderDto);
+//        return sqlSession.insert(namespace + "insertOrderStat", orderDto);
     }
 
     @Override
-    public OrderDto selectBySeq(Integer ordSeq) throws Exception {
-        return sqlSession.selectOne(namespace + "selectById", ordSeq);
+    public List<OrderDto> selectOrderByCondition(Map map) {
+        return sqlSession.selectList(namespace + "selectOrderByCondition", map);
     }
 
     @Override
-    public List<OrderDto> selectAll(String columnName, boolean isDesc) throws Exception {
-        Map<String, String> map = new HashMap<>();
-
-        String orderCriterion = isDesc ? "DESC" : "ASC";
-        String orderCondition = columnName + "_" + orderCriterion;
-        map.put("orderCondition", orderCondition);
-        return sqlSession.selectList(namespace + "selectAll", map);
+    public List<OrderDto> selectOrderPage(OrderSearchCondition orderSearchCondition){
+        return sqlSession.selectList(namespace + "selectOrderPage", orderSearchCondition);
     }
 
     @Override
-    public List<OrderDto> selectListByCondition(String userId) throws Exception {
-        Map map = new HashMap<>();
-        map.put("userId", userId);
+    public int selectOrderCount(OrderCountCondition condition) {
+        return sqlSession.selectOne(namespace + "selectOrderCount", condition);
+    }
 
-        return sqlSession.selectList(namespace + "selectListByCondition", map);
+    public int updateOrder(OrderDto orderDto) {
+        return sqlSession.update(namespace + "updateOrder", orderDto);
     }
 
     @Override
-    public int deleteBySeq(Integer ordSeq) throws Exception {
-        return sqlSession.delete(namespace + "deleteById", ordSeq);
+    public int updateStatus(OrderStatusUpdateDto orderStatusUpdateDto) {
+        return sqlSession.update(namespace + "updateStatus", orderStatusUpdateDto);
     }
 
     @Override
-    public int deleteAll() throws Exception {
-        return sqlSession.delete(namespace + "deleteAll");
+    public int updateOrderPriceInfo(Map map) {
+        return sqlSession.update(namespace + "updateOrderPriceInfo", map);
     }
 
     @Override
-    public int update(OrderDto orderDto, String upId) throws Exception {
-        orderDto.setUp_id(upId);
-        return sqlSession.update(namespace + "update", orderDto);
+    public int deleteOrderByCondition(Map map) {
+        return sqlSession.delete(namespace + "deleteOrder", map);
     }
 
-    @Override
-    public int countAll() throws Exception {
-        return sqlSession.selectOne(namespace + "countAll");
+    public int deleteAll() {
+        return sqlSession.delete("order.deleteAll");
     }
 }

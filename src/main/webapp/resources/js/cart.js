@@ -11,22 +11,6 @@ $(document).ready(function () {
         quantityInput.val(quantity + 1);
         updateTotalPrice($(this));
         updateSummary();
-
-        // $.ajax({
-        //     url: '/ch4/cart/product/quantity',
-        //     type: 'POST',
-        //     // data: {updateItemQuantity: quantity, cart_seq: cartSeq, isbn: isbn, prod_type_code: prodCodeType},
-        //     data: JSON.stringify({updateItemQuantity: quantity, cart_seq: cartSeq, isbn: isbn, prod_type_code: prodCodeType}),
-        //     contentType: "application/json; charset=utf-8",
-        //     success: function (response) {
-        //         quantityInput.val(quantity + 1);
-        //         updateTotalPrice($(this));
-        //         updateSummary();
-        //     },
-        //     error: function (xhr, status, error) {
-        //         console.error('수량 증가 요청 실패:', error);
-        //     }
-        // });
     });
 
     // 수량 감소 버튼 클릭 이벤트
@@ -40,6 +24,66 @@ $(document).ready(function () {
         updateTotalPrice($(this));
         updateSummary();
     });
+
+    $('.btn-order').on('click', function () {
+        const orderItemList = cartItemList.map(cartItem => {
+            return {
+                isbn: cartItem.isbn,
+                'prod_type_code': cartItem.prodTypeCode,
+                'item_quan': cartItem.itemQuan
+            };
+        });
+
+        const requestBody = {
+            'delivery_fee': 0,
+            'orderItemDtoList': orderItemList
+        };
+
+        submitForm(requestBody);
+    });
+
+    // requestBody 데이터를 form으로 전송하는 함수
+    function submitForm(requestBody) {
+        // 새로운 form element를 생성
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/ch4/order/orderView'; // 서버에서 처리할 URL
+
+        // delivery_fee 필드를 form에 추가
+        const deliveryFeeInput = document.createElement('input');
+        deliveryFeeInput.type = 'hidden';
+        deliveryFeeInput.name = 'delivery_fee';
+        deliveryFeeInput.value = requestBody.delivery_fee;
+        form.appendChild(deliveryFeeInput);
+
+        // orderItemDtoList의 각 항목을 form에 추가
+        requestBody.orderItemDtoList.forEach((item, index) => {
+            // isbn 필드
+            const isbnInput = document.createElement('input');
+            isbnInput.type = 'hidden';
+            isbnInput.name = `orderItemDtoList[${index}].isbn`;
+            isbnInput.value = item.isbn;
+            form.appendChild(isbnInput);
+
+            // prodCodeType 필드
+            const prodCodeInput = document.createElement('input');
+            prodCodeInput.type = 'hidden';
+            prodCodeInput.name = `orderItemDtoList[${index}].prod_type_code`;
+            prodCodeInput.value = item.prod_type_code;
+            form.appendChild(prodCodeInput);
+
+            // quantity 필드
+            const quantityInput = document.createElement('input');
+            quantityInput.type = 'hidden';
+            quantityInput.name = `orderItemDtoList[${index}].item_quan`;
+            quantityInput.value = item.item_quan;
+            form.appendChild(quantityInput);
+        });
+
+        // form을 body에 추가하고 전송
+        document.body.appendChild(form);
+        form.submit();
+    }
 
     // 총 판매가 업데이트 함수
     function updateTotalPrice(element) {
@@ -82,4 +126,5 @@ $(document).ready(function () {
 
     // 페이지 로드 시 요약 정보 초기화
     updateSummary();
-});
+})
+;

@@ -18,6 +18,12 @@
     WHERE code = #{code}
   </select>
 
+  <select id="selectByCodeName" parameterType="string" resultType="CodeDto">
+    SELECT *
+    FROM code
+    WHERE code_name = #{code_name}
+  </select>
+
   <select id="selectAll" resultType="CodeDto">
     SELECT *
     FROM code

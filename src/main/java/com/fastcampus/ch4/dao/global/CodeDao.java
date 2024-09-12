@@ -11,6 +11,8 @@ public interface CodeDao {
 
     CodeDto selectByCode(String code);
 
+    CodeDto selectByCodeName(String codeName);
+
     int deleteAll();
 
     int delete(String code);

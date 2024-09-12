@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcampus.ch4.dao.order.OrderProductStatusHistoryMapper">
+    <insert id="insertOrderProductStatusHistory" parameterType="OrderProductStatusHistoryDto" useGeneratedKeys="true" keyProperty="ord_prod_stat_hist_seq">
+        INSERT INTO book_shop.order_prod_status_history
+        (ord_prod_seq,
+         chg_start_date,
+         chg_end_date,
+         ord_stat,
+         deli_stat,
+         pay_stat,
+         reg_date,
+         reg_id,
+         up_date,
+         up_id)
+        VALUES (#{ord_prod_seq},
+                #{chg_start_date},
+                #{chg_end_date},
+                #{ord_stat},
+                #{deli_stat},
+                #{pay_stat},
+                NOW(),
+                #{reg_id},
+                NOW(),
+                #{up_id})
+    </insert>
+
+    <select id="selectListOrderProductStatusHistoryByCondition" parameterType="map" resultType="OrderProductStatusHistoryDto">
+        SELECT ord_prod_stat_hist_seq,
+               ord_prod_seq,
+               chg_start_date,
+               chg_end_date,
+               ord_stat,
+               deli_stat,
+               pay_stat,
+               reg_date,
+               reg_id,
+               up_date,
+               up_id
+        FROM book_shop.order_prod_status_history
+        <where>
+            <if test="ord_prod_stat_hist_seq">
+                ord_prod_stat_hist_seq = #{ord_prod_stat_hist_seq}
+            </if>
+            <if test="ord_prod_seq != null">
+                AND ord_prod_seq = #{ord_prod_seq}
+            </if>
+            <if test="chg_start_date != null">
+                AND <![CDATA[ chg_start_date >= #{chg_start_date} ]]>
+            </if>
+            <if test="chg_end_date != null">
+                AND <![CDATA[ chg_end_date >= #{chg_end_date} ]]>
+            </if>
+            <if test="ord_stat != null">
+                AND ord_stat = #{ord_stat}
+            </if>
+            <if test="deli_stat != null">
+                AND deli_stat = #{deli_stat}
+            </if>
+            <if test="pay_stat != null">
+                AND pay_stat = #{pay_stat}
+            </if>
+        </where>
+        ORDER BY ord_prod_stat_hist_seq DESC
+    </select>
+
+    <update id="updateOrderProductStatusHistory" parameterType="OrderProductStatusHistoryDto">
+        UPDATE book_shop.order_prod_status_history
+        <set>
+            up_date = NOW(),
+            up_id = #{up_id},
+            <if test="chg_start_date">
+                chg_start_date = #{chg_start_date},
+            </if>
+            <if test="chg_end_date">
+                chg_end_date = #{chg_end_date},
+            </if>
+            <if test="ord_stat">
+                ord_stat = #{ord_stat},
+            </if>
+            <if test="deli_stat">
+                deli_stat = #{deli_stat},
+            </if>
+            <if test="pay_stat">
+                pay_stat = #{pay_stat},
+            </if>
+        </set>
+        WHERE ord_prod_stat_hist_seq = #{ord_prod_stat_hist_seq}
+    </update>
+
+    <delete id="deleteOrderProductStatusHistoryByCondition" parameterType="map">
+        DELETE
+        FROM book_shop.order_prod_status_history
+        <choose>
+            <when test="ord_prod_stat_hist_seq != null and ord_prod_seq == null">
+                WHERE ord_prod_stat_hist_seq = #{ord_prod_stat_hist_seq}
+            </when>
+            <when test="ord_prod_stat_hist_seq == null and ord_prod_seq != null">
+                WHERE ord_prod_seq = #{ord_prod_seq}
+            </when>
+            <otherwise>
+                WHERE 1 = 2
+            </otherwise>
+        </choose>
+    </delete>
+</mapper>

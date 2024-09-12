@@ -103,6 +103,9 @@ public class BookDto {
         this.trl_name = trl_name;
     }
 
+    public BookDto(String number, String number1, String publisher46, String title1, String s, String 판매중, int i, int i1, int i2, int i3, int i4, int i5, int i6, String saleCom0, String cont0, double v, String info0, String introAward0, String rec0, String pubReview0, int i7, int i8, String url, Date date, String user50, Date date1, String reg20, Date date2, String up48) {
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;

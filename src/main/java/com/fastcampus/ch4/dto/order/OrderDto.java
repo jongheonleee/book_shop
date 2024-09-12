@@ -1,9 +1,5 @@
 package com.fastcampus.ch4.dto.order;
 
-import com.fastcampus.ch4.domain.order.DeliveryStatus;
-import com.fastcampus.ch4.domain.order.OrderStatus;
-import com.fastcampus.ch4.domain.payment.PaymentStatus;
-
 import java.util.Date;
 
 public class OrderDto {
@@ -28,7 +24,7 @@ public class OrderDto {
     private Integer total_prod_pric = 0; // 총 상품 금액
     private Integer total_disc_pric = 0; // 총 할인 금액
     private Integer total_ord_pric = 0; // 총 주문 금액
-    private String crated_at; // 주문 생성 일자
+    private String created_at; // 주문 생성 일자
     private String updated_at; // 주문 변경 일자
 
     // fk
@@ -76,7 +72,7 @@ public class OrderDto {
                 ", total_prod_pric=" + total_prod_pric +
                 ", total_disc_pric=" + total_disc_pric +
                 ", total_ord_pric=" + total_ord_pric +
-                ", crated_at='" + crated_at + '\'' +
+                ", crated_at='" + created_at + '\'' +
                 ", updated_at='" + updated_at + '\'' +
                 ", cust_id='" + cust_id + '\'' +
                 ", reg_date=" + reg_date +
@@ -198,12 +194,12 @@ public class OrderDto {
         this.total_ord_pric = total_ord_pric;
     }
 
-    public String getCrated_at() {
-        return crated_at;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setCrated_at(String crated_at) {
-        this.crated_at = crated_at;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
     public String getUpdated_at() {

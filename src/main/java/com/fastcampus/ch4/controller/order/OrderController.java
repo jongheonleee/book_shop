@@ -1,6 +1,8 @@
 package com.fastcampus.ch4.controller.order;
 
+import com.fastcampus.ch4.domain.order.OrderSearchCondition;
 import com.fastcampus.ch4.dto.order.request.OrderCreateDto;
+import com.fastcampus.ch4.dto.order.response.OrderCountDto;
 import com.fastcampus.ch4.dto.order.response.OrderViewDto;
 import com.fastcampus.ch4.service.order.OrderService;
 import com.fastcampus.ch4.util.JwtUtil;
@@ -10,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/order")
@@ -52,13 +55,28 @@ public class OrderController {
         return orderViewDto;
     }
 
-    @GetMapping(value = "/order")
-    public String order(Model model, HttpServletRequest request) {
-        return "order/order";
-    }
-
     @GetMapping(value="/order/success")
     public String orderSuccess(Model model, HttpServletRequest request) {
         return "order/success";
+    }
+
+    @GetMapping(value="/list")
+    public String orderList(OrderSearchCondition orderSearchCondition, Model model, HttpServletRequest request) {
+        // user id 셋팅
+        String user_id = (String) request.getSession().getAttribute("id");
+        orderSearchCondition.setCust_id(user_id);
+
+
+        // 주문 목록 조회
+        List<OrderViewDto> orderViewDtoList = orderService.searchOrderPage(orderSearchCondition);
+
+        // 상태별 개수 조회
+        OrderCountDto orderCountDto = orderService.getOrderCountByStatus(user_id);
+        System.out.println("orderCountDto = " + orderCountDto);
+
+        model.addAttribute("orderList", orderViewDtoList);
+        model.addAttribute("orderCount", orderCountDto);
+
+        return "order/orderList";
     }
 }

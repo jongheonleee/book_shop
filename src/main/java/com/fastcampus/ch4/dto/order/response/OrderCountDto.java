@@ -15,6 +15,16 @@ public class OrderCountDto {
         return dto;
     }
 
+    @Override
+    public String toString() {
+        return "OrderCountDto{" +
+                "totalCount=" + totalCount +
+                ", orderWaitCount=" + orderWaitCount +
+                ", deliveryDoingCount=" + deliveryDoingCount +
+                ", deliveryDoneCount=" + deliveryDoneCount +
+                '}';
+    }
+
     public int getTotalCount() {
         return totalCount;
     }

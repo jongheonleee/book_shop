@@ -11,7 +11,18 @@ public class OrderCountCondition {
         dto.setOrd_stat(ord_stat);
         dto.setDeli_stat(deli_stat);
         dto.setPay_stat(pay_stat);
+        dto.setCust_id(cust_id);
         return dto;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderCountCondition{" +
+                "ord_stat=" + ord_stat +
+                ", deli_stat=" + deli_stat +
+                ", pay_stat=" + pay_stat +
+                ", cust_id='" + cust_id + '\'' +
+                '}';
     }
 
     public Integer getOrd_stat() {

@@ -1,0 +1,266 @@
+/* 기본 설정 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+}
+
+ul {
+    list-style-type: none;
+    height: 48px;
+    width: 100%;
+    background-color: #30426E;
+    display: flex;
+    justify-content: space-between;
+}
+
+ul > li {
+    color: lightgray;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+ul > li > a {
+    color: lightgray;
+    margin: auto;
+    padding: 10px;
+    font-size: 20px;
+    align-items: center;
+}
+
+ul > li > a:hover {
+    color: white;
+}
+
+#logo {
+    color: white;
+    font-size: 18px;
+    padding-left: 40px;
+    margin-right: auto;
+    display: flex;
+}
+
+/* 상단 주문/배송 목록 헤더 */
+.order-summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px auto;
+    max-width: 1000px;
+}
+
+.order-summary-header h2 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.recent-info {
+    font-size: 14px;
+    color: #888;
+}
+
+.detail-button {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.detail-button i {
+    color: #888;
+}
+
+.detail-button:hover {
+    background-color: #f0f0f0;
+}
+
+/* 주문 상태 요약 */
+.order-status-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.status-box {
+    text-align: center;
+    flex: 1;
+    border-right: 1px solid #ddd;
+}
+
+.status-box:last-child {
+    border-right: none;
+}
+
+.status-box strong {
+    display: block;
+    font-size: 24px;
+    color: #000;
+}
+
+.status-box p {
+    font-size: 14px;
+    color: #888;
+    margin-top: 5px;
+}
+
+.status-box p i {
+    margin-left: 5px;
+    color: #ccc;
+}
+
+/* 주문 요약 컨테이너 */
+.order-summary-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.order-summary-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.summary-info span {
+    margin-right: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 주문 항목 컨테이너 */
+.order-item-container {
+    margin-bottom: 30px;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.detail-link {
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.detail-link:hover {
+    text-decoration: underline;
+}
+
+/* 주문 상품 항목 */
+.order-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.item-image img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.item-details {
+    flex-grow: 1;
+    margin-left: 20px;
+}
+
+.item-title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.item-quantity {
+    font-size: 14px;
+    color: #555;
+}
+
+.item-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 주문 하단 */
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.shipping-info {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    font-weight: bold;
+    align-items: center;
+    color: #5055b1;
+}
+
+.order-actions button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.order-actions button:hover {
+    background-color: #0056b3;
+}
+
+/* 하단 정보 스타일 */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #30426E;
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.no-orders-container {
+    text-align: center;
+    color: #555;
+}
+
+.no-orders-icon {
+    font-size: 50px;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.no-orders-message {
+    font-size: 18px;
+    color: #888;
+}

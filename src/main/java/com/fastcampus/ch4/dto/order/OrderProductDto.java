@@ -58,10 +58,6 @@ public class OrderProductDto {
         orderProductDto.setIsbn(bookDto.getIsbn());
         orderProductDto.setProd_type_code(orderItemDto.getProd_type_code());
 
-//        orderProductDto.setOrd_stat_code(OrderStatus.ORDER_WAIT.getCode());
-//        orderProductDto.setDeli_stat_code(DeliveryStatus.DELIVERY_WAIT.getCode());
-//        orderProductDto.setPay_stat_code(PaymentStatus.PAYMENT_WAIT.getCode());
-
         orderProductDto.setOrd_stat(ord_stat_id);
         orderProductDto.setDeli_stat(deli_stat_id);
         orderProductDto.setPay_stat(pay_stat_id);

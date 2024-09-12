@@ -7,6 +7,10 @@
     <!-- admin -->
     <typeAlias alias="AdminDto" type="com.fastcampus.ch4.dto.admin.AdminDto"/>
 
+    <!-- notice -->
+    <typeAlias alias="NoticeDto" type="com.fastcampus.ch4.dto.notice.NoticeDto"/>
+    <typeAlias alias="NoticeCateDto" type="com.fastcampus.ch4.dto.notice.NoticeCateDto"/>
+
     <!-- faq  -->
     <typeAlias alias="FaqDto" type="com.fastcampus.ch4.dto.faq.FaqDto"/>
     <typeAlias alias="FaqCateDto" type="com.fastcampus.ch4.dto.faq.FaqCateDto"/>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fastcampus.ch4.dao.notice.NoticeCateMapper">
+<!--
+    CRUD
+  - count
+  - insert
+  - selectById
+  - selectByCode
+  - selectAll
+  - selectIdByCode
+  - update
+  - delete
+  - deleteAll
+  -->
+    <select id="count" resultType="int">
+        select count(*) from notice_cate
+    </select>
+
+    <insert id="insert" parameterType="NoticeCateDto" useGeneratedKeys="true" keyProperty="ntc_cate_id">
+        insert into notice_cate (ntc_cate_code, name, use_chk, reg_date, reg_id, up_date, up_id)
+        values (#{ntc_cate_code}, #{name}, #{use_chk}, now(), #{reg_id}, now(), #{reg_id})
+    </insert>
+
+    <sql id="selectFromNtcCate">
+        select ntc_cate_id, ntc_cate_code, name, use_chk, reg_date, reg_id, up_date, up_id
+        from notice_cate
+    </sql>
+
+    <select id="selectById" parameterType="int" resultType="NoticeCateDto">
+        <include refid="selectFromNtcCate"/>
+        where ntc_cate_id = #{ntc_cate_id}
+    </select>
+
+    <select id="selectByCode" parameterType="string" resultType="NoticeCateDto">
+        <include refid="selectFromNtcCate"/>
+        where ntc_cate_code = #{ntc_cate_code}
+    </select>
+
+    <select id="selectAll" resultType="NoticeCateDto">
+        <include refid="selectFromNtcCate"/>
+        order by use_chk DESC, ntc_cate_id ASC
+    </select>
+
+    <select id="selectIdByCode" parameterType="string" resultType="int">
+        select ntc_cate_id from notice_cate
+        where ntc_cate_code = #{ntc_cate_code}
+    </select>
+
+    <update id="update" parameterType="NoticeCateDto">
+        update notice_cate
+        set ntc_cate_code = #{ntc_cate_code},
+            name = #{name},
+            use_chk = #{use_chk},
+            up_date = now(),
+            up_id = #{up_id}
+        where ntc_cate_id = #{ntc_cate_id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from notice_cate
+        where ntc_cate_id = #{ntc_cate_id}
+    </delete>
+
+    <delete id="deleteAll">
+        delete from notice_cate
+    </delete>
+</mapper>

@@ -14,7 +14,6 @@ import java.util.List;
 @Service
 public class InfoChangeHistoryServiceImpl implements InfoChangeHistoryService {
 
-
   @Autowired
   private InfoChangeHistoryDao infoChangeHistoryDao;
 
@@ -40,32 +39,37 @@ public class InfoChangeHistoryServiceImpl implements InfoChangeHistoryService {
       throw new IllegalStateException("현재 사용자를 찾을 수 없습니다.");
     }
 
-    // 사용자 정보를 업데이트
-    boolean isUpdated = memberDao.updateMember(updatedUser);
+    // 필요한 필드만 업데이트
+    boolean isUpdated = false;
 
+    if (updatedUser.getPswd() != null && !updatedUser.getPswd().equals(currentUser.getPswd())) {
+      currentUser.setPswd(updatedUser.getPswd());
+      InfoChangeHistoryDto pswdChangeLog = createChangeHistory("비밀번호 변경", currentUser.getPswd(), updatedUser.getPswd(), currentUser);
+      infoChangeHistoryDao.saveChangeHistory(pswdChangeLog);
+      isUpdated = true;
+    }
+
+    if (updatedUser.getPhnNumb() != null && !updatedUser.getPhnNumb().equals(currentUser.getPhnNumb())) {
+      currentUser.setPhnNumb(updatedUser.getPhnNumb());
+      InfoChangeHistoryDto phnNumbChangeLog = createChangeHistory("전화번호 변경", currentUser.getPhnNumb(), updatedUser.getPhnNumb(), currentUser);
+      infoChangeHistoryDao.saveChangeHistory(phnNumbChangeLog);
+      isUpdated = true;
+    }
+
+    if (updatedUser.getEmail() != null && !updatedUser.getEmail().equals(currentUser.getEmail())) {
+      currentUser.setEmail(updatedUser.getEmail());
+      InfoChangeHistoryDto emailChangeLog = createChangeHistory("이메일 변경", currentUser.getEmail(), updatedUser.getEmail(), currentUser);
+      infoChangeHistoryDao.saveChangeHistory(emailChangeLog);
+      isUpdated = true;
+    }
+
+    // 업데이트가 필요한 경우에만 DB에 반영
     if (isUpdated) {
-      // 비밀번호 변경 이력 기록
-      if (updatedUser.getPswd() != null && !updatedUser.getPswd().equals(currentUser.getPswd())) {
-        InfoChangeHistoryDto pswdChangeLog = createChangeHistory("비밀번호 변경", currentUser.getPswd(), updatedUser.getPswd(), currentUser);
-        infoChangeHistoryDao.saveChangeHistory(pswdChangeLog);
-      }
-
-      // 전화번호 변경 이력 기록
-      if (updatedUser.getPhnNumb() != null && !updatedUser.getPhnNumb().equals(currentUser.getPhnNumb())) {
-        InfoChangeHistoryDto phnNumbChangeLog = createChangeHistory("전화번호 변경", currentUser.getPhnNumb(), updatedUser.getPhnNumb(), currentUser);
-        infoChangeHistoryDao.saveChangeHistory(phnNumbChangeLog);
-      }
-
-      // 이메일 변경 이력 기록
-      if (updatedUser.getEmail() != null && !updatedUser.getEmail().equals(currentUser.getEmail())) {
-        InfoChangeHistoryDto emailChangeLog = createChangeHistory("이메일 변경", currentUser.getEmail(), updatedUser.getEmail(), currentUser);
-        infoChangeHistoryDao.saveChangeHistory(emailChangeLog);
-      }
+      memberDao.updateMember(currentUser);
     }
 
     return isUpdated;
   }
-
 
   private InfoChangeHistoryDto createChangeHistory(String changeType, String beforeChange, String afterChange, MemberDto currentUser) {
     InfoChangeHistoryDto changeLog = new InfoChangeHistoryDto();
@@ -85,5 +89,5 @@ public class InfoChangeHistoryServiceImpl implements InfoChangeHistoryService {
   public void deleteAllData() {
     infoChangeHistoryDao.deleteAllChangeHistories();
   }
-
 }
+

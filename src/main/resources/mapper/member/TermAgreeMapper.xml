@@ -54,6 +54,10 @@
             (#{termAgreeDto.id}, #{termAgreeDto.termId}, #{termAgreeDto.termAgree},
             #{termAgreeDto.regDate}, #{termAgreeDto.regId}, #{termAgreeDto.upDate}, #{termAgreeDto.upId})
         </foreach>
+        ON DUPLICATE KEY UPDATE
+        is_agrd = VALUES(is_agrd),
+        up_date = VALUES(up_date),
+        up_id = VALUES(up_id);
     </insert>
 
 </mapper>

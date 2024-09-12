@@ -15,7 +15,7 @@
     </resultMap>
 
      <!-- 로그인 기록 저장 -->
-    <insert id="insertLoginHistory" parameterType="LoginHistoryDto">
+    <insert id="insertLoginHistory" parameterType="LoginHistoryDto" useGeneratedKeys="true" keyProperty="lognId">
         INSERT INTO logn_history (logn_time, ip_addr, reg_date, reg_id, up_date, up_id, id)
         VALUES (#{lognTime}, #{ipAddr}, #{regDate}, #{regId}, #{upDate}, #{upId}, #{id})
     </insert>

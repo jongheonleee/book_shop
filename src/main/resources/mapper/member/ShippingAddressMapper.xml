@@ -35,8 +35,8 @@
             regi_addr2 = #{regiAddress2},
             rcnt_addr1 = #{rcntAddress1},
             rcnt_addr2 = #{rcntAddress2},
-            up_date = #{upDate},
-            up_id = #{upId}
+            up_date = Now(),
+            up_id = #{userId}
         WHERE id = #{userId}
     </update>
 

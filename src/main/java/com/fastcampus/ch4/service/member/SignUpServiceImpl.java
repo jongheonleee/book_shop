@@ -6,8 +6,11 @@ import com.fastcampus.ch4.dto.member.MemberDto;
 import com.fastcampus.ch4.dto.member.ShippingAddressDto;
 import com.fastcampus.ch4.dto.member.TermAgreeDto;
 import com.fastcampus.ch4.dto.member.TermDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +19,8 @@ import java.util.stream.Stream;
 
 @Service
 public class SignUpServiceImpl implements SignUpService {
+
+  private static final Logger logger = LoggerFactory.getLogger(SignUpServiceImpl.class);
 
   @Autowired
   private MemberManagementService memberManagementService;
@@ -33,16 +38,24 @@ public class SignUpServiceImpl implements SignUpService {
   private ShippingAddressService shippingAddressService;
 
   @Override
+  @Transactional
   public void processSignup(MemberDto member, List<Integer> requiredTerms, List<Integer> optionalTerms, String address) {
+    logger.info("Processing signup for member ID: {}", member.getId());
 
-    // 약관 동의 정보 생성
+    // 1. 회원 정보 저장
+    memberManagementService.addMember(member);
+    logger.info("Member added successfully for ID: {}", member.getId());
+
+    // 2. 약관 동의 정보 생성 및 저장
     List<TermAgreeDto> termAgreeDtos = createTermAgreeDtos(member.getId(), requiredTerms, optionalTerms);
-//
-    // 주소 정보 저장
-
-    shippingAddressService.addAddress(new ShippingAddressDto(member.getId(), address));
-    // 약관 동의 정보 저장
     termAgreeDao.insertTermAgreements(termAgreeDtos);
+    logger.info("Term agreements saved for member ID: {}", member.getId());
+
+    // 3. 주소 정보 저장
+    ShippingAddressDto shippingAddress = new ShippingAddressDto(member.getId(), address);
+    logger.info("Attempting to save shipping address: {}", shippingAddress.getAddress());
+    shippingAddressService.addAddress(shippingAddress);
+    logger.info("Shipping address saved for member ID: {}", member.getId());
   }
 
   private List<TermAgreeDto> createTermAgreeDtos(String memberId, List<Integer> requiredTermIds, List<Integer> optionalTermIds) {
@@ -55,7 +68,6 @@ public class SignUpServiceImpl implements SignUpService {
 
     // null 체크 후 빈 리스트로 초기화 (선택 약관)
     List<Integer> finalOptionalTermIds = optionalTermIds == null ? List.of() : optionalTermIds;
-
 
     // termService.getAllTerms()를 변수에 저장
     List<TermDto> allTerms = termService.getAllTerms(); // 최종적으로 모든 약관을 가져옵니다.
@@ -89,11 +101,7 @@ public class SignUpServiceImpl implements SignUpService {
             .collect(Collectors.toList());
 
     // 선택 약관 (동의한 것과 동의하지 않은 것)만 반환
-    List<TermAgreeDto> allOptionalTermAgreeDtos = Stream.concat(
-                    optionalTermAgreeDtos.stream(), nonAgreedOptionalTerms.stream())
+    return Stream.concat(optionalTermAgreeDtos.stream(), nonAgreedOptionalTerms.stream())
             .collect(Collectors.toList());
-
-    return allOptionalTermAgreeDtos;
   }
-
 }

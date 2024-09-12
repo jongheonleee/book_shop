@@ -9,10 +9,15 @@ import java.util.List;
 
 @Repository
 public class AdminDaoImpl implements AdminDao {
-    @Autowired
-    SqlSession sqlSession;
 
     String namespace = "com.fastcampus.ch4.dao.admin.AdminMapper.";
+
+    private final SqlSession sqlSession;
+
+    @Autowired
+    public AdminDaoImpl(SqlSession sqlSession) {
+        this.sqlSession = sqlSession;
+    }
 
     @Override
     public int count() {

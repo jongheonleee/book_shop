@@ -27,7 +27,7 @@ public class BookServiceImplTest {
     BookService bookService;
 
     // 테스트 데이터 주입
-    public void writeTestData(int num){
+    public void writeTestData(int num) {
         // 데이터 주입
         for (int i = 1; i <= num; i++) {
             BookDto bookDto = new BookDto(
@@ -69,7 +69,7 @@ public class BookServiceImplTest {
                     "wr_name" + i,               // wr_name
                     "ts_name" + i                // trl_name
             );
-            bookService.write(bookDto);
+            bookService.register(bookDto);
         }
     }
 
@@ -176,7 +176,7 @@ public class BookServiceImplTest {
                     "wr_name" + i,               // wr_name
                     "ts_name" + i                // trl_name
             );
-            bookService.write(bookDto);
+            bookService.register(bookDto);
         }
 
         /*
@@ -251,12 +251,12 @@ public class BookServiceImplTest {
                     "wr_name" + i,               // wr_name
                     "ts_name" + i                // trl_name
             );
-            bookService.write(bookDto);
+            bookService.register(bookDto);
         }
         assertTrue(bookService.getCountBook() == 3);
         // 예상결과: 3개 --> 2개
         String writer = bookDto.getRegi_id();
-        bookService.remove(bookService.getAllBookList().get(0).getIsbn(), writer);
+        assertTrue(bookService.remove(bookService.getAllBookList().get(0).getIsbn(), writer));
         // 똑같은거 읽어와서 확인
         assertTrue(bookService.getCountBook() == 2);
     }
@@ -304,12 +304,12 @@ public class BookServiceImplTest {
                 "wr_name",               // wr_name
                 "ts_name"                // trl_name
         );
-        bookService.write(bookDto);
+        bookService.register(bookDto);
 
         String wrongIsbn = bookService.getAllBookList().get(0).getIsbn() + 111;
         String writer = "test";
         // 잘못된 isbn주고 삭제
-        bookService.remove(wrongIsbn, writer);
+        assertTrue(bookService.remove(wrongIsbn, writer));
         assertTrue(bookService.getCountBook() == 1);
     }
 
@@ -356,7 +356,7 @@ public class BookServiceImplTest {
                 "wr_name",               // wr_name
                 "ts_name"                // trl_name
         );
-        bookService.write(bookDto);
+        bookService.register(bookDto);
         assertTrue(bookService.getCountBook() == 1);
     }
 
@@ -403,12 +403,12 @@ public class BookServiceImplTest {
                 "wr_name",               // wr_name
                 "ts_name"                // trl_name
         );
-        bookService.write(bookDto);
+        bookService.register(bookDto);
         assertTrue(bookService.getCountBook() == 1);
 
         // 중복값 불가 - DuplicateKeyException발생
         bookDto = bookService.getAllBookList().get(0);
-        bookService.write(bookDto);
+        bookService.register(bookDto);
     }
 
     // Not_Null에 Null넣기
@@ -457,7 +457,7 @@ public class BookServiceImplTest {
                 "ts_name"                // trl_name
         );
 
-        bookService.write(bookDto);
+        bookService.register(bookDto);
     }
 
     // 도메인 범위 넘어서는 값 넣기
@@ -507,7 +507,7 @@ public class BookServiceImplTest {
                 "ts_name"                // trl_name
         );
 
-        bookService.write(bookDto);
+        bookService.register(bookDto);
     }
 
     // 전체 조회
@@ -557,7 +557,7 @@ public class BookServiceImplTest {
                 "wr_name",               // wr_name
                 "ts_name"                // trl_name
         );
-        bookService.write(bookDto);
+        bookService.register(bookDto);
         assertTrue(bookService.getCountBook() == 1);
         bookList = bookService.getAllBookList();
         assertTrue(bookList.size() == 1);
@@ -613,7 +613,7 @@ public class BookServiceImplTest {
                 "wr_name",               // wr_name
                 "ts_name"                // trl_name
         );
-        bookService.write(bookDto);
+        bookService.register(bookDto);
         assertTrue(bookService.getCountBook() == 1);
 
         //isbn 가져오기
@@ -675,7 +675,7 @@ public class BookServiceImplTest {
                 "wr_name",               // wr_name
                 "ts_name"                // trl_name
         );
-        bookService.write(bookDto);
+        bookService.register(bookDto);
         assertTrue(bookService.getCountBook() == 1);
 
         //isbn 가져오기
@@ -734,7 +734,7 @@ public class BookServiceImplTest {
                 "wr_name",               // wr_name
                 "ts_name"                // trl_name
         );
-        bookService.write(bookDto);
+        bookService.register(bookDto);
         assertTrue(bookService.getCountBook() == 1);
 
         // NOT NULL에 NULL
@@ -788,7 +788,7 @@ public class BookServiceImplTest {
                 "wr_name",               // wr_name
                 "ts_name"                // trl_name
         );
-        bookService.write(bookDto);
+        bookService.register(bookDto);
         assertTrue(bookService.getCountBook() == 1);
 
         // 도메인 범위 벗어난 값 업데이트

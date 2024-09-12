@@ -77,9 +77,15 @@
             <if test="pswd != null">pswd = #{pswd},</if>
             <if test="phnNumb != null">phn_numb = #{phnNumb},</if>
             <if test="email != null">email = #{email},</if>
+            <if test="failLognAtmt != null">fail_logn_atmt = #{failLognAtmt},</if> <!-- 로그인 실패 횟수 업데이트 -->
+            <if test="acntLock != null">acnt_lock = #{acntLock},</if> <!-- 계정 잠금 여부 업데이트 -->
+            <if test="mailTokn != null">mail_tokn = #{mailTokn},</if> <!-- 토큰 업데이트 -->
+<!--            <if test="role != null">role = #{role},</if> &lt;!&ndash; 역할 업데이트 &ndash;&gt;-->
         </set>
         WHERE id = #{id}
     </update>
+
+
 
 
     <delete id="deleteMember" parameterType="String">
@@ -123,9 +129,9 @@
         VALUES (#{id}, #{termId}, #{termAgree}, #{regDate}, #{regId}, #{upDate}, #{upId})
     </insert>
     <!-- 토큰으로 회원 조회 -->
-    <select id="selectMemberByToken" parameterType="String" resultType="com.fastcampus.ch4.dto.member.MemberDto">
+    <select id="selectMemberByToken" parameterType="String" resultMap="memberResultMap">
         SELECT *
-        FROM members
-        WHERE mail_tokn = #{token}
+        FROM member
+        WHERE mail_tokn = #{mailTokn}
     </select>
 </mapper>

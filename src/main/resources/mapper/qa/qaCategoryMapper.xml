@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fastcampus.ch4.QaCategoryMapper">
+
+  <insert id="insert" parameterType="QaCategoryDto">
+    INSERT INTO qa_cate
+    VALUES (#{qa_cate_num}, #{name}, #{comt}, now(),
+            #{reg_id}, now(), #{up_id}, #{chk_use});
+  </insert>
+
+  <select id="count" resultType="int">
+    SELECT COUNT(*)
+    FROM qa_cate;
+  </select>
+
+
+  <select id="selectAll" resultType="QaCategoryDto">
+    SELECT
+        qa_cate_num, name, comt, reg_date,
+        reg_id, up_date, up_id, chk_use
+    FROM qa_cate;
+  </select>
+
+  <select id="select" parameterType="string" resultType="QaCategoryDto">
+    SELECT
+      qa_cate_num, name, comt, reg_date,
+      reg_id, up_date, up_id, chk_use
+    FROM qa_cate
+    WHERE qa_cate_num = #{qa_cate_num};
+  </select>
+
+  <select id="selectByChkUse" parameterType="string" resultType="QaCategoryDto">
+    SELECT
+      qa_cate_num, name, comt, reg_date,
+      reg_id, up_date, up_id, chk_use
+    FROM qa_cate
+    WHERE chk_use = #{chk_use};
+  </select>
+
+  <update id="update" parameterType="QaCategoryDto">
+    UPDATE qa_cate
+    SET name = #{name}, comt = #{comt}, up_date = now(),
+        up_id = #{up_id}, chk_use = #{chk_use}
+    WHERE qa_cate_num = #{qa_cate_num};
+  </update>
+
+  <delete id="deleteAll">
+    DELETE
+    FROM qa_cate;
+  </delete>
+
+  <delete id="delete">
+    DELETE
+    FROM qa_cate
+    WHERE qa_cate_num = #{qa_cate_num};
+  </delete>
+</mapper>

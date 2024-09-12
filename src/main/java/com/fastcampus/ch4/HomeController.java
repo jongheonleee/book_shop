@@ -1,27 +1,39 @@
 package com.fastcampus.ch4;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
+/**
+ * Handles requests for the application home page.
+ */
 @Controller
 public class HomeController {
-
-	@RequestMapping("/home")
-	public String showHomePage(Model model) {
-
-		// 현재 서버 시간 가져오기
-		LocalDateTime now = LocalDateTime.now();
-		// 시간을 문자열로 포맷팅
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		String formattedNow = now.format(formatter);
-		// 모델에 시간 추가
-		model.addAttribute("serverTime", formattedNow);
-		return "home"; // home.jsp를 반환
-
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 */
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String home(Locale locale, Model model) {
+		logger.info("Welcome home! The client locale is {}.", locale);
+		
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+		
+		String formattedDate = dateFormat.format(date);
+		
+		model.addAttribute("serverTime", formattedDate );
+		
+		return "index";
 	}
+	
 }

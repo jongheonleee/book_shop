@@ -24,8 +24,6 @@ public class MemberDto {
   private LocalDateTime upDate; // 날짜를 LocalDateTime으로 처리
   private String upId;
 
-
-
   public MemberDto() {}
 
   public MemberDto(String id, String pswd  ) {
@@ -210,16 +208,4 @@ public class MemberDto {
             ", upId='" + upId + '\'' +
             '}';
   }
-
-
-//  public String getRole() {
-//    return role;
-//  }
-//
-//  public void setRole(String role) {
-//    this.role = role;
-//  }
-//
-//  private String role;
-
 }

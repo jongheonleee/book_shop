@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fastcampus.ch4.dao.item.BookMapper">
+    <!-- 책 전체 개수 카운트  -->
+    <select id="count" resultType="int">
+        SELECT count(*) FROM book
+    </select>
+
+    <!-- 도서 테이블 전체 삭제 -->
+    <delete id="deleteAll">
+        DELETE FROM book
+    </delete>
+
+    <!-- 집필기여자 테이블 전체 삭제 -->
+    <delete id="deleteAllFromWritingContributor">
+        DELETE FROM writing_contributor
+    </delete>
+
+    <!-- 도서기여자 테이블 전체 삭제 -->
+    <delete id="deleteAllFromBookContributor">
+        DELETE FROM book_contributor
+    </delete>
+
+    <!-- isbn 일치하면 삭제-->
+    <delete id="delete" parameterType="String">
+        DELETE FROM book WHERE isbn = #{isbn}
+    </delete>
+
+    <!-- BookDto 삽입 -->
+    <insert id="insert" parameterType="BookDto">
+        INSERT INTO book
+        (isbn, cate_num, title,
+         pub_name, pub_date, sale_stat,
+         sale_vol, papr_pric, e_pric,
+         papr_point,e_point, tot_page_num,
+         tot_book_num, sale_com, cont,
+         rating, info, intro_award,
+         rec, pub_review, pre_start_page,
+         pre_end_page, ebook_url, book_reg_date,
+         regi_id, reg_date, reg_id,up_date, up_id)
+        VALUES
+            (#{isbn}, #{cate_num}, #{title},
+             #{pub_name}, #{pub_date}, #{sale_stat},
+             #{sale_vol}, #{papr_pric}, #{e_pric},
+             #{papr_point}, #{e_point}, #{tot_page_num},
+             #{tot_book_num}, #{sale_com}, #{cont},
+             #{rating}, #{info}, #{intro_award},
+             #{rec}, #{pub_review}, #{pre_start_page},
+             #{pre_end_page},#{ebook_url}, #{book_reg_date},
+             #{regi_id}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), 'admin', DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), 'admin')
+    </insert>
+
+    <!--도서 이미지 테이블 인서트 -->
+    <insert id="insertToBookImage" parameterType="BookDto">
+        INSERT INTO book_image (isbn, img_seq, img_url, img_regi_day, reg_date, reg_id, up_date, up_id)
+        VALUES (#{isbn}, #{img_seq}, #{img_url}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "reg_id",DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "up_id")
+    </insert>
+
+    <!--집필 기여자 테이블 인서트 -->
+    <insert id="insertToWritingContributor" parameterType="BookDto">
+        <!-- 저자 삽입 조건 -->
+        <choose>
+            <when test="wr_chk=='Y'">
+                INSERT INTO writing_contributor (
+                cb_num,
+                name,
+                job1,
+                job2,
+                cont_desc,
+                wr_chk,
+                reg_date,
+                reg_id,
+                up_date,
+                up_id
+                )
+                VALUES (
+                #{cb_num},      <!-- 저자 기여자 번호 -->
+                #{name},        <!-- 저자 이름 -->
+                "job1",        <!-- 저자 직업1 -->
+                "job2",        <!-- 저자 직업2 -->
+                "wr_desc",   <!-- 저자 설명 -->
+                'Y',               <!-- wr_chk: 저자는 'Y' -->
+                DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),  <!-- 등록일시 -->
+                "reg_id",          <!-- reg_id를 고정된 값으로 사용 -->
+                DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),  <!-- 수정일시 -->
+                "up_id"            <!-- up_id를 고정된 값으로 사용 -->
+                );
+            </when>
+            <when test="wr_chk == 'N'">
+                INSERT INTO writing_contributor (
+                cb_num,
+                name,
+                job1,
+                job2,
+                cont_desc,
+                wr_chk,
+                reg_date,
+                reg_id,
+                up_date,
+                up_id
+                )
+                VALUES (
+                #{cb_num},      <!-- 번역가 기여자 번호 -->
+                #{name},        <!-- 번역가 이름 -->
+                "job1",        <!-- 저자 직업1 -->
+                "job2",        <!-- 저자 직업2 -->
+                "trl_desc",   <!-- 저자 설명 -->
+                'N',               <!-- wr_chk: 번역가는 'N' -->
+                DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),  <!-- 등록일시 -->
+                "reg_id",          <!-- reg_id를 고정된 값으로 사용 -->
+                DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),  <!-- 수정일시 -->
+                "up_id"            <!-- up_id를 고정된 값으로 사용 -->
+                );
+            </when>
+        </choose>
+    </insert>
+
+
+    <insert id="insertToBookContributor" parameterType="map">
+        INSERT INTO book_contributor (isbn, cb_num, reg_date, reg_id, up_date, up_id)
+        VALUES (#{isbn}, #{cb_num}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "reg_id", DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), "up_id")
+    </insert>
+
+    <!--동적 쿼리-->
+    <sql id="selectFromBook">
+        SELECT *
+        FROM book
+    </sql>
+
+    <!-- 전체 테이블 조회(등록일 내림차순)-->
+    <select id="selectAll" resultType="BookDto">
+        <include refid="selectFromBook"/>
+        ORDER BY reg_date DESC
+    </select>
+
+    <select id="selectMaxImgSeq" parameterType="String" resultType="int">
+        SELECT img_seq FROM book_image where isbn = #{isbn} ORDER BY img_seq DESC Limit 0,1;
+    </select>
+
+    <select id="selectWrSeq">
+        select nextval('wr_seq') from dual;
+    </select>
+
+    <select id="selectTrlSeq">
+        select nextval('trl_seq') from dual;
+    </select>
+
+    <!-- isbn으로 조회 -->
+    <select id="select" parameterType="String" resultType="BookDto">
+
+        SELECT
+        bi.img_url AS repre_img,
+        b.*,  <!-- 도서의 기본 정보 -->
+        c.name AS whol_layr_name,  <!-- 전체 카테고리명 -->
+        COALESCE(bdh.papr_disc, 0) AS papr_disc,  <!-- 종이책 할인율 -->
+        COALESCE(bdh.e_disc, 0) AS e_disc,  <!-- eBook 할인율 -->
+        (
+        SELECT wc.name
+        FROM writing_contributor wc
+        JOIN book_contributor bc ON wc.cb_num = bc.cb_num
+        WHERE bc.isbn = b.isbn
+        AND wc.wr_chk = 'Y'
+        LIMIT 1
+        ) AS wr_name,  <!-- 저자 이름 -->
+        (
+        SELECT wc.name
+        FROM writing_contributor wc
+        JOIN book_contributor bc ON wc.cb_num = bc.cb_num
+        WHERE bc.isbn = b.isbn
+        AND wc.wr_chk = 'N'
+        LIMIT 1
+        ) AS trl_name  <!-- 번역가 이름 -->
+        FROM
+        book b
+        LEFT JOIN
+        book_image bi ON b.isbn = bi.isbn AND bi.main_img_chk = 'Y'  <!-- 대표 이미지 -->
+        LEFT JOIN
+        book_disc_hist bdh ON b.isbn = bdh.isbn
+        AND NOW() BETWEEN bdh.disc_start_date AND bdh.disc_end_date
+        LEFT JOIN
+        category c ON b.cate_num = c.cate_num
+        WHERE b.isbn = #{isbn}
+    </select>
+
+    <!-- 수정 -->
+    <update id="update" parameterType="BookDto">
+        UPDATE book
+        SET
+            isbn = #{isbn}, cate_num = #{cate_num}, title = #{title},
+            pub_name = #{pub_name}, pub_date = #{pub_date}, sale_stat = #{sale_stat},
+            sale_vol = #{sale_vol}, papr_pric = #{papr_pric}, e_pric = #{e_pric},
+            papr_point = #{papr_point},e_point = #{e_point}, tot_page_num = #{tot_page_num},
+            tot_book_num = #{tot_book_num}, sale_com = #{sale_com}, cont = #{cont},
+            rating = #{rating}, info = #{info}, intro_award = #{intro_award},
+            rec = #{rec}, pub_review = #{pub_review}, pre_start_page = #{pre_start_page},
+            pre_end_page = #{pre_end_page}, ebook_url = #{ebook_url}, up_date = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), up_id = #{up_id}
+        WHERE isbn = #{isbn}
+    </update>
+
+    <!-- 판매량 증가 -->
+    <update id="increaseSaleVol" parameterType="Map">
+        UPDATE book
+        SET sale_vol = sale_vol + #{sale_quantity}
+        WHERE isbn = #{isbn}
+    </update>
+
+    <sql id="orderByCondition">
+        <choose>
+            <when test="order_criteria == 'book_reg_date'">
+                ORDER BY b.book_reg_date ${order_direction == 'DESC' ? 'DESC' : 'ASC'}
+            </when>
+            <when test="order_criteria == 'papr_disc_pric'">
+                ORDER BY (b.papr_pric * (1 - COALESCE(papr_disc, 0) / 100)) ${order_direction == 'DESC' ? 'DESC' : 'ASC'}
+            </when>
+            <when test="order_criteria == 'e_disc_pric'">
+                ORDER BY (b.e_pric * (1 - COALESCE(e_disc, 0) / 100)) ${order_direction == 'DESC' ? 'DESC' : 'ASC'}
+            </when>
+            <when test="order_criteria == 'sale_vol'">
+                ORDER BY b.sale_vol ${order_direction == 'DESC' ? 'DESC' : 'ASC'}
+            </when>
+            <when test="order_criteria == 'pub_date'">
+                ORDER ㅐㅔ샤ㅐㅜ b.pub_date ${order_direction == 'DESC' ? 'DESC' : 'ASC'}
+            </when>
+            <otherwise>
+                ORDER BY b.book_reg_date DESC
+            </otherwise>
+        </choose>
+    </sql>
+
+    <sql id="searchCondition">
+        <choose>
+            <when test='option=="T"'>
+                AND title LIKE concat('%', #{keyword}, '%')
+            </when>
+            <when test='option=="W"'>
+                AND EXISTS(
+                    SELECT 1
+                    FROM writing_contributor wc
+                    JOIN book_contributor bc ON wc.cb_num = bc.cb_num
+                    WHERE bc.isbn = b.isbn
+                    AND wc.wr_chk = 'Y'
+                    AND wc.name LIKE concat('%', #{keyword}, '%')
+                )
+            </when>
+            <when test='option=="P"'>
+                AND pub_name LIKE concat('%', #{keyword}, '%')
+            </when>
+        </choose>
+    </sql>
+
+    <!-- 선택된 페이지 가져오기 -->
+    <select id="selectPage" parameterType="map" resultType="BookDto">
+        SELECT
+        bi_main.img_url AS repre_img,
+        b.*,  <!-- 도서의 기본 정보 -->
+        (
+        SELECT c.name
+        FROM category c
+        WHERE c.cate_num = b.cate_num
+        LIMIT 1
+        ) AS whol_layr_name,  <!-- 전체 카테고리명 -->
+        COALESCE(
+        (
+        SELECT bdh.papr_disc
+        FROM book_disc_hist bdh
+        WHERE bdh.isbn = b.isbn
+        AND NOW() BETWEEN bdh.disc_start_date AND bdh.disc_end_date
+        LIMIT 1
+        ), 0
+        ) AS papr_disc,  <!-- 종이책 할인율 -->
+        COALESCE(
+        (
+        SELECT bdh.e_disc
+        FROM book_disc_hist bdh
+        WHERE bdh.isbn = b.isbn
+        AND NOW() BETWEEN bdh.disc_start_date AND bdh.disc_end_date
+        LIMIT 1
+        ), 0
+        ) AS e_disc,  <!-- eBook 할인율 -->
+        (
+        SELECT wc.name
+        FROM writing_contributor wc
+        JOIN book_contributor bc ON wc.cb_num = bc.cb_num
+        WHERE bc.isbn = b.isbn
+        AND wc.wr_chk = 'Y'
+        LIMIT 1
+        ) AS wr_name,  <!-- 저자 이름 -->
+        (
+        SELECT wc.name
+        FROM writing_contributor wc
+        JOIN book_contributor bc ON wc.cb_num = bc.cb_num
+        WHERE bc.isbn = b.isbn
+        AND wc.wr_chk = 'N'
+        LIMIT 1
+        ) AS trl_name  <!-- 번역가 이름 -->
+        FROM
+        book b
+        LEFT JOIN
+        book_image bi_main ON b.isbn = bi_main.isbn AND bi_main.main_img_chk = 'Y'  <!-- 대표 이미지 -->
+        <include refid="orderByCondition"/>
+        LIMIT #{offset}, #{pageSize} <!-- 페이지네이션 -->
+    </select>
+
+    <!-- 검색된 페이지 가져오기 -->
+    <select id="searchSelectPage" parameterType="BookSearchCondition" resultType="BookDto">
+        SELECT
+        bi_main.img_url AS repre_img,
+        b.*,  <!-- 도서의 기본 정보 -->
+        (
+        SELECT c.name
+        FROM category c
+        WHERE c.cate_num = b.cate_num
+        LIMIT 1
+        ) AS whol_layr_name,  <!-- 전체 카테고리명 -->
+        COALESCE(
+        (
+        SELECT bdh.papr_disc
+        FROM book_disc_hist bdh
+        WHERE bdh.isbn = b.isbn
+        AND NOW() BETWEEN bdh.disc_start_date AND bdh.disc_end_date
+        LIMIT 1
+        ), 0
+        ) AS papr_disc,  <!-- 종이책 할인율 -->
+        COALESCE(
+        (
+        SELECT bdh.e_disc
+        FROM book_disc_hist bdh
+        WHERE bdh.isbn = b.isbn
+        AND NOW() BETWEEN bdh.disc_start_date AND bdh.disc_end_date
+        LIMIT 1
+        ), 0
+        ) AS e_disc,  <!-- eBook 할인율 -->
+        (
+        SELECT wc.name
+        FROM writing_contributor wc
+        JOIN book_contributor bc ON wc.cb_num = bc.cb_num
+        WHERE bc.isbn = b.isbn
+        AND wc.wr_chk = 'Y'
+        LIMIT 1
+        ) AS wr_name,  <!-- 저자 이름 -->
+        (
+        SELECT wc.name
+        FROM writing_contributor wc
+        JOIN book_contributor bc ON wc.cb_num = bc.cb_num
+        WHERE bc.isbn = b.isbn
+        AND wc.wr_chk = 'N'
+        LIMIT 1
+        ) AS trl_name  <!-- 번역가 이름 -->
+        FROM
+        book b
+        LEFT JOIN
+        book_image bi_main ON b.isbn = bi_main.isbn AND bi_main.main_img_chk = 'Y'  <!-- 대표 이미지 -->
+        WHERE true
+            <include refid="searchCondition"/>
+            <include refid="orderByCondition"/>
+        LIMIT #{offset}, #{pageSize} <!-- 페이지네이션 -->
+    </select>
+
+    <!-- 검색된 페이지 총 개수 가져오기 -->
+    <select id="searchResultCnt" parameterType="BookSearchCondition" resultType="int">
+        SELECT COUNT(*)
+        FROM (
+            SELECT
+            bi_main.img_url AS repre_img,
+            b.*,  <!-- 도서의 기본 정보 -->
+            (
+            SELECT c.name
+            FROM category c
+            WHERE c.cate_num = b.cate_num
+            LIMIT 1
+            ) AS whol_layr_name,  <!-- 전체 카테고리명 -->
+            COALESCE(
+            (
+            SELECT bdh.papr_disc
+            FROM book_disc_hist bdh
+            WHERE bdh.isbn = b.isbn
+            AND NOW() BETWEEN bdh.disc_start_date AND bdh.disc_end_date
+            LIMIT 1
+            ), 0
+            ) AS papr_disc,  <!-- 종이책 할인율 -->
+            COALESCE(
+            (
+            SELECT bdh.e_disc
+            FROM book_disc_hist bdh
+            WHERE bdh.isbn = b.isbn
+            AND NOW() BETWEEN bdh.disc_start_date AND bdh.disc_end_date
+            LIMIT 1
+            ), 0
+            ) AS e_disc,  <!-- eBook 할인율 -->
+            (
+            SELECT wc.name
+            FROM writing_contributor wc
+            JOIN book_contributor bc ON wc.cb_num = bc.cb_num
+            WHERE bc.isbn = b.isbn
+            AND wc.wr_chk = 'Y'
+            LIMIT 1
+            ) AS wr_name,  <!-- 저자 이름 -->
+            (
+            SELECT wc.name
+            FROM writing_contributor wc
+            JOIN book_contributor bc ON wc.cb_num = bc.cb_num
+            WHERE bc.isbn = b.isbn
+            AND wc.wr_chk = 'N'
+            LIMIT 1
+            ) AS trl_name  <!-- 번역가 이름 -->
+            FROM
+            book b
+            LEFT JOIN
+            book_image bi_main ON b.isbn = bi_main.isbn AND bi_main.main_img_chk = 'Y'  <!-- 대표 이미지 -->
+            WHERE true
+                <include refid="searchCondition"/>
+        ) AS Temp
+    </select>
+</mapper>

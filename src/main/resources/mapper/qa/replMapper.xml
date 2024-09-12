@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fastcampus.ch4.ReplMapper">
+  <insert id="insert" parameterType="ReplyDto">
+    INSERT INTO
+    qa_repl(qa_num, writer, content, created_at, comt, reg_date, reg_id, up_date, up_id)
+    VALUES (#{qa_num}, #{writer}, #{content}, now(), #{comt}, now(), #{reg_id}, now(), #{up_id});
+  </insert>
+
+  <select id="count" resultType="int">
+    SELECT COUNT(*)
+    FROM qa_repl;
+  </select>
+
+  <select id="select" parameterType="int" resultType="ReplyDto">
+    SELECT
+      qa_num, writer, content, created_at, comt,
+      reg_date, reg_id, up_date, up_id
+    FROM qa_repl
+    WHERE qa_num = #{qa_num};
+  </select>
+
+  <select id="selectAll" resultType="ReplyDto">
+    SELECT
+      qa_num, writer, content, created_at, comt,
+      reg_date, reg_id, up_date, up_id
+    FROM qa_repl
+  </select>
+
+  <update id="update" parameterType="ReplyDto">
+    update qa_repl
+    set writer = #{writer},
+        content = #{content},
+        created_at = now(),
+        comt = #{comt},
+        up_date = now(),
+        up_id = #{up_id}
+    where qa_num = #{qa_num};
+  </update>
+
+  <delete id="delete" parameterType="int">
+    DELETE
+    FROM qa_repl
+    WHERE qa_num = #{qa_num};
+  </delete>
+
+  <delete id="deleteAll">
+    DELETE
+    FROM qa_repl;
+  </delete>
+</mapper>

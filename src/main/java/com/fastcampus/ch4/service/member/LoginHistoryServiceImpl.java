@@ -14,7 +14,6 @@ public class LoginHistoryServiceImpl implements LoginHistoryService {
 
   @Override
   public void saveLoginHistory(LoginHistoryDto loginHistory) {
-    System.out.println("Saving login history: " + loginHistory);
     loginHistoryDao.insertLoginHistory(loginHistory);
   }
 
@@ -28,4 +27,3 @@ public class LoginHistoryServiceImpl implements LoginHistoryService {
     loginHistoryDao.deleteAll();
   }
 }
-

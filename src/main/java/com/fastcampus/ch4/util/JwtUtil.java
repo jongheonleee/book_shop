@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.util.*;
 
 @Component
 @PropertySource("classpath:properties/jwt.properties")
@@ -22,6 +22,10 @@ public class JwtUtil {
     @Value("${jwt.signature_algorithm}")
     private String signatureAlgorithm;
 
+    // secretKey를 Base64로 인코딩하여 반환하는 메서드
+    private String getBase64EncodedSecretKey() {
+        return Base64.getEncoder().encodeToString(secretKey.getBytes());
+    }
 
     public String generateToken(String id) {
         // signatureAlgorithm을 SignatureAlgorithm Enum으로 변환
@@ -33,12 +37,8 @@ public class JwtUtil {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .claim("userID", id)
-                .signWith(algorithm, secretKey)  // Base64 인코딩 없이 비밀키 사용
+                .signWith(algorithm, secretKey)
                 .compact();
-
-        System.out.println("jwtUtils 생성된 토큰: " + generatedToken);
-        System.out.println("사용한 비밀키: " + secretKey);
-        System.out.println("사용한 알고리즘: " + algorithm);
         return generatedToken;
     }
 

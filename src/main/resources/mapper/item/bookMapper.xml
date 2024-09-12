@@ -54,6 +54,31 @@
     </delete>
 
     <!-- isbn 일치하면 삭제-->
+    <delete id="deleteBookForAdmin" parameterType="String">
+        DELETE FROM book WHERE isbn = #{isbn}
+    </delete>
+
+    <!-- isbn 일치하면 삭제-->
+    <delete id="deleteBookDiscHistForAdmin" parameterType="String">
+        DELETE FROM book_disc_hist WHERE isbn = #{isbn}
+    </delete>
+
+    <!-- isbn 일치하면 삭제-->
+    <delete id="deleteBookImageForAdmin" parameterType="String">
+        DELETE FROM book_image WHERE isbn = #{isbn}
+    </delete>
+
+    <!-- isbn 일치하면 삭제-->
+    <delete id="deleteBookContributorForAdmin" parameterType="String">
+        DELETE FROM book_contributor WHERE isbn = #{isbn}
+    </delete>
+
+    <!-- isbn 일치하면 삭제-->
+    <delete id="deleteWritingContributorForAdmin" parameterType="String">
+        DELETE FROM book_contributor WHERE isbn = #{isbn}
+    </delete>
+
+    <!-- isbn 일치하면 삭제-->
     <delete id="deleteBook" parameterType="map">
         DELETE FROM book WHERE isbn = #{isbn} and regi_id = #{writer}
     </delete>

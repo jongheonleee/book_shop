@@ -3,6 +3,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<c:set var="loginId" value="${pageContext.request.getSession(false)==null ? '' : pageContext.request.session.getAttribute('id')}"/>
+<c:set var="loginOutLink" value="${loginId=='' ? '/member/login' : '/member/logout'}"/>
+<c:set var="loginOut" value="${loginId=='' ? 'Login' : 'ID='+=loginId}"/>
 <%-- 기본값 설정 --%>
 <%
     String orderCriteria = request.getParameter("order_criteria") != null ? request.getParameter("order_criteria") : "book_reg_date";
@@ -23,8 +26,8 @@
         <li id="logo">fastcampus</li>
         <li><a href="<c:url value='/'/>">Home</a></li>
         <li><a href="<c:url value='/book/list'/>">BookList</a></li>
-        <li><a href="<c:url value='/login/login'/>">Login</a></li>
-        <li><a href="<c:url value='/register/add'/>">Sign in</a></li>
+        <li><a href="<c:url value='${loginOutLink}'/>">${loginOut}</a></li>
+        <li><a href="<c:url value='/singup'/>">Sign in</a></li>
     </ul>
 </div>
 <script>

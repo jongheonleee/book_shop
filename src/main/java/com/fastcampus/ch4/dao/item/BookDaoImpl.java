@@ -122,6 +122,31 @@ public class BookDaoImpl implements BookDao {
         return session.delete(namespace + "deleteWritingContributor", map);
     }
 
+    @Override
+    public int deleteBookForAdmin(String isbn) { // isbn과 pub_num일치하면 삭제. 삭제된 로우수 반환
+        return session.delete(namespace + "deleteBookForAdmin", isbn);
+    }
+
+    @Override
+    public int deleteBookDiscHistForAdmin(String isbn) { // isbn과 pub_num일치하면 삭제. 삭제된 로우수 반환
+        return session.delete(namespace + "deleteBookDiscHistForAdmin", isbn);
+    }
+
+    @Override
+    public int deleteBookImageForAdmin(String isbn) { // isbn과 pub_num일치하면 삭제. 삭제된 로우수 반환
+        return session.delete(namespace + "deleteBookImageForAdmin", isbn);
+    }
+
+    @Override
+    public int deleteBookContributorForAdmin(String isbn) { // isbn과 pub_num일치하면 삭제. 삭제된 로우수 반환
+        return session.delete(namespace + "deleteBookContributorForAdmin", isbn);
+    }
+
+    @Override
+    public int deleteWritingContributorForAdmin(String isbn) { // isbn과 pub_num일치하면 삭제. 삭제된 로우수 반환
+        return session.delete(namespace + "deleteWritingContributorForAdmin", isbn);
+    }
+
 
     // BookDto 삽입.
     @Override

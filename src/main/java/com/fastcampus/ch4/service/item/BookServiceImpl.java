@@ -38,14 +38,14 @@ public class BookServiceImpl implements com.fastcampus.ch4.service.item.BookServ
     // 2. 도서 상품 등록
     @Override
     @Transactional
-    public void write(BookDto bookDto) {
-        // sale_stat 임의 설정
-//        bookDto.setSale_stat("판매중");
+    public void register(BookDto bookDto) {
         // e_book_url 임의 설정
         bookDto.setEbook_url("");
+        // 책 등록일 현재 일자로 등록
+        bookDto.setBook_reg_date(new Date());
 
         // 도서 테이블 인서트
-        int result = bookDao.insertBook(bookDto);
+        bookDao.insertBook(bookDto);
 
         /* 도서 이미지 인서트 - ISBN, 일련번호, 이미지 URL(repre_img) */
         BookImageDto bookImageDto = null;
@@ -133,7 +133,7 @@ public class BookServiceImpl implements com.fastcampus.ch4.service.item.BookServ
     // 6. 도서 삭제 - isbn 일치 확인
     @Override
     @Transactional
-    public void remove(String isbn, String writer) {
+    public boolean remove(String isbn, String writer) {
         /*
             삭제 대상(isbn으로 조회)
             (1) book 테이블
@@ -141,10 +141,29 @@ public class BookServiceImpl implements com.fastcampus.ch4.service.item.BookServ
             (3) book_disc_hist 테이블
             (4) book_contributor 테이블
          */
-        bookDao.deleteBook(isbn, writer);
-        bookDao.deleteBookImage(isbn,writer);
-        bookDao.deleteBookDiscHist(isbn,writer);
-        bookDao.deleteBookContributor(isbn,writer);
+        int rowCntBook = bookDao.deleteBook(isbn, writer);
+        int rowCntBookImage = bookDao.deleteBookImage(isbn,writer);
+        int rowCntBookDiscHist = bookDao.deleteBookDiscHist(isbn,writer);
+        int rowCntBookContributor = bookDao.deleteBookContributor(isbn,writer);
+        return (rowCntBook != 0 && rowCntBookImage != 0 && rowCntBookContributor != 0);
+    }
+
+    // 6. 도서 삭제 - isbn 일치 확인
+    @Override
+    @Transactional
+    public boolean removeForAdmin(String isbn) {
+        /*
+            삭제 대상(isbn으로 조회)
+            (1) book 테이블
+            (2) book_image테이블
+            (3) book_disc_hist 테이블
+            (4) book_contributor 테이블
+         */
+        int rowCntBook = bookDao.deleteBookForAdmin(isbn);
+        int rowCntBookImage = bookDao.deleteBookImageForAdmin(isbn);
+        int rowCntBookDiscHist = bookDao.deleteBookDiscHistForAdmin(isbn);
+        int rowCntBookContributor = bookDao.deleteBookContributorForAdmin(isbn);
+        return (rowCntBook != 0 && rowCntBookImage != 0 && rowCntBookContributor != 0);
     }
 
     // 7. 선택된 페이지 가져오기.

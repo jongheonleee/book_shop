@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/member")
@@ -36,53 +38,45 @@ public class LoginController {
 
   @RequestMapping("/login")
   public String showLoginForm() {
-    return "member/login"; // 로그인 페이지 JSP
+    return "member/loginForm"; // 로그인 페이지 JSP
   }
 
   @PostMapping("/login")
-  public String login(@RequestParam("id") String id,
-                      @RequestParam("pswd") String password,
-                      HttpServletRequest request,
-                      HttpServletResponse response,
-                      Model model) {
+  public ResponseEntity<?> login(@RequestParam("id") String id,
+                                 @RequestParam("pswd") String password,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response,
+                                 String toURL) {
+    Map<String, Object> result = new HashMap<>();
     try {
       boolean isAuthenticated = memberAuthenticationService.login(id, password, request);
+      toURL = (toURL == null || toURL.isEmpty()) ? "/ch4" : toURL;
+      System.out.println("toURL = " + toURL);
 
       if (isAuthenticated) {
         // 로그인 성공 시 세션에 사용자 정보를 저장
         request.getSession().setAttribute("id", id);
-        model.addAttribute("message", "환영합니다, " + id + "님!");
 
         // JWT 토큰 생성
         String token = jwtUtil.generateToken(id);
-        System.out.println("로그인 컨트롤러 생성된 토큰:" + token);
-        System.out.println(jwtUtil.validateToken(token));
-        // 응답 헤더에 JWT 토큰 추가
         response.setHeader("Authorization", "Bearer " + token);
 
-        // 세션에 사용자 정보 저장 (필요한 경우)
-//        request.getSession().setAttribute("token", token);
-
-        // 로그인 성공 시 홈으로 리디렉션
-        return "index";
+        // 로그인 성공 시 리다이렉트할 URL 전달
+        result.put("redirectUrl", toURL);
+        result.put("token", token);
+        return ResponseEntity.ok(result);
       } else {
-        // 로그인 실패 처리
         MemberDto member = memberManagementService.getMemberById(id);
-        if (member != null) {
-          if ("Y".equals(member.getAcntLock())) {
-            model.addAttribute("error", "비밀번호를 3회 이상 틀렸습니다. 계정이 잠겼습니다.");
-            return "/member/enter-token";  // 비밀번호 재설정 페이지로 리디렉션
-          } else {
-            model.addAttribute("error", "잘못된 비밀번호입니다. 남은 기회: " + (3 - member.getFailLognAtmt()));
-          }
+        if (member != null && "Y".equals(member.getAcntLock())) {
+          result.put("redirectUrl", "/member/enter-token");
         } else {
-          model.addAttribute("error", "존재하지 않는 사용자입니다.");
+          result.put("redirectUrl", "/member/loginForm");
         }
-        return "/member/login";  // 로그인 실패 시 로그인 페이지로 리디렉션
+        return ResponseEntity.ok(result);
       }
     } catch (Exception e) {
-      model.addAttribute("error", "로그인 처리 중 오류가 발생했습니다: " + e.getMessage());
-      return "/member/login";  // 오류 발생 시 로그인 페이지로 리디렉션
+      result.put("redirectUrl", "/member/loginForm");
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
     }
   }
 

@@ -31,11 +31,11 @@
         INSERT INTO member (
             id, pswd, email, phn_numb, join_date, fail_logn_atmt, acnt_lock,
             is_mail_vrfi, mail_tokn, name, brth_date, is_acnt_actv, ads_rece_mthd,
-            grad, is_canc, reg_date, reg_id, up_date, up_id, role
+            grad, is_canc, reg_date, reg_id, up_date, up_id
         ) VALUES (
                      #{id}, #{pswd}, #{email}, #{phnNumb}, #{joinDate}, #{failLognAtmt}, #{acntLock},
                      #{isMailVrfi}, #{mailTokn}, #{name}, #{brthDate}, #{isAcntActv}, #{adsReceMthd},
-                     #{grad}, #{isCanc}, #{regDate}, #{regId}, #{upDate}, #{upId}, #{role}
+                     #{grad}, #{isCanc}, #{regDate}, #{regId}, #{upDate}, #{upId}
                  );
     </insert>
 
@@ -80,7 +80,7 @@
             <if test="failLognAtmt != null">fail_logn_atmt = #{failLognAtmt},</if> <!-- 로그인 실패 횟수 업데이트 -->
             <if test="acntLock != null">acnt_lock = #{acntLock},</if> <!-- 계정 잠금 여부 업데이트 -->
             <if test="mailTokn != null">mail_tokn = #{mailTokn},</if> <!-- 토큰 업데이트 -->
-            <if test="role != null">role = #{role},</if> <!-- 역할 업데이트 -->
+<!--            <if test="role != null">role = #{role},</if> &lt;!&ndash; 역할 업데이트 &ndash;&gt;-->
         </set>
         WHERE id = #{id}
     </update>

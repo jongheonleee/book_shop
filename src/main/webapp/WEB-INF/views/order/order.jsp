@@ -132,7 +132,7 @@
             await widgets.requestPayment({
                 orderId: "orderId" + orderViewDto['orderDto']['ord_seq'],
                 orderName: orderViewDto['orderProductDtoList'][0]['book_title'] + " 외 " + (orderViewDto['orderProductDtoList'].length - 1) +"건",
-                successUrl: window.location.origin + "/success.html",
+                successUrl: window.location.origin + "/ch4/order/success",
                 failUrl: window.location.origin + "/fail.html",
                 customerEmail: "test@gmail.com",
                 customerName: orderViewDto['orderDto']['cust_id'],

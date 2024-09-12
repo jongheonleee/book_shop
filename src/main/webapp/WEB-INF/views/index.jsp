@@ -1,7 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false"%>
-<c:set var="loginId" value="${pageContext.request.getSession(false)==null ? '' : pageContext.request.session.getAttribute('id')}"/>
+<%@ page session="false" %>
+<c:set var="loginId"
+       value="${pageContext.request.getSession(false)==null ? '' : pageContext.request.session.getAttribute('id')}"/>
 <c:set var="loginOutLink" value="${loginId=='' ? '/member/login' : '/member/logout'}"/>
 <c:set var="loginOut" value="${loginId=='' ? 'Login' : 'ID='+=loginId}"/>
 <!DOCTYPE html>
@@ -26,7 +27,7 @@
             padding: 10px;
             display: flex;
             flex-direction: column;
-            z-index: 10000;  /* z-index 값을 높게 설정 */
+            z-index: 10000; /* z-index 값을 높게 설정 */
         }
 
         .chat-container.minimized {
@@ -168,7 +169,7 @@
     <div class="messages" id="messages"></div>
 
     <form class="input-form" onsubmit="sendMessage(event)">
-        <input type="text" id="user_input" placeholder="채팅을 입력하세요 : " required />
+        <input type="text" id="user_input" placeholder="채팅을 입력하세요 : " required/>
         <button type="submit">전송</button>
     </form>
 </div>
@@ -186,7 +187,7 @@
         // 로컬 스토리지에서 JWT 토큰 가져오기
         const token = localStorage.getItem('token');  // 'token'이 로컬 스토리지에 저장된 이름
         console.log("저장된 토큰: " + token)
-        fetch('http://127.0.0.1:8000/', {
+        fetch('http://127.0.0.1:8000/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -208,46 +209,40 @@
                 messages.appendChild(userMessage);
 
                 // 봇의 응답 처리
-                if (data.bot_response) {
+                if (data['bot_response']) {
                     const botMessage = document.createElement('div');
                     botMessage.classList.add('message', 'bot');
 
-                    // 책 정보가 있는 경우
-                    if (data.books && data.books.length > 0) {
-                        botMessage.innerHTML = "🤖: 다음은 검색된 책들입니다:<br>";
-                        data.books.forEach(function (book) {
-                            botMessage.innerHTML +=
-                                "<div class='book-block'>" +
-                                "<h4>" + book.title + "</h4>" +
-                                "<p><strong>ISBN:</strong> " + book.isbn + "</p>" +
-                                "<p><strong>출판사:</strong> " + book.pub_name + "</p>" +
-                                "<p><strong>출판일:</strong> " + book.pub_date + "</p>" +
-                                "<p><strong>판매 상태:</strong> " + book.sale_stat + "</p>" +
-                                "<p><strong>판매량:</strong> " + book.sale_vol + "</p>" +
-                                "<p><strong>종이책 가격:</strong> " + book.papr_pric + "원</p>" +
-                                "<p><strong>전자책 가격:</strong> " + book.e_pric + "원</p>" +
-                                "<p><strong>판매 회사:</strong> " + book.sale_com + "</p>" +
-                                "<p><strong>출판사 리뷰:</strong> " + book.pub_review + "</p>" +
-                                "</div>";
-                        });
-                    }
-
-                    // FAQ 정보가 있는 경우
-                    if (data.faqs && data.faqs.length > 0) {
-                        botMessage.innerHTML += "🤖: 다음은 검색된 FAQ 항목들입니다:<br>";
-                        data.faqs.forEach(function(faq) {
-                            botMessage.innerHTML +=
-                                "<div class='faq-block'>" +
-                                "<h4>" + faq.title + "</h4>" +
-                                "<p>" + faq.cont + "</p>" +
-                                "<p><strong>조회수:</strong> " + faq.view_cnt + "</p>" +
-                                "</div>";
-                        });
-                    }
-
                     // 일반 텍스트 응답 처리
-                    if ((!data.books || data.books.length === 0) && (!data.faqs || data.faqs.length === 0)) {
-                        botMessage.textContent = "🤖: " + data.bot_response;
+                    botMessage.innerHTML = "🤖: " + data['bot_response'] + "<br>";
+
+                    if (data.content.length > 0) {
+                        data.content.forEach(content => {
+                            if (content['reply_type'] === "book") {
+                                console.log(content);
+                                botMessage.innerHTML +=
+                                    "<div class='book-block'>" +
+                                    "<h4>" + content.title + "</h4>" +
+                                    "<p><strong>ISBN:</strong> " + content.isbn + "</p>" +
+                                    "<p><strong>출판사:</strong> " + content['pub_name'] + "</p>" +
+                                    "<p><strong>출판일:</strong> " + content['pub_date'] + "</p>" +
+                                    "<p><strong>판매 상태:</strong> " + content['sale_stat'] + "</p>" +
+                                    "<p><strong>판매량:</strong> " + content['sale_vol'] + "</p>" +
+                                    "<p><strong>종이책 가격:</strong> " + content['papr_pric'] + "원</p>" +
+                                    "<p><strong>전자책 가격:</strong> " + content['e_pric'] + "원</p>" +
+                                    "<p><strong>판매 회사:</strong> " + content['sale_com'] + "</p>" +
+                                    "<p><strong>출판사 리뷰:</strong> " + content['pub_review'] + "</p>" +
+                                    "</div>";
+                            } else if (content['reply_type'] === "faq") {
+                                botMessage.innerHTML +=
+                                    "<div class='faq-block'>" +
+                                    "<h4>" + content.title + "</h4>" +
+                                    "<p>" + content['content'] + "</p>" +
+                                    "<p><strong>조회수:</strong> " + content['view_cnt'] + "</p>" +
+                                    "</div>";
+                            }
+
+                        })
                     }
 
                     messages.appendChild(botMessage);

@@ -204,7 +204,7 @@ public class CategoryDaoImplTest {
 
         // categoryDto 객체 속성값 바꾸고 업데이트
         categoryDto.setCate_num(cate_num);
-        categoryDto.setCate_name("내가 바꾼 출판사명");
+        categoryDto.setName("내가 바꾼 출판사명");
         assertTrue(categoryDao.update(categoryDto) == 1);
 
         // 업데이트한 객체와 같은지 체크

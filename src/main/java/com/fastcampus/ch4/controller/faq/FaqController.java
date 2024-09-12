@@ -9,6 +9,7 @@ import com.fastcampus.ch4.service.faq.FaqCateService;
 import com.fastcampus.ch4.service.faq.FaqService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -120,6 +121,10 @@ public class FaqController {
 
         // 유저가 admin이 맞으면 role = admin, 아니면 role = ""
         model.addAttribute("role", isAdmin(request) ? "admin" : "");
+
+        HttpSession session = request.getSession(true);
+        session.setAttribute("id", "110111");
+        session.setAttribute("role", "admin");
 
         // 중분류 코드 갖고 와서 넣어주자!
         List<FaqCateDto> faqCateList = faqCateService.readSubCate();

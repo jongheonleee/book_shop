@@ -99,6 +99,47 @@
             text-decoration: underline;
         }
     </style>
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();  // 폼 기본 동작 방지
+
+            // 폼 데이터 수집
+            const formData = new FormData(event.target);
+            const id = formData.get('id');
+            const password = formData.get('pswd');
+            const toURL = formData.get('toURL');
+
+            // 로그인 요청 보내기
+            fetch('${pageContext.request.contextPath}/member/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    id: id,
+                    pswd: password,
+                    toURL: toURL  // toURL을 함께 전송
+                }),
+
+            }).then(response => response.json())
+                .then(data => {
+                    const token = data.token;
+                    const redirectUrl = data.redirectUrl;
+
+                    if (token) {
+                        // JWT 토큰을 로컬 스토리지에 저장
+                        localStorage.setItem('token', token);
+                    }
+                    if (redirectUrl) {
+                        // 리다이렉트할 URL로 이동
+                        window.location.href = redirectUrl;
+                    } else {
+                        alert("로그인 실패했습니다");
+                        window.location.href = '/ch4/member/login';
+                    }
+                }).catch(error => console.error('Error:', error));
+        }
+    </script>
 </head>
 <body>
 <div class="container">
@@ -113,7 +154,7 @@
     </c:if>
 
     <!-- 로그인 폼 -->
-    <form action="${pageContext.request.contextPath}/member/login" method="post">
+    <form onsubmit="handleLogin(event)">
         <label for="id">아이디</label>
         <input type="text" id="id" name="id" required>
 
@@ -126,6 +167,7 @@
         </div>
 
         <input type="submit" value="로그인">
+        <input type="hidden" name="toURL" value="${param.toURL}">
 
         <div class="links">
             <a href="${pageContext.request.contextPath}/findId">아이디 찾기</a> |

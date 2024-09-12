@@ -1,8 +1,11 @@
+<%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
+<c:set var="loginId" value="${pageContext.request.getSession(false)==null ? '' : pageContext.request.session.getAttribute('id')}"/>
+<c:set var="loginOutLink" value="${loginId=='' ? '/member/login' : '/member/logout'}"/>
+<c:set var="loginOut" value="${loginId=='' ? 'Login' : 'ID='+=loginId}"/>
 <%-- 기본값 설정 --%>
 <%
     String orderCriteria = request.getParameter("order_criteria") != null ? request.getParameter("order_criteria") : "book_reg_date";
@@ -23,8 +26,8 @@
         <li id="logo">fastcampus</li>
         <li><a href="<c:url value='/'/>">Home</a></li>
         <li><a href="<c:url value='/book/list'/>">BookList</a></li>
-        <li><a href="<c:url value='/login/login'/>">Login</a></li>
-        <li><a href="<c:url value='/register/add'/>">Sign in</a></li>
+        <li><a href="<c:url value='${loginOutLink}'/>">${loginOut}</a></li>
+        <li><a href="<c:url value='/singup'/>">Sign in</a></li>
     </ul>
 </div>
 <script>
@@ -32,6 +35,11 @@
     if(msg == "WRT_OK") alert("성공적으로 등록되었습니다.");
     if(msg == "DEL_OK") alert("성공적으로 삭제되었습니다.");
     if(msg == "DEL_ERR") alert("삭제에 실패했습니다.");
+
+    var page = '<c:out value="${ph.bsc.page}"/>';
+    var pageSize = '<c:out value="${ph.bsc.pageSize}"/>';
+    var order_criteria = '<c:out value="${ph.bsc.order_criteria}"/>';
+    var order_direction = '<c:out value="${ph.bsc.order_direction}"/>';
 </script>
 
 <div class="container">
@@ -92,7 +100,7 @@
             <!-- 정렬 버튼 추가 -->
             <button type="submit"  class="btn btn-sort">정렬하기</button>
             <!-- 글쓰기 버튼 추가 -->
-            <button type="button" onclick="goToWritePage()" class="btn btn-write">상품등록</button>
+            <button type="button" onclick="goToRegisterPage()" class="btn btn-write">상품등록</button>
         </form>
     </div>
 

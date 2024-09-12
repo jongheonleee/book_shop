@@ -1,15 +1,16 @@
 package com.fastcampus.ch4.service.item;
 
 import com.fastcampus.ch4.dao.item.BookDao;
-import com.fastcampus.ch4.dto.item.BookDto;
-import com.fastcampus.ch4.dto.item.BookImageDto;
-import com.fastcampus.ch4.dto.item.BookSearchCondition;
-import com.fastcampus.ch4.dto.item.WritingContributorDto;
+import com.fastcampus.ch4.dao.item.CategoryDao;
+import com.fastcampus.ch4.dto.item.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,33 +26,32 @@ public class BookServiceImpl implements com.fastcampus.ch4.service.item.BookServ
 
     @Autowired
     private BookDao bookDao;
+    @Autowired
+    private CategoryDao categoryDao;
 
     // 1. 도서 개수 카운트
     @Override
-    public int getCount() throws Exception{
-        return bookDao.count();
+    public int getCountBook() {
+        return bookDao.countBook();
     }
 
     // 2. 도서 상품 등록
     @Override
     @Transactional
-    public int write(BookDto bookDto) throws Exception {
-        // 중복 키 값 검사
-        if (bookDao.select(bookDto.getIsbn()) != null)
-            throw new DuplicateKeyException("isbn already exists");
-
-        // cate_num 조회
+    public void register(BookDto bookDto) {
+        // e_book_url 임의 설정
+        bookDto.setEbook_url("");
+        // 책 등록일 현재 일자로 등록
+        bookDto.setBook_reg_date(new Date());
 
         // 도서 테이블 인서트
-        int result = bookDao.insert(bookDto);
-        System.out.println(bookDto);
+        bookDao.insertBook(bookDto);
 
         /* 도서 이미지 인서트 - ISBN, 일련번호, 이미지 URL(repre_img) */
         BookImageDto bookImageDto = null;
 
         // 이미지 일련번호 설정
         Integer maxImgSeq = bookDao.selectMaxImgSeq(bookDto.getIsbn());
-        System.out.println("최대시퀀스="+maxImgSeq);
         if(maxImgSeq == null)
             bookImageDto = new BookImageDto(bookDto.getIsbn(), 1);
         else
@@ -60,7 +60,8 @@ public class BookServiceImpl implements com.fastcampus.ch4.service.item.BookServ
         // 대표_이미지 설정
         bookImageDto.setImg_url(bookDto.getRepre_img());
         bookImageDto.setMain_img_chk('Y');
-        bookDao.insertToBookImage(bookImageDto);
+
+        bookDao.insertBookImage(bookImageDto);
 
         /* 집필 기여자 인서트 - 기여자번호(cb_num), 이름, 직업1, reg_id, up_id */
 
@@ -70,92 +71,134 @@ public class BookServiceImpl implements com.fastcampus.ch4.service.item.BookServ
         // BookDto의 isbn과 writingContributor의 cb_num을 맵에 담아서 넘기기
         Map map = new HashMap();
         map.put("isbn", bookDto.getIsbn());
-        // 작가 이름이 넘어왔다면 다음 작가 시퀀스 번호 조회
-        // cbNum생성해서 테이블 인서트
-        // writingContributorDto 객체 생성(cb_num, wr_name)
-        // writingContributor테이블 인서트
+        /*
+            (1) 작가 이름이 넘어왔다면 다음 작가 시퀀스 번호 조회
+            (2) cbNum생성해서 테이블 인서트
+            (3) writingContributorDto 객체 생성(cb_num, wr_name)
+            (4) writingContributor테이블 인서트
+         */
+
         if (bookDto.getWr_name() != null) {
             Integer wrSeq = bookDao.selectWrSeq();
+
             String wrCbNum = "wr" + wrSeq;
             wrWritingContributorDto = new WritingContributorDto(wrCbNum, bookDto.getWr_name());
-            bookDao.insertToWritingContributor(wrWritingContributorDto);
+            wrWritingContributorDto.setWr_chk('Y');
+
+            bookDao.insertWritingContributor(wrWritingContributorDto);
             map.put("cb_num", wrWritingContributorDto.getCb_num());
+
+            // 도서-집필 기여자 관계 테이블 인서트 (isbn, cb_num)
+            bookDao.insertBookContributor(map);
         }
-        // 번역자 이름이 넘어왔다면 다음 번역자 시퀀스 번호 조회
-        //  cbNum생성해서 테이블 인서트
-        // writingContributorDto 객체 생성(cb_num, trl_name)
-        // writingContributor테이블 인서트
+        /*
+            (1) 번역자 이름이 넘어왔다면 다음 번역자 시퀀스 번호 조회
+            (2) cbNum생성해서 테이블 인서트
+            (3) writingContributorDto 객체 생성(cb_num, trl_name)
+            (4) writingContributor테이블 인서트
+         */
         if (bookDto.getTrl_name() != null) {
             Integer trlSeq = bookDao.selectTrlSeq();
+
             String trlCbNum = "trl"+trlSeq;
             trlWritingContributorDto = new WritingContributorDto(trlCbNum, bookDto.getTrl_name());
-            bookDao.insertToWritingContributor(trlWritingContributorDto);
+            trlWritingContributorDto.setWr_chk('N');
+
+            bookDao.insertWritingContributor(trlWritingContributorDto);
             map.put("cb_num", trlWritingContributorDto.getCb_num());
+
+            // 도서-집필 기여자 관계 테이블 인서트 (isbn, cb_num)
+            bookDao.insertBookContributor(map);
         }
-
-        // 도서-집필 기여자 관계 테이블 인서트 (isbn, cb_num)
-        bookDao.insertToBookContributor(map);
-
-        return result;
     }
 
     // 3. 도서상세페이지 읽기
     @Override
-    public BookDto read(String isbn) throws Exception {
-        return bookDao.select(isbn);
+    public BookDto read(String isbn) {
+        return bookDao.selectBook(isbn);
     }
 
     // 4. 도서목록 가져오기
     @Override
-    public List<BookDto> getList() throws Exception {
-        return bookDao.selectAll();
+    public List<BookDto> getList() {
+        return bookDao.selectAllBook();
     }
 
-    // 5. 도서글 수정
+    // 5. 도서 수정
     @Override
-    public int modify(BookDto bookDto) throws Exception {
-        return bookDao.update(bookDto);
+    public int modify(BookDto bookDto) {
+        return bookDao.updateBook(bookDto);
     }
 
-    // 6. 도서글 삭제 - isbn 일치 확인
+    // 6. 도서 삭제 - isbn 일치 확인
     @Override
-    public int remove(String isbn) throws Exception {
-        return bookDao.delete(isbn);
+    @Transactional
+    public boolean remove(String isbn, String writer) {
+        /*
+            삭제 대상(isbn으로 조회)
+            (1) book 테이블
+            (2) book_image테이블
+            (3) book_disc_hist 테이블
+            (4) book_contributor 테이블
+         */
+        int rowCntBook = bookDao.deleteBook(isbn, writer);
+        int rowCntBookImage = bookDao.deleteBookImage(isbn,writer);
+        int rowCntBookDiscHist = bookDao.deleteBookDiscHist(isbn,writer);
+        int rowCntBookContributor = bookDao.deleteBookContributor(isbn,writer);
+        return (rowCntBook != 0 && rowCntBookImage != 0 && rowCntBookContributor != 0);
+    }
+
+    // 6. 도서 삭제 - isbn 일치 확인
+    @Override
+    @Transactional
+    public boolean removeForAdmin(String isbn) {
+        /*
+            삭제 대상(isbn으로 조회)
+            (1) book 테이블
+            (2) book_image테이블
+            (3) book_disc_hist 테이블
+            (4) book_contributor 테이블
+         */
+        int rowCntBook = bookDao.deleteBookForAdmin(isbn);
+        int rowCntBookImage = bookDao.deleteBookImageForAdmin(isbn);
+        int rowCntBookDiscHist = bookDao.deleteBookDiscHistForAdmin(isbn);
+        int rowCntBookContributor = bookDao.deleteBookContributorForAdmin(isbn);
+        return (rowCntBook != 0 && rowCntBookImage != 0 && rowCntBookContributor != 0);
     }
 
     // 7. 선택된 페이지 가져오기.
     @Override
-    public List<BookDto> getPage(Map map) throws Exception {
+    public List<BookDto> getPage(Map map) {
         return bookDao.selectPage(map);
     }
 
-    // 8. 전체 목록 초기화
+    // 8. 도서 목록 전체 조회
     @Override
-    public int resetList() throws Exception {
-        return bookDao.deleteAll();
+    public List<BookDto> getAllBookList() {
+        return bookDao.selectAllBook();
     }
 
-    // 9. 도서 목록 전체 조회
+    // 9. 판매량 증가
     @Override
-    public List<BookDto> getAllBookList() throws Exception {
-        return bookDao.selectAll();
-    }
-
-    // 10. 판매량 증가
-    @Override
-    public int increaseSaleVol(Map map) throws Exception {
+    public int increaseSaleVol(Map map) {
         return bookDao.increaseSaleVol(map);
     }
 
-    // 11. 검색된 페이지 가져오기
+    // 10. 검색된 페이지 가져오기
     @Override
-    public List<BookDto> getSearchResultPage(BookSearchCondition bsc) throws Exception {
+    public List<BookDto> getSearchResultPage(BookSearchCondition bsc) {
         return bookDao.searchSelectPage(bsc);
     }
 
-    // 12. 검색된 총 도서 개수 카운트
+    // 11. 검색된 총 도서 개수 카운트
     @Override
-    public int getSearchResultCnt(BookSearchCondition bsc) throws Exception {
+    public int getSearchResultCnt(BookSearchCondition bsc) {
         return bookDao.searchResultCnt(bsc);
+    }
+
+    // 12. 전체 카테고리 리스트 받아오기
+    @Override
+    public List<CategoryDto> getCategoryList() {
+        return categoryDao.selectAll();
     }
 }

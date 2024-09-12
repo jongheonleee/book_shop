@@ -1,88 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans xmlns:mvc="http://www.springframework.org/schema/mvc"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:context="http://www.springframework.org/schema/context"
-	   xmlns:tx="http://www.springframework.org/schema/tx"
-	   xmlns:security="http://www.springframework.org/schema/security"
-	   xsi:schemaLocation="
-           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+	   xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-	<!-- DataSource configuration -->
+	<!-- Properties 파일 로드 -->
+	<context:property-placeholder location="classpath:/properties/database.properties"/>
+	<context:property-placeholder location="classpath:/properties/jwt.properties"/>
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-		<property name="url" value="jdbc:mysql://localhost:3306/toyproject?useUnicode=true&amp;characterEncoding=utf8"/>
-		<property name="username" value="root"/>
-		<property name="password" value="1234"/>
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="${spring.datasource.url}"></property>
+		<property name="username" value="${spring.datasource.username}"></property>
+		<property name="password" value="${spring.datasource.password}"></property>
 	</bean>
 
-	<!-- MyBatis configuration -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
-		<property name="configLocation" value="classpath:mybatis-config.xml"/>
-		<property name="mapperLocations" value="classpath:mapper/member/*Mapper.xml"/>
+		<property name="configLocation"  value="classpath:mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath:mapper/**/*Mapper.xml"/>
 	</bean>
 
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sqlSessionFactory"/>
 	</bean>
 
-	<!-- Transaction Manager -->
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
-
-	<!-- Annotation-based transaction management -->
 	<tx:annotation-driven/>
-
-	<!-- Component scanning -->
 	<context:component-scan base-package="com.fastcampus.ch4"/>
 
-	<!-- JavaMailSender configuration -->
+	<aop:aspectj-autoproxy />
+
+
+
+
+	<!-- JavaMailSender 설정 -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="smtp.naver.com"/>
 		<property name="port" value="465"/>
-		<property name="username" value="buraldongja@naver.com"/>
+		<property name="username" value="buraldongja"/>
 		<property name="password" value="manofhonor"/>
 		<property name="javaMailProperties">
 			<props>
 				<prop key="mail.transport.protocol">smtp</prop>
 				<prop key="mail.smtp.auth">true</prop>
 				<prop key="mail.smtp.starttls.enable">true</prop>
-				<prop key="mail.smtp.ssl.enable">true</prop>
-				<prop key="mail.smtp.ssl.trust">smtp.naver.com</prop>
-				<prop key="mail.debug">true</prop>
 			</props>
 		</property>
 	</bean>
 
-<!--	&lt;!&ndash; Spring Security configuration &ndash;&gt;-->
-<!--	<security:http auto-config="true" use-expressions="true">-->
-<!--		<security:form-login-->
-<!--				login-page="/member/login"-->
-<!--				default-target-url="/home"-->
-<!--				authentication-failure-url="/member/login?error"-->
-<!--				username-parameter="id"-->
-<!--				password-parameter="pswd"/>-->
-<!--		<security:logout-->
-<!--				logout-url="/member/logout"-->
-<!--				logout-success-url="/member/login"/>-->
-<!--		<security:csrf/>-->
-<!--	</security:http>-->
-
-<!--	&lt;!&ndash; Authentication Manager &ndash;&gt;-->
-<!--	<security:authentication-manager>-->
-<!--		<security:authentication-provider user-service-ref="memberDetailService">-->
-<!--			<security:password-encoder ref="passwordEncoder"/>-->
-<!--		</security:authentication-provider>-->
-<!--	</security:authentication-manager>-->
-
-<!--	&lt;!&ndash; UserDetailsService 설정 &ndash;&gt;-->
-<!--	<bean id="memberDetailService" class="com.fastcampus.ch4.service.member.MemberDetailServiceImpl"/>-->
-
-<!--	&lt;!&ndash; 비밀번호 암호화 &ndash;&gt;-->
-<!--	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>-->
 
 </beans>

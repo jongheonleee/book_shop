@@ -16,23 +16,21 @@ public class AdminDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AdminDto adminDto = (AdminDto) o;
-        return Objects.equals(id, adminDto.id) && Objects.equals(reg_date, adminDto.reg_date) && Objects.equals(reg_id, adminDto.reg_id);
+        return auth == adminDto.auth && Objects.equals(id, adminDto.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, reg_date, reg_id);
+        return Objects.hash(id, auth);
     }
 
-    public AdminDto() {}
+    public AdminDto() {
+    }
 
-    public AdminDto(String id, int auth, Date reg_date, String reg_id, Date up_date, String up_id) {
+    public AdminDto(String id, int auth, String reg_id) {
         this.id = id;
         this.auth = auth;
-        this.reg_date = reg_date;
         this.reg_id = reg_id;
-        this.up_date = up_date;
-        this.up_id = up_id;
     }
 
     public String getId() {

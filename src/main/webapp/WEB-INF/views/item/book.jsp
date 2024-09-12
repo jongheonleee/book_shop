@@ -15,10 +15,10 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
         // JSP 변수 값을 전역 변수로 설정
-        var page = '<c:out value="${page}"/>';
-        var pageSize = '<c:out value="${pageSize}"/>';
-        var order_criteria = '<c:out value="${order_criteria}"/>';
-        var order_direction = '<c:out value="${order_direction}"/>';
+        var page = '<c:out value="${bsc.page}"/>';
+        var pageSize = '<c:out value="${bsc.pageSize}"/>';
+        var order_criteria = '<c:out value="${bsc.order_criteria}"/>';
+        var order_direction = '<c:out value="${bsc.order_direction}"/>';
 
         let msg = '<c:out value="${msg}"/>';
         if(msg == "WRT_ERR") alert("게시물 등록에 실패했습니다. 다시 시도해 주세요.");
@@ -40,7 +40,6 @@
         <h2>상품 ${mode=="new" ? "등록" : "조회"}</h2>
         <!-- 버튼들을 가로로 정렬 -->
         <div class="button-group">
-            <button type="button" id="writeBtn" class="btn">등록</button>
             <button type="button" id="modifyBtn" class="btn">수정</button>
             <button type="button" id="removeBtn" class="btn">삭제</button>
             <button type="button" id="listBtn" class="btn">목록</button>
@@ -56,6 +55,14 @@
                        oninput="updateImagePreview()">
             </div>
             <div class="product-details">
+                <!-- 판매 상태 선택 -->
+                <p>
+                    <strong>판매 상태:</strong>
+                    <select id="sale_stat" name="sale_stat" <c:if test="${mode != 'new'}">disabled="disabled"</c:if>>
+                        <option value="판매중" <c:if test="${bookDto.sale_stat == '판매중'}">selected</c:if>>판매중</option>
+                        <option value="판매중지" <c:if test="${bookDto.sale_stat == '판매중지'}">selected</c:if>>판매중지</option>
+                    </select>
+                </p>
                 <p><strong>책 제목: </strong><input type="text" name="title" value="<c:out value="${bookDto.title}"/>"
                                                  <c:if test="${mode != 'new'}">readonly="readonly"</c:if>></p>
                 <p><strong>카테고리:</strong> <input type="text" name="whol_layr_name" value="<c:out value="${bookDto.whol_layr_name}"/>"

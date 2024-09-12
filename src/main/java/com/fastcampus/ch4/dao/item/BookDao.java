@@ -9,36 +9,54 @@ import java.util.List;
 import java.util.Map;
 
 public interface BookDao {
-    int count() throws Exception;
+    int countBook();
+    int countBookImage();
 
-    int deleteAll() throws Exception;
+    int countBookContributor();
 
-    int delete(String isbn) throws Exception;
+    int countWritingContributor();
+    int countBookDiscHist();
 
-    int insert(BookDto dto) throws Exception;
+    int deleteAllBook();
+    int deleteAllWritingContributor();
+    int deleteAllBookContributor();
+    int deleteAllBookImage();
+    int deleteAllBookDiscHist();
 
-    List<BookDto> selectAll() throws Exception;
+    int deleteBook(String isbn, String writer);
+    int deleteBookImage(String isbn, String writer);
+    int deleteBookDiscHist(String isbn, String writer);
+    int deleteBookContributor(String isbn, String writer);
+    int deleteWritingContributor(String isbn, String writer);
 
-    BookDto select(String isbn) throws Exception;
+    int deleteBookForAdmin(String isbn);
+    int deleteBookImageForAdmin(String isbn);
+    int deleteBookDiscHistForAdmin(String isbn);
+    int deleteBookContributorForAdmin(String isbn);
+    int deleteWritingContributorForAdmin(String isbn);
 
-    int update(BookDto dto) throws Exception;
+    int insertBook(BookDto dto);
 
-    int increaseSaleVol(Map map) throws Exception;
+    List<BookDto> selectAllBook();
 
-    List<BookDto> selectPage(Map map) throws Exception;
+    BookDto selectBook(String isbn);
+
+    int updateBook(BookDto dto);
+
+    int increaseSaleVol(Map map);
+
+    List<BookDto> selectPage(Map map);
 
 
-    int insertToBookImage(BookImageDto bookImageDto) throws Exception;
-    int insertToWritingContributor(WritingContributorDto writingContributorDto) throws Exception;
-    int insertToBookContributor(Map map) throws Exception;
+    int insertBookImage(BookImageDto bookImageDto);
+    int insertWritingContributor(WritingContributorDto writingContributorDto);
+    int insertBookContributor(Map map);
 
-    Integer selectMaxImgSeq(String isbn) throws Exception;
-    Integer selectWrSeq() throws Exception;
-    Integer selectTrlSeq() throws Exception;
+    Integer selectMaxImgSeq(String isbn);
+    Integer selectWrSeq();
+    Integer selectTrlSeq();
 
-    int searchResultCnt(BookSearchCondition bsc) throws Exception;
+    int searchResultCnt(BookSearchCondition bsc);
 
-    List<BookDto> searchSelectPage(BookSearchCondition bsc) throws Exception;
-    int deleteAllFromWritingContributor() throws Exception;
-    int deleteAllFromBookContributor() throws Exception;
+    List<BookDto> searchSelectPage(BookSearchCondition bsc);
 }

@@ -20,11 +20,12 @@
 
     <select id="selectAll" resultType="AdminDto">
         <include refid="selectFromAdmin"/>
+        order by auth ASC, reg_date ASC
     </select>
 
     <delete id="delete" parameterType="string">
         delete from admin
-        whete id = #{id}
+        where id = #{id}
     </delete>
 
     <delete id="deleteAll">
@@ -33,6 +34,6 @@
 
     <insert id="insert" parameterType="AdminDto">
         insert into admin(id, auth, reg_date, reg_id, up_date, up_id)
-        values #{id}, #{auth}, #{reg_date}, #{reg_id}, #{up_date}, #{up_id}
+        values (#{id}, #{auth}, now(), #{reg_id}, now(), #{reg_id})
     </insert>
 </mapper>
